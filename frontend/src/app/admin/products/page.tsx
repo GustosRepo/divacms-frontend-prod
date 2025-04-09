@@ -12,6 +12,7 @@ interface Product {
   image: string | null;
   bestSeller: boolean;
   category: { id: string; name: string } | null; // ✅ Ensure category is an object
+  quantity: number;
 }
 
 export default function ManageProducts() {
@@ -82,6 +83,7 @@ export default function ManageProducts() {
             <th className="p-3">Price</th>
             <th className="p-3">Category</th>
             <th className="p-3">Best Seller</th>
+            <th className="p-3">Stock</th>
             <th className="p-3">Actions</th>
           </tr>
         </thead>
@@ -97,6 +99,9 @@ export default function ManageProducts() {
                   : product.category || "No Category"}
               </td>
               <td className="p-3">{product.bestSeller ? "✅ Yes" : "❌ No"}</td>
+              <td style={{ color: product.quantity < 3 ? "red" : "white" }}>
+                {product.quantity}
+              </td>
               <td className="p-3">
                 <Link href={`/admin/products/edit/${product.id}`}>
                   <button className="bg-yellow-500 px-3 py-1 rounded">

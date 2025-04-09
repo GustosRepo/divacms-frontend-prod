@@ -121,8 +121,13 @@ export const getAllProducts = async (req, res) => {
         sort === "price_asc" ? { price: "asc" } :
         sort === "price_desc" ? { price: "desc" } :
         { createdAt: "desc" },
-      include: { 
-        category: { select: { name: true } } // ✅ Fetch only category name
+      select: {
+        id: true,
+        title: true,
+        price: true,
+        bestSeller: true,
+        quantity: true, // ✅ Include stock quantity
+        category: { select: { name: true } }
       },
     });
 

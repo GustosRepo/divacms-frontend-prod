@@ -127,6 +127,7 @@ const processCheckoutSession = async (session) => {
         : order.totalAmount / item.quantity;
 
       try {
+        // ➕ Add OrderItem
         await prisma.orderItem.create({
           data: {
             orderId: order.id,
@@ -136,8 +137,19 @@ const processCheckoutSession = async (session) => {
           },
         });
         console.log("➕ Added OrderItem for:", product.title);
+
+        // 📉 Update inventory
+        await prisma.product.update({
+          where: { id: product.id },
+          data: {
+            quantity: {
+              decrement: item.quantity,
+            },
+          },
+        });
+        console.log(`📦 Inventory updated: -${item.quantity} for ${product.title}`);
       } catch (err) {
-        console.error("❌ Failed to create orderItem:", err);
+        console.error("❌ Failed to process item:", product.title, err);
       }
     }
 
@@ -151,9 +163,13 @@ const processCheckoutSession = async (session) => {
       await sendEmail(
         process.env.ADMIN_EMAIL || "admin@example.com",
         "🛍️ New Order Received",
-        `A new order has been placed for $${order.totalAmount}.`
+        `
+        <h2>New Order Received</h2>
+        <p><strong>Order ID:</strong> ${order.id}</p>
+        <p><strong>Email:</strong> ${order.email}</p>
+        <p><strong>Total:</strong> $${order.totalAmount}</p>
+        `
       );
-
       console.log("📧 Order confirmation emails sent");
     } catch (err) {
       console.error("❌ Failed to send confirmation emails:", err);

@@ -6,7 +6,7 @@ export default function AdminSidebar() {
 
   return (
     <aside className="w-1/5 min-h-screen bg-black/50 p-6 shadow-lg">
-      <h2 className="text-xl font-bold text-pink-400">🎀 ADMIN PANEL</h2>
+      <h2 className="text-xl font-bold text-pink-400 pt-6">🎀 ADMIN PANEL</h2>
       <ul className="mt-4 space-y-3">
         <li>
           <button
