@@ -1,32 +1,30 @@
-import { PrismaClient } from '@prisma/client';
-
+import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
 async function main() {
-  await prisma.product.createMany({
+  await prisma.category.createMany({
     data: [
-      {
-        title: 'Test Nail Set',
-        description: 'Beautiful press-on nails',
-        price: 19.99,
-        image: 'https://example.com/nailset.jpg',
-      },
-      {
-        title: 'New Nail Set',
-        description: 'A stylish new set',
-        price: 29.99,
-        image: 'https://example.com/newset.jpg',
-      },
+      { name: "Almond" },
+      { name: "Coffin" },
+      { name: "Square" },
+      { name: "Round" },
+      { name: "Oval" },
+      { name: "Stiletto" },
+      { name: "Squoval" },
+      { name: "Flare (Duck Nails)" },
+      { name: "Lipstick" },
+      { name: "Edge" },
     ],
   });
+
+  console.log("✅ Nail shape categories added!");
 }
 
 main()
-  .then(async () => {
-    await prisma.$disconnect();
-  })
-  .catch(async (e) => {
+  .catch((e) => {
     console.error(e);
-    await prisma.$disconnect();
     process.exit(1);
+  })
+  .finally(async () => {
+    await prisma.$disconnect();
   });

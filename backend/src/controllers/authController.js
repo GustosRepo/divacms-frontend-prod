@@ -1,19 +1,16 @@
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
-import { PrismaClient } from "@prisma/client";
+import pkg from "@prisma/client";
+const { PrismaClient } = pkg;
 
 const prisma = new PrismaClient();
 const JWT_SECRET = process.env.JWT_SECRET || "supersecretkey"; // Secure this in production
 
 // 🔹 Register a new user
 export const registerUser = async (req, res) => {
-  const { name, email, password, role } = req.body;
+  const { name, email, password } = req.body;
 
   try {
-    if (role === "admin") {
-      return res.status(403).json({ message: "Cannot assign admin role" });
-    }
-
     const existingUser = await prisma.user.findUnique({ where: { email } });
     if (existingUser) {
       return res.status(400).json({ message: "User already exists" });
@@ -45,25 +42,28 @@ export const loginUser = async (req, res) => {
   const { email, password } = req.body;
 
   try {
+    // Check if user exists
     const user = await prisma.user.findUnique({ where: { email } });
     if (!user) {
       return res.status(400).json({ message: "Invalid credentials" });
     }
 
+    // Compare the provided password with the hashed password
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
       return res.status(400).json({ message: "Invalid credentials" });
     }
 
+    // Generate JWT token
     const token = jwt.sign(
-      { userId: user.id, role: user.role },
+      { userId: user.id, role: user.role , isAdmin: user.role === "admin" },
       JWT_SECRET,
-      { expiresIn: "7d" }
+      { expiresIn: "1h" }
     );
 
     res.status(200).json({
       token,
-      user: { id: user.id, name: user.name, email: user.email, role: user.role },
+      user: { id: user.id, name: user.name, email: user.email, role: user.role, isAdmin: user.role === "admin" },
     });
   } catch (error) {
     res.status(500).json({ message: "Server error", error: error.message });

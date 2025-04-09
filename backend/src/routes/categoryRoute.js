@@ -1,16 +1,14 @@
 import express from "express";
-import { getAllCategories, addCategory, deleteCategory } from "../controllers/categoryController.js";
+import { addCategory, updateCategory, deleteCategory, getAllCategories } from "../controllers/categoryController.js";
 import authMiddleware from "../middleware/authMiddleware.js";
+import isAdminMiddleware from "../middleware/isAdminMiddleware.js";
 
 const router = express.Router();
 
-// 🔹 Public: Get all categories
+// 🔹 Public Route - Get All Categories
 router.get("/", getAllCategories);
-
-// 🔹 Admin: Add a new category
-router.post("/", authMiddleware, addCategory);
-
-// 🔹 Admin: Delete a category
-router.delete("/:id", authMiddleware, deleteCategory);
+router.post("/", authMiddleware, isAdminMiddleware, addCategory); // Admin Only
+router.put("/:id", authMiddleware, isAdminMiddleware, updateCategory); // Admin Only
+router.delete("/:id", authMiddleware, isAdminMiddleware, deleteCategory); // Admin Only
 
 export default router;

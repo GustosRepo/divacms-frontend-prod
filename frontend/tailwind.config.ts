@@ -9,9 +9,12 @@ export default {
   theme: {
     extend: {
       colors: {
-        background: "var(--background)",
-        foreground: "var(--foreground)",
+        'glass': 'rgba(255, 255, 255, 0.1)',
       },
+      backdropBlur: {
+        'xl': '20px',
+      },
+      
     },
   },
   plugins: [],

@@ -1,7 +1,10 @@
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=IBM+Plex+Mono:wght@400;700&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
+/* 🎨 Color Variables */
 :root {
   --background: #ffffff;
   --foreground: #171717;
@@ -14,8 +17,176 @@
   }
 }
 
+/* 🎀 Global Styles */
 body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: 'IBM Plex Mono', monospace;
+  background: linear-gradient(to bottom, #ffcccb, #dda0dd, #add8e6); /* Soft sky gradient */
+  color: #111;
+  text-transform: uppercase;
+  position: relative;
+  overflow-x: hidden;
+}
+
+/* ✨ Glitch Effect */
+@keyframes glitch {
+  0%, 100% { transform: translate(0); }
+  25% { transform: translate(-3px, 3px); }
+  50% { transform: translate(3px, -3px); }
+  75% { transform: translate(-3px, -3px); }
+}
+
+.glitch {
+  font-family: 'Press Start 2P', cursive;
+  position: relative;
+  display: inline-block;
+  animation: glitch 1s infinite;
+  text-shadow: 
+    2px 2px 0 #ff00ff, 
+    -2px -2px 0 #00ffff;
+}
+
+/* 🌌 Background Noise Texture */
+body::before {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: url('/static/noise.png'); /* Add noise texture */
+  opacity: 0.1;
+  z-index: -1;
+  pointer-events: none;
+}
+
+/* 🔲 Y2K Grid Effect */
+.y2k-grid {
+  background: repeating-linear-gradient(
+    rgba(255, 255, 255, 0.1) 0px,
+    rgba(255, 255, 255, 0.1) 2px,
+    transparent 2px,
+    transparent 10px
+  ),
+  repeating-linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0.1) 0px,
+    rgba(255, 255, 255, 0.1) 2px,
+    transparent 2px,
+    transparent 10px
+  );
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+}
+
+/* 🖲️ Glitch Button */
+.glitch-button:hover {
+  animation: glitch 0.1s infinite;
+  background: linear-gradient(90deg, #ff00ff, #00ffff);
+}
+
+/* 💖 Floating Pixel Hearts */
+@keyframes floatingStars {
+  0%, 100% { transform: translateY(0) rotate(0deg); opacity: 1; }
+  50% { transform: translateY(-8px) rotate(-5deg); opacity: 0.9; }
+}
+
+.pixel-star {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  background-color: #ff66b2; /* Soft Pink */
+  clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%); /* Heart shape */
+  animation: floatingHearts 3s infinite ease-in-out alternate;
+}
+/* 💖 Floating Pixel Hearts */
+@keyframes floatingHearts {
+  0%, 100% { transform: translateY(0) rotate(0deg); opacity: 1; }
+  50% { transform: translateY(-8px) rotate(-5deg); opacity: 0.9; }
+}
+
+.pixel-heart {
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  background-color: #ff66b2; /* Soft Pink */
+  clip-path: polygon(30% 0%, 50% 15%, 70% 0%, 90% 10%, 100% 35%, 80% 70%, 50% 100%, 20% 70%, 0% 35%, 10% 10%);
+
+  animation: floatingHearts 6s infinite ease-in-out alternate;
+}
+/* ⭐ Floating Pixel Stars */
+@keyframes floatingStars {
+  0%, 100% { transform: translateY(0) rotate(0deg); opacity: 1; }
+  50% { transform: translateY(-8px) rotate(-5deg); opacity: 0.9; }
+}
+
+.pixel-star {
+  position: absolute;
+  width: 15px;
+  height: 15px;
+  background-color: #ffd700; /* Gold */
+  clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%); /* Star shape */
+  animation: floatingStars 4s infinite ease-in-out alternate;
+}
+
+/* 🌙 Floating Pixel Moons */
+@keyframes floatingMoons {
+  0%, 100% { transform: translateY(0) rotate(0deg); opacity: 1; }
+  50% { transform: translateY(-8px) rotate(-5deg); opacity: 0.9; }
+}
+
+.pixel-moon {
+  position: absolute;
+  width: 15px;
+  height: 15px;
+  background-color: #fafafa; /* Light Steel Blue */
+  clip-path: polygon(25% 0%, 75% 0%, 100% 25%, 50% 100%, 0% 25%);
+
+  animation: floatingMoons 2s infinite ease-in-out alternate;
+}
+
+@keyframes floatingText {
+  0% { transform: translateY(0); opacity: 1; }
+  50% { transform: translateY(-4px); opacity: 0.9; }
+  100% { transform: translateY(0); opacity: 1; }
+}
+
+.glitch-text {
+  animation: floatingText 3s infinite ease-in-out;
+}
+
+@keyframes glitch-border {
+  0% { box-shadow: 0px 0px 5px #ff00ff; }
+  50% { box-shadow: 0px 0px 15px #ff00ff, 0px 0px 10px #00ffff; }
+  100% { box-shadow: 0px 0px 5px #ff00ff; }
+}
+
+.glitch-border {
+  animation: glitch-border 1.5s infinite alternate ease-in-out;
+}
+
+@keyframes pulse-glitch {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+  100% { transform: scale(1); }
+}
+
+.glitch-button {
+  animation: pulse-glitch 2s infinite ease-in-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.3s ease-out;
 }
