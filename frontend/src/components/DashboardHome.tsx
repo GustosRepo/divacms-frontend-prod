@@ -28,7 +28,7 @@ const DashboardHome: React.FC<DashboardHomeProps> = ({ userName, points }) => {
           points!
         </p>
         <p className="text-gray-300 text-sm mt-2">
-          Earn points with every purchase and redeem them for rewards!
+          Earn points with every purchase and after 100 points are accumulated we automatically apply 10% off your next order!
         </p>
       </div>
     </div>

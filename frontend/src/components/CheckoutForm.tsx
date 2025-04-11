@@ -116,16 +116,7 @@ export default function CheckoutForm({ onSubmit, defaultValues, totalAmount, use
       <input type="text" name="zip" value={formData.zip} onChange={(e) => setFormData({ ...formData, zip: e.target.value })} placeholder="ZIP Code" className="p-2 text-black rounded-lg w-full mt-2" />
       <input type="text" name="country" value={formData.country} onChange={(e) => setFormData({ ...formData, country: e.target.value })} placeholder="Country" className="p-2 text-black rounded-lg w-full mt-2" />
 
-      <div className="mt-4">
-        <label className="block text-white">💎 Redeem Diva Points:</label>
-        <select className="p-2 text-black rounded-lg w-full mt-2" value={selectedPoints} onChange={handlePointsChange}>
-          <option value="0">Do not use points</option>
-          {userPoints >= 50 && <option value="50">50 Points → 5% Off</option>}
-          {userPoints >= 100 && <option value="100">100 Points → 10% Off</option>}
-        </select>
-      </div>
-
-      <p className="text-white mt-4 text-lg"><strong>Total After Discount:</strong> ${discountedTotal}</p>
+      <p className="text-white mt-4 text-lg"><strong>Total:</strong> ${discountedTotal}</p>
 
       <button type="submit" disabled={loading} className="mt-4 bg-pink-500 text-white px-4 py-2 rounded-md w-full">
         {loading ? "Processing..." : "Proceed to Payment"}

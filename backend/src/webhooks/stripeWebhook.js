@@ -32,10 +32,10 @@ export const stripeWebhookHandler = async (req, res) => {
     return res.status(400).send(`Webhook Error: ${error.message}`);
   }
 
-  // ✅ Handle the event
   try {
     if (event.type === "checkout.session.completed") {
       await processCheckoutSession(event.data.object);
+      console.log("📦 Webhook metadata received:", event.data.object.metadata);
     } else {
       console.log(`⚠️ Unhandled event type: ${event.type}`);
     }
@@ -63,14 +63,13 @@ const processCheckoutSession = async (session) => {
       expand: ["line_items", "customer_details"],
     });
 
-    const userId = session.metadata?.userId || null;
+    const userId = session.metadata?.userId;
+    const pointsUsed = parseInt(session.metadata?.pointsUsed || "0"); // 💎 fix
+
     console.log("📦 Session metadata:", session.metadata);
+    console.log("💎 Points used:", pointsUsed);
 
     const lineItems = sessionDetails.line_items.data;
-
-    console.log("🧾 Extracted userId:", userId);
-    console.log("🧾 Total amount (cents):", session.amount_total);
-    console.log("📦 Line items:", JSON.stringify(lineItems, null, 2));
 
     const orderData = {
       email:
@@ -91,28 +90,46 @@ const processCheckoutSession = async (session) => {
 
     if (userId && userId !== "guest") {
       const isUUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(userId);
-      if (!isUUID) {
-        console.warn("⚠️ Invalid userId format:", userId);
-      } else {
+      if (isUUID) {
         orderData.userId = userId;
         console.log("✅ userId added to orderData:", userId);
+      } else {
+        console.warn("⚠️ Invalid userId format:", userId);
       }
     }
-
-    console.log("📄 Final Order Data:", orderData);
 
     let order;
     try {
       order = await prisma.order.create({ data: orderData });
       console.log("✅ Order created in DB:", order.id);
+
+      try {
+        await sendEmail(
+          order.email,
+          "Order Confirmation",
+          `Thank you for your order 💅 Your tracking number is: ${order.trackingCode}`
+        );
+
+        await sendEmail(
+          process.env.ADMIN_EMAIL || "admin@example.com",
+          "🛍️ New Order Received",
+          `
+          <h2>New Order Received</h2>
+          <p><strong>Order ID:</strong> ${order.id}</p>
+          <p><strong>Email:</strong> ${order.email}</p>
+          <p><strong>Total:</strong> $${order.totalAmount}</p>
+          `
+        );
+        console.log("📧 Order confirmation emails sent");
+      } catch (err) {
+        console.error("❌ Failed to send confirmation emails:", err);
+      }
     } catch (err) {
       console.error("❌ Failed to create order in DB:", err);
       return;
     }
 
     for (const item of lineItems) {
-      console.log("🔍 Processing item:", item.description);
-
       const product = await prisma.product.findUnique({
         where: { title: item.description },
       });
@@ -127,7 +144,6 @@ const processCheckoutSession = async (session) => {
         : order.totalAmount / item.quantity;
 
       try {
-        // ➕ Add OrderItem
         await prisma.orderItem.create({
           data: {
             orderId: order.id,
@@ -136,9 +152,7 @@ const processCheckoutSession = async (session) => {
             price: pricePerUnit,
           },
         });
-        console.log("➕ Added OrderItem for:", product.title);
 
-        // 📉 Update inventory
         await prisma.product.update({
           where: { id: product.id },
           data: {
@@ -153,29 +167,24 @@ const processCheckoutSession = async (session) => {
       }
     }
 
-    try {
-      await sendEmail(
-        order.email,
-        "Order Confirmation",
-        `Thank you for your order 💅 Your tracking number is: ${order.trackingCode}`
-      );
+    if (userId && order?.totalAmount) {
+      const user = await prisma.user.findUnique({ where: { id: userId } });
 
-      await sendEmail(
-        process.env.ADMIN_EMAIL || "admin@example.com",
-        "🛍️ New Order Received",
-        `
-        <h2>New Order Received</h2>
-        <p><strong>Order ID:</strong> ${order.id}</p>
-        <p><strong>Email:</strong> ${order.email}</p>
-        <p><strong>Total:</strong> $${order.totalAmount}</p>
-        `
-      );
-      console.log("📧 Order confirmation emails sent");
-    } catch (err) {
-      console.error("❌ Failed to send confirmation emails:", err);
+      if (user) {
+        const currentPoints = user.points;
+        const newPoints = Math.max(currentPoints - pointsUsed);
+
+        await prisma.user.update({
+          where: { id: userId },
+          data: { points: newPoints },
+        });
+
+        console.log(`✨ Final Points: ${newPoints} (Used: ${pointsUsed}, Earned: ${pointsEarned})`);
+      } else {
+        console.warn(`⚠️ User not found for ID: ${userId}`);
+      }
     }
   } catch (err) {
     console.error("❌ Error in processCheckoutSession:", err);
   }
 };
-

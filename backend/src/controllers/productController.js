@@ -126,6 +126,7 @@ export const getAllProducts = async (req, res) => {
         title: true,
         price: true,
         bestSeller: true,
+        image: true,
         quantity: true, // ✅ Include stock quantity
         category: { select: { name: true } }
       },

@@ -12,7 +12,7 @@ export default function CheckoutPage() {
   const [shippingInfo, setShippingInfo] = useState<CheckoutFormData | null>(null);
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
   const [loading, setLoading] = useState(true);
-  
+
   useEffect(() => {
     if (!user) {
       toast.error("You need to be logged in to checkout.");
@@ -27,7 +27,7 @@ export default function CheckoutPage() {
         });
 
         if (!response.ok) throw new Error("Failed to fetch user profile.");
-        
+
         const data = await response.json();
         setShippingInfo({ ...data, pointsUsed: 0 });
       } catch (err) {
@@ -38,7 +38,6 @@ export default function CheckoutPage() {
 
     fetchUserData();
 
-    // ✅ Load cart items from localStorage safely
     const storedCart = localStorage.getItem("cart");
     if (storedCart) {
       try {
@@ -79,33 +78,16 @@ export default function CheckoutPage() {
   const userPoints = shippingInfo?.points || 0;
 
   const handleOrderSubmit = async (data: CheckoutFormData, pointsUsed: number) => {
-    let discount = 0;
-    if (pointsUsed === 50) discount = totalAmount * 0.05;
-    if (pointsUsed === 100) discount = totalAmount * 0.10;
-
-    const discountedAmount = Math.max(0, totalAmount - discount);
-
-    console.log("📦 Order Details:", JSON.stringify(cartItems, null, 2));
-
-    const orderData: OrderData = {
-      userId: user.id,
-      email: user.email,
-      items: cartItems,
-      totalAmount: discountedAmount,
-      status: "Pending",
-      trackingCode: "Processing",
-      shippingInfo: { ...data, pointsUsed },
-      pointsUsed: pointsUsed,
-    };
+    const discount = pointsUsed === 100 ? 0.10 : pointsUsed === 50 ? 0.05 : 0;
 
     try {
-      const res = await fetch("http://localhost:3001/orders", {
+      const res = await fetch("http://localhost:3001/checkout/create-checkout-session", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${user.token}`,
         },
-        body: JSON.stringify(orderData),
+        body: JSON.stringify({ items: cartItems, pointsUsed }),
       });
 
       if (!res.ok) {
@@ -113,25 +95,10 @@ export default function CheckoutPage() {
         throw new Error(errorData.message || "Unknown server error");
       }
 
-      const responseData = await res.json();
-      console.log("✅ Order Success:", responseData);
-
-      localStorage.setItem(
-        "latestOrder",
-        JSON.stringify({
-          orderId: responseData.order.id,
-          trackingCode: responseData.order.trackingCode,
-          estimatedDelivery: responseData.order.estimatedDelivery,
-          pointsUsed,
-          discountApplied: discount.toFixed(2),
-        })
-      );
-
-      localStorage.removeItem("cart");
-      toast.success("🎉 Order placed successfully!");
-      setTimeout(() => router.push("/order-confirmation"), 2000);
+      const { url } = await res.json();
+      window.location.href = url;
     } catch (error) {
-      console.error("❌ Error placing order:", error);
+      console.error("❌ Error starting Stripe session:", error);
       toast.error(error instanceof Error ? error.message : "An unknown error occurred.");
     }
   };

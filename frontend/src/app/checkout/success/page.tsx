@@ -10,9 +10,36 @@ export default function SuccessPage() {
 
   useEffect(() => {
     const sessionOrderId = searchParams.get("session_id");
-    if (sessionOrderId) {
+  
+    if (sessionOrderId && !localStorage.getItem(`pointsFinalized-${sessionOrderId}`)) {
       setOrderId(sessionOrderId);
       toast.success("🎉 Order placed successfully!");
+  
+      // ⛔ Prevent double trigger immediately
+      localStorage.setItem(`pointsFinalized-${sessionOrderId}`, "true");
+  
+      const finalizePoints = async () => {
+        try {
+          const response = await fetch("http://localhost:3001/checkout/finalize-points", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ sessionId: sessionOrderId }),
+          });
+  
+          const result = await response.json();
+          if (response.ok) {
+            console.log("🟢 Points finalized:", result);
+          } else {
+            console.error("⚠️ Failed to finalize points:", result.message);
+          }
+        } catch (err) {
+          console.error("❌ Error finalizing points:", err);
+        }
+      };
+  
+      finalizePoints();
     }
   }, [searchParams]);
 
