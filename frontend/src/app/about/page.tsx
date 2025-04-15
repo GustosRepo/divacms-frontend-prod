@@ -50,19 +50,19 @@ export default function About() {
             
             {/* Testimonial 1 */}
             <div className="bg-white p-6 rounded-xl shadow-lg w-80 border border-gray-200 hover:shadow-xl transition transform hover:-translate-y-2">
-              <p className="text-gray-700">"Literally obsessed! So easy to apply & last for weeks!"</p>
+              <p className="text-gray-700">&quot;Literally obsessed! So easy to apply &amp; last for weeks!&quot;</p>
               <h3 className="text-sm font-bold mt-3">– Sophia R.</h3>
             </div>
 
             {/* Testimonial 2 */}
             <div className="bg-white p-6 rounded-xl shadow-lg w-80 border border-gray-200 hover:shadow-xl transition transform hover:-translate-y-2">
-              <p className="text-gray-700">"Salon-quality nails without the price tag. Love it!"</p>
+              <p className="text-gray-700">&quot;Salon-quality nails without the price tag. Love it!&quot;</p>
               <h3 className="text-sm font-bold mt-3">– Emily K.</h3>
             </div>
 
             {/* Testimonial 3 */}
             <div className="bg-white p-6 rounded-xl shadow-lg w-80 border border-gray-200 hover:shadow-xl transition transform hover:-translate-y-2">
-              <p className="text-gray-700">"Game changer! So pretty and reusable. 100% recommended!"</p>
+              <p className="text-gray-700">&quot;Game changer! So pretty and reusable. 100% recommended!&quot;</p>
               <h3 className="text-sm font-bold mt-3">– Jasmine P.</h3>
             </div>
           </div>
@@ -95,7 +95,7 @@ export default function About() {
 
         {/* 🔹 Footer */}
         <footer className="mt-24 text-gray-700 text-sm">
-          © 2025 **Diva Nails Factory** |  
+          © 2025 <strong>Diva Nails Factory</strong> |  
           <a href="/contact" className="ml-2 hover:text-pink-500 transition">Contact Us</a>
         </footer>
 

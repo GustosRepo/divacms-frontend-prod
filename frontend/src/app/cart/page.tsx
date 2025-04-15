@@ -35,7 +35,7 @@ export default function CartPage() {
                   src={
                     product.image.startsWith("http")
                       ? product.image
-                      : `http://localhost:3001${product.image}`
+                      : `${process.env.NEXT_PUBLIC_API_URL}${product.image}`
                   }
                   alt={product.title}
                   width={80}

@@ -14,7 +14,7 @@ export default function AboutSection() {
       {/* Image */}
       <div className="relative flex justify-center mt-6">
         <Image
-          src={"http://localhost:3001/uploads/aboutplace.jpg"}
+          src={"${process.env.NEXT_PUBLIC_API_URL}/uploads/aboutplace.jpg"}
           alt="About Diva Factory Nails"
           width={500}
           height={300}

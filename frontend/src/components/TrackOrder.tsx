@@ -8,7 +8,7 @@ export default function TrackOrder() {
 
   const trackOrder = async () => {
     const res = await fetch(
-      `http://localhost:3001/orders/track?orderId=${orderId}&email=${email}`
+      `${process.env.NEXT_PUBLIC_API_URL}/orders/track?orderId=${orderId}&email=${email}`
     );
     if (!res.ok) return alert("Order not found.");
     

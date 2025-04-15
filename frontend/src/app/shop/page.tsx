@@ -20,7 +20,7 @@ export default function Shop() {
 
   useEffect(() => {
     console.log("📡 Fetching products from API...");
-    fetch("http://localhost:3001/products")
+    fetch("${process.env.NEXT_PUBLIC_API_URL}/products")
       .then(async (res) => {
         console.log("🔍 API Response Status:", res.status);
         if (!res.ok) throw new Error(`HTTP error! Status: ${res.status}`);
@@ -88,7 +88,7 @@ export default function Shop() {
                         product.image
                           ? product.image.startsWith("http")
                             ? product.image
-                            : `http://localhost:3001${product.image}`
+                            : `${process.env.NEXT_PUBLIC_API_URL}${product.image}`
                           : "/placeholder.jpg" // ✅ Fallback image
                       }
                       alt={product.title}
@@ -103,7 +103,7 @@ export default function Shop() {
                       product.image
                         ? product.image.startsWith("http")
                           ? product.image
-                          : `http://localhost:3001${product.image}`
+                          : `${process.env.NEXT_PUBLIC_API_URL}${product.image}`
                         : "/placeholder.jpg" // ✅ Fallback image
                     }
                     alt={product.title}

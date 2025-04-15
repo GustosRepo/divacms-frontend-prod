@@ -71,7 +71,7 @@ export default function CheckoutForm({ onSubmit, defaultValues, totalAmount, use
 
       console.log("📩 Sending checkout request with body:", requestBody);
 
-      const response = await fetch("http://localhost:3001/checkout/create-checkout-session", {
+      const response = await fetch("${process.env.NEXT_PUBLIC_API_URL}/checkout/create-checkout-session", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

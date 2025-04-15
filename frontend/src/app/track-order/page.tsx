@@ -25,7 +25,7 @@ export default function TrackOrderPage() {
     }
 
     try {
-      const res = await fetch(`http://localhost:3001/orders/track?orderId=${orderId}&email=${email}`);
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/orders/track?orderId=${orderId}&email=${email}`);
       const data = await res.json();
 
       if (!res.ok) throw new Error(data.message || "Order not found.");

@@ -16,7 +16,7 @@ export default function ProductList() {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    fetch("http://localhost:3001/products")
+    fetch("${process.env.NEXT_PUBLIC_API_URL}/products")
       .then(async (res) => {
         if (!res.ok) throw new Error(`HTTP error! Status: ${res.status}`);
         return res.json();

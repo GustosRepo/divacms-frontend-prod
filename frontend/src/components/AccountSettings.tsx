@@ -20,7 +20,7 @@ export default function AccountSettings() {
   
     const fetchProfile = async () => {
       try {
-        const res = await fetch(`http://localhost:3001/users/${user.id}`, {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/users/${user.id}`, {
           headers: { Authorization: `Bearer ${user.token}` },
         });
   
@@ -57,7 +57,7 @@ export default function AccountSettings() {
     console.log("📤 Sending profile update:", formData); // ✅ Log request data
   
     try {
-      const res = await fetch("http://localhost:3001/users/update", {
+      const res = await fetch("${process.env.NEXT_PUBLIC_API_URL}/users/update", {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",

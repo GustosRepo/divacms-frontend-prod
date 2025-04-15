@@ -2,7 +2,6 @@
 import { useEffect, useState } from "react";
 import { useAuth } from "@/context/AuthContext";
 import { useRouter } from "next/navigation";
-import AdminSidebar from "@/components/AdminSidebar";
 import Link from "next/link";
 
 export default function AdminDashboard() {
@@ -23,7 +22,7 @@ export default function AdminDashboard() {
   useEffect(() => {
     const fetchStats = async () => {
       try {
-        const res = await fetch("http://localhost:3001/admin/dashboard-stats", {
+        const res = await fetch("${process.env.NEXT_PUBLIC_API_URL}/admin/dashboard-stats", {
           headers: { Authorization: `Bearer ${user?.token}` },
         });
 

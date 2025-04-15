@@ -23,7 +23,7 @@ export default function MyOrders() {
     if (!confirmCancel) return;
   
     try {
-      const res = await fetch(`http://localhost:3001/orders/${orderId}/cancel`, {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/orders/${orderId}/cancel`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -51,7 +51,7 @@ export default function MyOrders() {
     if (!user) return;
     const fetchOrders = async () => {
       try {
-        const response = await fetch("http://localhost:3001/orders/my-orders", {
+        const response = await fetch("${process.env.NEXT_PUBLIC_API_URL}/orders/my-orders", {
           method: "GET",
           headers: {
             "Content-Type": "application/json",

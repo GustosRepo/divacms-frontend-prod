@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useCart } from "@/context/CartContext";
 
+
 export default function OrderConfirmation() {
   const { clearCart } = useCart();
   const [orderId, setOrderId] = useState<string | null>(null);
@@ -50,7 +51,7 @@ export default function OrderConfirmation() {
       <p className="mt-2">
         <strong>Discount Applied:</strong> ${discountApplied}
       </p>
-      <p className="mt-2">You'll receive a confirmation email shortly with your order details.</p>
+      <p className="mt-2">You will receive a confirmation email shortly with your order details</p>
       <p className="mt-2 text-sm text-gray-300">
         Estimated Delivery: <span className="font-semibold">5-7 Business Days</span>
       </p>

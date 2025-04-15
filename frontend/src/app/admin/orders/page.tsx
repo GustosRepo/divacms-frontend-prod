@@ -26,7 +26,7 @@ export default function ManageOrders() {
 
     const fetchOrders = async () => {
       try {
-        const res = await fetch("http://localhost:3001/orders/admin/orders", {
+        const res = await fetch("${process.env.NEXT_PUBLIC_API_URL}/orders/admin/orders", {
           headers: { Authorization: `Bearer ${user.token}` },
         });
 
@@ -67,8 +67,8 @@ export default function ManageOrders() {
     try {
       const endpoint =
         newStatus === "Canceled"
-          ? `http://localhost:3001/orders/${orderId}/cancel`
-          : `http://localhost:3001/orders/admin/orders/${orderId}`;
+          ? `${process.env.NEXT_PUBLIC_API_URL}/orders/${orderId}/cancel`
+          : `${process.env.NEXT_PUBLIC_API_URL}/orders/admin/orders/${orderId}`;
 
       const res = await fetch(endpoint, {
         method: "PUT",
@@ -107,7 +107,7 @@ export default function ManageOrders() {
 
     try {
       const res = await fetch(
-        `http://localhost:3001/orders/admin/orders/${orderId}`,
+        `${process.env.NEXT_PUBLIC_API_URL}/orders/admin/orders/${orderId}`,
         {
           method: "DELETE",
           headers: { Authorization: `Bearer ${user?.token}` },

@@ -16,7 +16,7 @@ export default function BestSellers() {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    fetch("http://localhost:3001/products/best-sellers")
+    fetch("${process.env.NEXT_PUBLIC_API_URL}/products/best-sellers")
       .then(async (res) => {
         if (!res.ok) {
           throw new Error(`HTTP error! Status: ${res.status}`);
@@ -64,7 +64,7 @@ export default function BestSellers() {
                   src={
                     product.image.startsWith("http")
                       ? product.image
-                      : `http://localhost:3001${product.image}`
+                      : `${process.env.NEXT_PUBLIC_API_URL}${product.image}`
                   }
                   alt={product.title}
                   width={400}

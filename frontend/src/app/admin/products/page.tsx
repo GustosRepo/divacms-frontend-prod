@@ -29,7 +29,7 @@ export default function ManageProducts() {
 
     const fetchProducts = async () => {
       try {
-        const res = await fetch("http://localhost:3001/products", {
+        const res = await fetch("${process.env.NEXT_PUBLIC_API_URL}/products", {
           headers: { Authorization: `Bearer ${user.token}` },
         });
 
@@ -53,7 +53,7 @@ export default function ManageProducts() {
     if (!confirm("Are you sure you want to delete this product?")) return;
 
     try {
-      const res = await fetch(`http://localhost:3001/admin/products/${id}`, {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/admin/products/${id}`, {
         method: "DELETE",
         headers: { Authorization: `Bearer ${user?.token}` },
       });

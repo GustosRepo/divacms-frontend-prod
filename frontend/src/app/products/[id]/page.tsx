@@ -23,7 +23,7 @@ export default function ProductPage() {
   useEffect(() => {
     if (!id) return;
 
-    fetch(`http://localhost:3001/products/${id}`)
+    fetch(`${process.env.NEXT_PUBLIC_API_URL}/products/${id}`)
       .then(async (res) => {
         if (!res.ok) throw new Error(`HTTP error! Status: ${res.status}`);
         return res.json();
@@ -46,7 +46,7 @@ export default function ProductPage() {
             src={
               product.image.startsWith("http")
                 ? product.image
-                : `http://localhost:3001${product.image}`
+                : `${process.env.NEXT_PUBLIC_API_URL}${product.image}`
             }
             alt={product.title}
             width={500}
@@ -100,11 +100,11 @@ export default function ProductPage() {
         <h2 className="text-2xl font-bold text-center">💖 Customer Reviews 💖</h2>
         <div className="mt-6 space-y-6">
           <div className="bg-black/20 p-4 rounded-lg shadow-lg">
-            <p className="text-lg">"Absolutely love these nails! So easy to apply and lasted weeks!"</p>
+            <p className="text-lg">&quot;Absolutely love these nails! So easy to apply and lasted weeks!&quot;</p>
             <p className="text-sm text-gray-400 mt-2">⭐⭐⭐⭐⭐ - Emily R.</p>
           </div>
           <div className="bg-black/20 p-4 rounded-lg shadow-lg">
-            <p className="text-lg">"The quality is amazing! The cutest press-on nails ever!"</p>
+            <p className="text-lg">&quot;The quality is amazing! The cutest press-on nails ever!&quot;</p>
             <p className="text-sm text-gray-400 mt-2">⭐⭐⭐⭐⭐ - Sophia L.</p>
           </div>
         </div>

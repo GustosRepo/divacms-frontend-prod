@@ -24,7 +24,7 @@ export default function ProductPage() {
   useEffect(() => {
     if (!id) return;
 
-    fetch(`http://localhost:3001/products/${id}`)
+    fetch(`${process.env.NEXT_PUBLIC_API_URL}/products/${id}`)
       .then(async (res) => {
         if (!res.ok) throw new Error(`HTTP error! Status: ${res.status}`);
         return res.json();
@@ -42,7 +42,7 @@ export default function ProductPage() {
     <div className="container mx-auto px-6 py-10 text-white">
       <div className="flex flex-col md:flex-row items-center gap-10">
         <Image
-          src={product.image.startsWith("http") ? product.image : `http://localhost:3001${product.image}`}
+          src={product.image.startsWith("http") ? product.image : `${process.env.NEXT_PUBLIC_API_URL}${product.image}`}
           alt={product.title}
           width={500}
           height={500}

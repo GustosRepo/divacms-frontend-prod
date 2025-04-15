@@ -25,7 +25,7 @@ export default function OrderHistoryPage() {
       return;
     }
 
-    fetch(`http://localhost:3001/api/orders/my-orders`, {
+    fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/orders/my-orders`, {
       headers: {
         Authorization: `Bearer ${user?.token || ""}`,
       },
@@ -34,11 +34,11 @@ export default function OrderHistoryPage() {
       .then((data) => setOrders(data))
       .catch(() => setError("Failed to load orders."))
       .finally(() => setLoading(false));
-  }, [user]);
+  }, [user, router]);
 
   const cancelOrder = async (orderId: string) => {
     try {
-      const res = await fetch(`http://localhost:3001/api/orders/${orderId}/cancel`, {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/orders/${orderId}/cancel`, {
         method: "PUT", // <-- Correct method!
         headers: {
           Authorization: `Bearer ${user?.token || ""}`,
@@ -66,7 +66,7 @@ export default function OrderHistoryPage() {
       <h1 className="text-3xl font-bold text-center">📦 My Orders</h1>
 
       {orders.length === 0 ? (
-        <p className="text-gray-400 text-center mt-6">You haven't placed any orders yet.</p>
+        <p className="text-gray-400 text-center mt-6">You haven&apos;t placed any orders yet.</p>
       ) : (
         <div className="mt-6 space-y-6">
           {orders.map((order) => (

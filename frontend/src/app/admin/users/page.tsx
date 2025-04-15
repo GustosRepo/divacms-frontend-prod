@@ -22,7 +22,7 @@ export default function AdminUsersPage() {
 
     const fetchUsers = async () => {
       try {
-        const res = await fetch("http://localhost:3001/admin/users", {
+        const res = await fetch("${process.env.NEXT_PUBLIC_API_URL}/admin/users", {
           headers: { Authorization: `Bearer ${user.token}` },
         });
 
@@ -44,7 +44,7 @@ export default function AdminUsersPage() {
     if (!user || !user.token) return;
   
     try {
-      const res = await fetch(`http://localhost:3001/admin/users/${userId}`, {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/admin/users/${userId}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -83,7 +83,7 @@ export default function AdminUsersPage() {
     if (!confirm("Are you sure you want to delete this user?")) return;
 
     try {
-      const res = await fetch(`http://localhost:3001/admin/users/${userId}`, {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/admin/users/${userId}`, {
         method: "DELETE",
         headers: { Authorization: `Bearer ${user.token}` },
       });

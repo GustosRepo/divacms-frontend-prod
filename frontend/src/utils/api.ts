@@ -1,4 +1,4 @@
-const API_BASE_URL = "http://localhost:3001"; // Update when deploying
+const API_BASE_URL = "${process.env.NEXT_PUBLIC_API_URL}"; // Update when deploying
 
 export const fetchProducts = async () => {
   const res = await fetch(`${API_BASE_URL}/products`);

@@ -15,7 +15,7 @@ export default function ProductCard({ product }: { product: Product }) {
         src={
           product.image && product.image.startsWith("http")
             ? product.image
-            : `http://localhost:3001/uploads/placeholder.jpg`
+            : `${process.env.NEXT_PUBLIC_API_URL}/uploads/placeholder.jpg`
         }
         alt={product.title}
         width={220}  // Adjusted width

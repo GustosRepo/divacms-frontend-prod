@@ -28,12 +28,11 @@ export default function AddProduct() {
 
   const [categories, setCategories] = useState<{ id: string; name: string }[]>([]);
   const [categoryName, setCategoryName] = useState<string>("");
-  const [message, setMessage] = useState<string>("");
 
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const res = await fetch("http://localhost:3001/categories");
+        const res = await fetch("${process.env.NEXT_PUBLIC_API_URL}/categories");
         if (!res.ok) throw new Error("Failed to fetch categories.");
         const data = await res.json();
         setCategories(data);
@@ -105,7 +104,7 @@ export default function AddProduct() {
     console.log("📝 FormData before sending:", [...formData.entries()]);
   
     try {
-      const res = await fetch("http://localhost:3001/products", {
+      const res = await fetch("${process.env.NEXT_PUBLIC_API_URL}/products", {
         method: "POST",
         headers: { Authorization: `Bearer ${user.token}` }, // ✅ Pass token for authentication
         body: formData, // ✅ Send as FormData for proper file upload
@@ -128,8 +127,6 @@ export default function AddProduct() {
   return (
     <div className="container mx-auto p-6 text-white">
       <h1 className="text-3xl font-bold text-center">Add New Product</h1>
-
-      {message && <p className="text-center text-green-500">{message}</p>}
 
       <form onSubmit={handleSubmit} className="bg-gray-800 p-6 rounded-lg shadow-md max-w-lg mx-auto mt-6">
         <label className="block text-white">Title:</label>

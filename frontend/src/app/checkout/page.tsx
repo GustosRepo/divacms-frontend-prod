@@ -4,7 +4,7 @@ import { useRouter } from "next/navigation";
 import { toast } from "react-hot-toast";
 import { useAuth } from "@/context/AuthContext";
 import CheckoutForm from "@/components/CheckoutForm";
-import { CheckoutFormData, CartItem, OrderData } from "@/types/checkout";
+import { CheckoutFormData, CartItem } from "@/types/checkout";
 
 export default function CheckoutPage() {
   const { user } = useAuth();
@@ -22,7 +22,7 @@ export default function CheckoutPage() {
 
     const fetchUserData = async () => {
       try {
-        const response = await fetch(`http://localhost:3001/users/${user.id}`, {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/users/${user.id}`, {
           headers: { Authorization: `Bearer ${user.token}` },
         });
 
@@ -62,7 +62,7 @@ export default function CheckoutPage() {
     }
 
     setLoading(false);
-  }, [user]);
+  }, [user, router]);
 
   if (loading) {
     return (
@@ -78,10 +78,9 @@ export default function CheckoutPage() {
   const userPoints = shippingInfo?.points || 0;
 
   const handleOrderSubmit = async (data: CheckoutFormData, pointsUsed: number) => {
-    const discount = pointsUsed === 100 ? 0.10 : pointsUsed === 50 ? 0.05 : 0;
 
     try {
-      const res = await fetch("http://localhost:3001/checkout/create-checkout-session", {
+      const res = await fetch("${process.env.NEXT_PUBLIC_API_URL}/checkout/create-checkout-session", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

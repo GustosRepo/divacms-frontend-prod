@@ -28,7 +28,7 @@ export default function AuthForm({ isLogin = true }) {
         await login(formData.email, formData.password); // ✅ Use AuthContext login function
       } else {
         // Handle register separately (existing API call)
-        const response = await fetch("http://localhost:3001/auth/register", {
+        const response = await fetch("${process.env.NEXT_PUBLIC_API_URL}/auth/register", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(formData),

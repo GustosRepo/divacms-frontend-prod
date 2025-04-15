@@ -20,7 +20,7 @@ export default function SuccessPage() {
   
       const finalizePoints = async () => {
         try {
-          const response = await fetch("http://localhost:3001/checkout/finalize-points", {
+          const response = await fetch("${process.env.NEXT_PUBLIC_API_URL}/checkout/finalize-points", {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
