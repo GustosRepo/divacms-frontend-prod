@@ -16,7 +16,7 @@ const oAuth2Client = new google.auth.OAuth2(
 
 oAuth2Client.setCredentials({ refresh_token: REFRESH_TOKEN });
 
-const sendEmail = async (to, subject, text, replyTo) => {
+const sendEmail = async (to, subject, htmlContent, replyTo) => {
   try {
     const accessToken = await oAuth2Client.getAccessToken();
 
@@ -24,7 +24,7 @@ const sendEmail = async (to, subject, text, replyTo) => {
       service: "gmail",
       auth: {
         type: "OAuth2",
-        user: "natnaree@divafactorynails.com", // your Gmail
+        user: "natnaree@divafactorynails.com",
         clientId: CLIENT_ID,
         clientSecret: CLIENT_SECRET,
         refreshToken: REFRESH_TOKEN,
@@ -36,7 +36,7 @@ const sendEmail = async (to, subject, text, replyTo) => {
       from: `"Diva Nails" <support@divafactorynails.com>`,
       to,
       subject,
-      text,
+      html: htmlContent,
       replyTo,
     });
 

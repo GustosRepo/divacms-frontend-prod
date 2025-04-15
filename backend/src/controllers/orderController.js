@@ -1,5 +1,5 @@
 import pkg from "@prisma/client";
-const { PrismaClient } = pkg;
+import sendEmail from "../services/emailServices.js";const { PrismaClient } = pkg;
 
 const prisma = new PrismaClient();
 
@@ -195,12 +195,10 @@ export const updateOrderStatus = async (req, res) => {
 
   // ✅ Ensure status is valid
   if (!["Pending", "Shipped", "Delivered", "Canceled"].includes(status)) {
-    return res
-      .status(400)
-      .json({
-        message:
-          "Invalid status. Must be Pending, Shipped, Delivered, or Canceled.",
-      });
+    return res.status(400).json({
+      message:
+        "Invalid status. Must be Pending, Shipped, Delivered, or Canceled.",
+    });
   }
 
   try {
@@ -210,7 +208,6 @@ export const updateOrderStatus = async (req, res) => {
       return res.status(404).json({ message: "Order not found." });
     }
 
-    // ✅ Ensure trackingCode is added when marking as "Shipped"
     let updateData = { status };
     if (status === "Shipped" && trackingCode) {
       updateData.trackingCode = trackingCode;
@@ -222,12 +219,20 @@ export const updateOrderStatus = async (req, res) => {
       data: updateData,
     });
 
+    // ✅ If shipped, send tracking email
+    if (status === "Shipped" && trackingCode) {
+      try {
+        await sendShippingNotification(orderId);
+        console.log(`📦 Shipping notification sent to ${updatedOrder.email}`);
+      } catch (err) {
+        console.error("❌ Failed to send shipping notification email:", err);
+      }
+    }
+
     res.json(updatedOrder);
   } catch (error) {
     console.error("❌ Error updating order:", error);
-    res
-      .status(500)
-      .json({ message: "Error updating order", error: error.message });
+    res.status(500).json({ message: "Error updating order", error: error.message });
   }
 };
 // 🔹 Delete order (Admin Only)
@@ -427,36 +432,31 @@ export const trackOrder = async (req, res) => {
 export const cancelOrder = async (req, res) => {
   try {
     const { orderId } = req.params;
-    const userId = req.user?.userId; // Ensure only the user who placed the order can cancel it
+    const userId = req.user?.id;
 
-    // ✅ Fetch the order
+
+    // ✅ Use orderId field, not id
     const order = await prisma.order.findUnique({
-      where: { id: orderId },
-    });
+      where: { id: orderId }    });
 
     if (!order) {
       return res.status(404).json({ message: "Order not found." });
     }
 
-    // ✅ Ensure only the correct user or admin can cancel
     if (order.userId !== userId && req.user.role !== "admin") {
       return res
         .status(403)
         .json({ message: "Unauthorized to cancel this order." });
     }
 
-    // ✅ Only allow cancellation if order is still pending
     if (order.status !== "Pending") {
       return res
         .status(400)
-        .json({
-          message: "Order cannot be canceled after it has been processed.",
-        });
+        .json({ message: "Order cannot be canceled after it has been processed." });
     }
 
-    // ✅ Cancel the order
     await prisma.order.update({
-      where: { id: orderId },
+      where: { id: orderId }, // ✅ FIXED
       data: { status: "Canceled" },
     });
 
@@ -464,9 +464,7 @@ export const cancelOrder = async (req, res) => {
     res.json({ message: "Order successfully canceled." });
   } catch (error) {
     console.error("❌ Error canceling order:", error);
-    res
-      .status(500)
-      .json({ message: "Error canceling order", details: error.message });
+    res.status(500).json({ message: "Error canceling order", details: error.message });
   }
 };
 
@@ -492,4 +490,20 @@ export const getOrderById = async (req, res) => {
   }
 };
 
+export const sendShippingNotification = async (orderId) => {
+  const order = await prisma.order.findUnique({ where: { id: orderId } });
+  if (!order || !order.email || !order.trackingCode) return;
 
+  await sendEmail(
+    order.email,
+    "🎉 Your Order Has Shipped!",
+    `
+      <p>Hey Diva💅</p>
+      <p>Your order has officially shipped!</p>
+      <p><strong>Tracking Code:</strong> ${order.trackingCode}</p>
+      <p>You can expect your order soon. Thanks again for shopping with us 💖</p>
+    `
+  );
+
+  console.log(`📦 Shipping email sent to ${order.email}`);
+};
