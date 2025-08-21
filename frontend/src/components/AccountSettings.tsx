@@ -57,7 +57,7 @@ export default function AccountSettings() {
     console.log("📤 Sending profile update:", formData); // ✅ Log request data
   
     try {
-      const res = await fetch("${process.env.NEXT_PUBLIC_API_URL}/users/update", {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/users/update`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",

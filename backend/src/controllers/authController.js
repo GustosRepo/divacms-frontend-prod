@@ -1,26 +1,34 @@
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
-import pkg from "@prisma/client";
-const { PrismaClient } = pkg;
+import supabase from "../../supabaseClient.js";
 
-const prisma = new PrismaClient();
-const JWT_SECRET = process.env.JWT_SECRET || "supersecretkey"; // Secure this in production
+const JWT_SECRET = process.env.JWT_SECRET;
 
 // 🔹 Register a new user
 export const registerUser = async (req, res) => {
   const { name, email, password } = req.body;
 
   try {
-    const existingUser = await prisma.user.findUnique({ where: { email } });
+    // Check if user exists
+    const { data: existingUser, error: findError } = await supabase
+      .from("user")
+      .select("*")
+      .eq("email", email)
+      .single();
     if (existingUser) {
       return res.status(400).json({ message: "User already exists" });
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    const newUser = await prisma.user.create({
-      data: { name, email, password: hashedPassword, role: "customer" },
-    });
+    const { data: newUser, error: createError } = await supabase
+      .from("user")
+      .insert([
+        { name, email, password: hashedPassword, role: "customer" }
+      ])
+      .select()
+      .single();
+    if (createError) throw createError;
 
     const token = jwt.sign(
       { userId: newUser.id, role: newUser.role },
@@ -41,9 +49,17 @@ export const registerUser = async (req, res) => {
 export const loginUser = async (req, res) => {
   const { email, password } = req.body;
 
+  if (!JWT_SECRET) {
+    return res.status(500).json({ message: "JWT_SECRET not set in environment" });
+  }
+
   try {
     // Check if user exists
-    const user = await prisma.user.findUnique({ where: { email } });
+    const { data: user, error: findError } = await supabase
+      .from("user")
+      .select("*")
+      .eq("email", email)
+      .single();
     if (!user) {
       return res.status(400).json({ message: "Invalid credentials" });
     }
@@ -56,14 +72,20 @@ export const loginUser = async (req, res) => {
 
     // Generate JWT token
     const token = jwt.sign(
-      { userId: user.id, role: user.role , isAdmin: user.role === "admin" },
+      { userId: user.id, role: user.role, isAdmin: user.role === "admin" },
       JWT_SECRET,
       { expiresIn: "1h" }
     );
 
     res.status(200).json({
       token,
-      user: { id: user.id, name: user.name, email: user.email, role: user.role, isAdmin: user.role === "admin" },
+      user: {
+        id: user.id,
+        name: user.name,
+        email: user.email,
+        role: user.role,
+        isAdmin: user.role === "admin"
+      },
     });
   } catch (error) {
     res.status(500).json({ message: "Server error", error: error.message });
@@ -79,10 +101,13 @@ export const promoteToAdmin = async (req, res) => {
       return res.status(403).json({ message: "Access denied: Admins only" });
     }
 
-    const updatedUser = await prisma.user.update({
-      where: { id: userId },
-      data: { role: "admin" },
-    });
+    const { data: updatedUser, error } = await supabase
+      .from("user")
+      .update({ role: "admin" })
+      .eq("id", userId)
+      .select()
+      .single();
+    if (error) throw error;
 
     res.json({ message: "User promoted to admin", user: updatedUser });
   } catch (error) {

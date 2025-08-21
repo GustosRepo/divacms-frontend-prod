@@ -1,8 +1,24 @@
-import pkg from "@prisma/client";
-import sendEmail from "../services/emailServices.js";const { PrismaClient } = pkg;
+import sendEmail from "../services/emailServices.js";
+import supabase from "../../supabaseClient.js";
+import { decrementProductQuantity } from "./productController.js";
+import { incrementProductQuantity } from "./productController.js"; // NEW
 
-const prisma = new PrismaClient();
+// Send shipping notification email
+export async function sendShippingNotification(orderId) {
+  // Fetch order details (email, tracking_code, etc.)
+  const { data: order, error } = await supabase
+    .from("order")
+    .select("email, tracking_code")
+    .eq("id", orderId)
+    .single();
+  if (error || !order) throw new Error("Order not found for shipping notification");
 
+  const subject = "Your Diva Nails Order Has Shipped!";
+  const htmlContent = `<p>Thank you for your order 💅 Your tracking number is: <b>${order.tracking_code}</b></p>`;
+  await sendEmail(order.email, subject, htmlContent);
+}
+
+// 🔹 Get all orders (Admin)
 export const getAllOrders = async (req, res) => {
   try {
     let { status, startDate, endDate, sort, page = 1, limit = 10 } = req.query;
@@ -19,45 +35,40 @@ export const getAllOrders = async (req, res) => {
     let filters = {};
     if (status) filters.status = status;
     if (startDate || endDate) {
-      filters.createdAt = {};
-      if (startDate) filters.createdAt.gte = new Date(startDate);
-      if (endDate) filters.createdAt.lte = new Date(endDate);
+      filters.created_at = {};
+      if (startDate) filters.created_at.gte = startDate;
+      if (endDate) filters.created_at.lte = endDate;
     }
 
     // Get total count for pagination
-    const totalOrders = await prisma.order.count({ where: filters });
+    const { count: totalOrders, error: countError } = await supabase
+      .from("order")
+      .select("id", { count: "exact", head: true })
+      .match(filters);
+    if (countError) throw countError;
 
     // Fetch orders with filters, pagination, and sorting
-    const orders = await prisma.order.findMany({
-      where: filters,
-      skip: (page - 1) * limit,
-      take: limit,
-      orderBy: { createdAt: "desc" },
-      include: {
-        User: {
-          select: {
-            email: true,
-          },
-        },
-        OrderItem: {
-          include: {
-            Product: {
-              select: {
-                title: true,
-                price: true,
-              },
-            },
-          },
-        },
-      },
-    });
+    const { data: orders, error } = await supabase
+      .from("order")
+      .select("*, user!fk_user(email), order_item!fk_order(*, product!fk_product(title, price))")
+      .match(filters)
+      .order("created_at", { ascending: false })
+      .range((page - 1) * limit, page * limit - 1);
+    if (error) throw error;
+
+    // Map total_amount to totalAmount for each order
+    // Map total_amount to totalAmount for each order
+    const cleanedOrders = orders.map(order => ({
+      ...order,
+      totalAmount: order.total_amount,
+    }));
 
     res.json({
       page,
       limit,
       totalOrders,
       totalPages: Math.ceil(totalOrders / limit),
-      orders,
+      orders: cleanedOrders,
     });
   } catch (error) {
     res.status(500).json({ message: "Server error", error: error.message });
@@ -68,10 +79,12 @@ export const getAllOrders = async (req, res) => {
 export const getMyOrders = async (req, res) => {
   try {
     const userId = req.user.userId;
-    const orders = await prisma.order.findMany({
-      where: { userId },
-      include: { product: true },
-    });
+    const { data: orders, error } = await supabase
+      .from("order")
+      .select("*, order_item!fk_order(*, product!fk_product(title, price))")
+      .eq("user_id", userId);
+
+    if (error) throw error;
 
     if (orders.length === 0) {
       return res
@@ -79,7 +92,16 @@ export const getMyOrders = async (req, res) => {
         .json({ message: "No orders found for this user." });
     }
 
-    res.json(orders);
+    // Normalize DB snake_case fields to frontend-friendly camelCase
+    const cleaned = orders.map((o) => ({
+      ...o,
+      totalAmount: o.total_amount,
+      trackingCode: o.tracking_code,
+      // Keep shipping_info as-is but also provide top-level fields if needed
+      shippingInfo: o.shipping_info || null,
+    }));
+
+    res.json(cleaned);
   } catch (error) {
     res
       .status(500)
@@ -87,6 +109,7 @@ export const getMyOrders = async (req, res) => {
   }
 };
 
+// 🔹 Create a new order with validation
 // 🔹 Create a new order with validation
 export const createOrder = async (req, res) => {
   const {
@@ -100,91 +123,123 @@ export const createOrder = async (req, res) => {
     pointsUsed,
   } = req.body;
 
-  if (!userId || !email || !items || items.length === 0 || !shippingInfo) {
+  console.log("[createOrder] Incoming order data:", req.body);
+
+  // Required: userId, email, items (non-empty), shippingInfo
+  if (!userId || !email || !Array.isArray(items) || items.length === 0 || !shippingInfo) {
     return res.status(400).json({ message: "Missing required order fields" });
   }
 
   try {
-    const user = await prisma.user.findUnique({
-      where: { id: userId },
-      select: { points: true },
-    });
-
+    // Get user + points
+    const { data: user, error: userError } = await supabase
+      .from("user")
+      .select("points")
+      .eq("id", userId)
+      .single();
+    if (userError) throw userError;
     if (!user) return res.status(404).json({ message: "User not found" });
 
-    let userPoints = user.points || 0;
-    let discount = 0;
+    const userPoints = user.points || 0;
 
+    // Calculate discount from points
+    let discount = 0;
     if (pointsUsed === 50) discount = totalAmount * 0.05;
     if (pointsUsed === 100) discount = totalAmount * 0.1;
+    const finalTotal = Math.max(0, Number(totalAmount) - discount);
 
-    const finalTotal = Math.max(0, totalAmount - discount);
+    // 1) Insert order
+    const orderPayload = {
+      user_id: userId,
+      email,
+      total_amount: finalTotal,
+      status: status || "Pending",
+      tracking_code: trackingCode || "Processing",
+      shipping_info: shippingInfo,
+      points_used: pointsUsed || 0,
+    };
 
-    // ✅ Begin transaction to ensure data integrity
-    const newOrder = await prisma.$transaction(async (prisma) => {
-      // ✅ Loop through each ordered item
-      for (const item of items) {
-        // 🔍 Fetch product
-        const product = await prisma.product.findUnique({
-          where: { id: item.id },
-          select: { quantity: true },
-        });
+    const { data: newOrder, error: orderError } = await supabase
+      .from("order")
+      .insert([orderPayload])
+      .select()
+      .single();
 
-        if (!product) {
-          throw new Error(`Product with ID ${item.id} not found.`);
-        }
+    if (orderError) {
+      console.error("❌ Order insert error:", orderError);
+      return res.status(500).json({ message: "Order insert failed", details: orderError.message });
+    }
+    if (!newOrder?.id) {
+      return res.status(500).json({ message: "Order insert failed or missing ID" });
+    }
 
-        if (product.quantity < item.quantity) {
-          throw new Error(`Not enough stock for product ID ${item.id}.`);
-        }
-
-        // 🔻 Deduct purchased quantity
-        await prisma.product.update({
-          where: { id: item.id },
-          data: { quantity: product.quantity - item.quantity },
-        });
+    // 2) Insert order items
+    // Enrich each item with product_brand_segment from current product record if not provided
+    const orderItemsPayload = [];
+    for (const item of items) {
+      const productId = item.id || item.product_id;
+      let brandSegment = (item.brandSegment || item.brand_segment || '').toLowerCase();
+      if (!brandSegment && productId) {
+        const { data: prodRow } = await supabase.from('product').select('brand_segment').eq('id', productId).single();
+        if (prodRow?.brand_segment) brandSegment = prodRow.brand_segment.toLowerCase();
       }
-
-      // ✅ Create order after stock is updated
-      return prisma.order.create({
-        data: {
-          User: { connect: { id: userId } },
-          email,
-          totalAmount: finalTotal,
-          status: status || "Pending",
-          trackingCode: trackingCode || "Processing",
-          shippingInfo,
-          orderItem: {
-            create: items.map((item) => ({
-              Product: { connect: { id: item.id } },
-              quantity: item.quantity,
-              price: item.price,
-            })),
-          },
-        },
+      orderItemsPayload.push({
+        order_id: newOrder.id,
+        product_id: productId,
+        quantity: Number(item.quantity || 1),
+        price: Number(item.price || 0),
+        product_brand_segment: brandSegment || null,
       });
-    });
-    console.log("✅ Order successfully saved:", order);
-    // ✅ Update user points balance
-    const newPointsBalance = userPoints - pointsUsed + Math.floor(finalTotal);
-    await prisma.user.update({
-      where: { id: userId },
-      data: { points: newPointsBalance },
-    });
+    }
+    const { error: orderItemError } = await supabase.from("order_item").insert(orderItemsPayload);
+    if (orderItemError) {
+      console.error("❌ order_item insert error:", orderItemError);
+      // Attempt rollback of order
+      try {
+        await supabase.from("order").delete().eq("id", newOrder.id);
+      } catch (rbErr) {
+        console.error("❌ Rollback failed:", rbErr);
+      }
+      return res.status(500).json({ message: "Failed to create order items", details: orderItemError.message });
+    }
 
-    res
-      .status(201)
-      .json({
-        message: "Order placed!",
-        order: newOrder,
-        pointsUsed,
-        discountApplied: discount,
-      });
+    // 3) Decrement inventory per item (atomic via RPC)
+    try {
+      for (const item of items) {
+        const productId = item?.id ?? item?.product_id;
+        const qty = Number(item?.quantity || 1);
+        if (!productId) {
+          console.warn("⚠️ Missing product id on order item, skipping:", item);
+          continue;
+        }
+        const { error: decErr } = await decrementProductQuantity(productId, qty);
+        if (decErr) {
+          console.error(`❌ Inventory decrement failed for ${productId} x${qty}:`, decErr);
+          // Optional: set order to On Hold if stock insufficient
+          // await supabase.from('order').update({ status: 'On Hold' }).eq('id', newOrder.id);
+        } else {
+          console.log(`✅ Inventory decremented for ${productId} by ${qty}`);
+        }
+      }
+    } catch (invErr) {
+      console.error("❌ Unexpected inventory decrement error:", invErr);
+      // continue; order stays created
+    }
+
+    // 4) Update user points balance
+    const newPointsBalance = userPoints - (pointsUsed || 0) + Math.floor(finalTotal);
+    await supabase.from("user").update({ points: newPointsBalance }).eq("id", userId);
+
+    // Done
+    res.status(201).json({
+      message: "Order placed!",
+      order: newOrder,
+      pointsUsed,
+      discountApplied: discount,
+    });
   } catch (error) {
     console.error("❌ Error creating order:", error);
-    res
-      .status(500)
-      .json({ message: "Error creating order", details: error.message });
+    res.status(500).json({ message: "Error creating order", details: error.message });
   }
 };
 
@@ -203,21 +258,31 @@ export const updateOrderStatus = async (req, res) => {
 
   try {
     // ✅ Check if the order exists
-    const order = await prisma.order.findUnique({ where: { id: orderId } });
+    const { data: order, error: orderError } = await supabase
+      .from("order")
+      .select()
+      .eq("id", orderId)
+      .single();
+
+    if (orderError) throw orderError;
     if (!order) {
       return res.status(404).json({ message: "Order not found." });
     }
 
     let updateData = { status };
     if (status === "Shipped" && trackingCode) {
-      updateData.trackingCode = trackingCode;
+      updateData.tracking_code = trackingCode;
     }
 
     // ✅ Update the order
-    const updatedOrder = await prisma.order.update({
-      where: { id: orderId },
-      data: updateData,
-    });
+    const { data: updatedOrder, error: updateError } = await supabase
+      .from("order")
+      .update(updateData)
+      .eq("id", orderId)
+      .select()
+      .single();
+
+    if (updateError) throw updateError;
 
     // ✅ If shipped, send tracking email
     if (status === "Shipped" && trackingCode) {
@@ -239,17 +304,22 @@ export const updateOrderStatus = async (req, res) => {
 export const deleteOrder = async (req, res) => {
   const { orderId } = req.params;
   try {
-    const order = await prisma.order.findUnique({ where: { id: orderId } });
+    const { data: order, error: orderError } = await supabase
+      .from("order")
+      .select()
+      .eq("id", orderId)
+      .single();
 
+    if (orderError) throw orderError;
     if (!order) {
       return res.status(404).json({ message: "Order not found." });
     }
 
-    // 🧹 Delete related OrderItems first
-    await prisma.orderItem.deleteMany({ where: { orderId } });
+    // 🧹 Delete related order_items first
+    await supabase.from("order_item").delete().eq("orderId", orderId);
 
     // 🗑 Now delete the order
-    await prisma.order.delete({ where: { id: orderId } });
+    await supabase.from("order").delete().eq("id", orderId);
 
     res.json({ message: "Order deleted successfully." });
   } catch (error) {
@@ -276,16 +346,12 @@ export const getUserOrders = async (req, res) => {
 
     console.log("🔍 Fetching orders for user:", userId);
 
-    const orders = await prisma.order.findMany({
-      where: { userId },
-      include: {
-        OrderItem: {
-          include: {
-            Product: true,
-          },
-        },
-      },
-    });
+    const { data: orders, error } = await supabase
+      .from("order")
+      .select("*, order_item!fk_order(*, product!fk_product(title, price))")
+      .eq("user_id", userId);
+
+    if (error) throw error;
 
     if (!orders.length) {
       console.log("❌ No orders found for user:", userId);
@@ -293,7 +359,15 @@ export const getUserOrders = async (req, res) => {
     }
 
     console.log("✅ Orders found:", orders);
-    res.json(orders);
+    // Normalize DB snake_case -> frontend camelCase for consistency
+    const cleaned = orders.map((o) => ({
+      ...o,
+      totalAmount: o.total_amount,
+      trackingCode: o.tracking_code,
+      shippingInfo: o.shipping_info || null,
+    }));
+
+    res.json(cleaned);
   } catch (error) {
     console.error("❌ Error fetching orders:", error);
     res
@@ -317,30 +391,22 @@ export const getFilteredOrders = async (req, res) => {
     const filters = {};
     if (status) filters.status = status;
 
-    const totalOrders = await prisma.order.count({ where: filters });
+    const { count: totalOrders, error: countError } = await supabase
+      .from("order")
+      .select("id", { count: "exact", head: true })
+      .match(filters);
+
+    if (countError) throw countError;
 
     // ✅ Ensure user.email is fetched properly
-    const orders = await prisma.order.findMany({
-      where: filters,
-      skip: (page - 1) * limit,
-      take: limit,
-      orderBy: { createdAt: "desc" },
-      include: {
-        User: {
-          select: { email: true },
-        },
-        OrderItem: {
-          include: {
-            Product: {
-              select: {
-                title: true,
-                price: true,
-              },
-            },
-          },
-        },
-      },
-    });
+    const { data: orders, error } = await supabase
+      .from("order")
+      .select("*, user!fk_user(email), order_item!fk_order(*, product!fk_product(title, price))")
+      .match(filters)
+      .order("created_at", { ascending: false })
+      .range((page - 1) * limit, page * limit - 1);
+
+    if (error) throw error;
 
     res.json({
       page,
@@ -349,7 +415,10 @@ export const getFilteredOrders = async (req, res) => {
       totalPages: Math.ceil(totalOrders / limit),
       orders: orders.map((order) => ({
         ...order,
-        customerEmail: order.user?.email || order.email, // ✅ Use user.email if exists, otherwise fallback to order email
+        customerEmail: order.user?.email || order.email,
+        // normalize DB snake_case to frontend camelCase
+        totalAmount: order.total_amount,
+        trackingCode: order.tracking_code,
       })),
     });
   } catch (error) {
@@ -365,23 +434,24 @@ export const searchOrdersByEmail = async (req, res) => {
       return res.status(400).json({ message: "Email query is required" });
     }
 
-    const totalOrders = await prisma.order.count({
-      where: {
-        user: { email: { contains: email, mode: "insensitive" } },
-      },
-    });
+    const { count: totalOrders, error: countError } = await supabase
+      .from("order")
+      .select("id", { count: "exact", head: true })
+      .match({
+        user: { email: { contains: email, op: "ilike" } },
+      });
 
-    const orders = await prisma.order.findMany({
-      where: {
-        user: { email: { contains: email, mode: "insensitive" } },
-      },
-      skip: (page - 1) * limit,
-      take: limit,
-      include: {
-        User: { select: { id: true, email: true } },
-        Product: { select: { id: true, title: true, price: true } },
-      },
-    });
+    if (countError) throw countError;
+
+    const { data: orders, error } = await supabase
+      .from("order")
+      .select("User(id, email), Product(id, title, price)")
+      .match({
+        user: { email: { contains: email, op: "ilike" } },
+      })
+      .range((page - 1) * limit, page * limit - 1);
+
+    if (error) throw error;
 
     res.json({
       page,
@@ -406,44 +476,42 @@ export const trackOrder = async (req, res) => {
   }
 
   try {
-    const order = await prisma.order.findUnique({
-      where: { orderId },
-      include: { orderItem: true }, // ✅ Include order items
-    });
+    const { data: order, error } = await supabase
+      .from("order")
+      .select("*, order_item(*)")
+      .eq("id", orderId)
+      .single();
 
+    if (error) throw error;
     if (!order || order.email !== email) {
       return res.status(404).json({ error: "Order not found" });
     }
 
-    res.json({
-      orderId: order.orderId,
-      status: order.status,
-      trackingCode: order.trackingCode,
-      totalAmount: order.totalAmount,
-      orderItem: order.orderItem,
-      estimatedDelivery: "5-7 business days", // ✅ Can be dynamic later
-    });
+    res.json(order);
   } catch (error) {
-    console.error("Error fetching order:", error);
-    res.status(500).json({ error: "Internal server error" });
+    console.error("❌ Error tracking order:", error);
+    res.status(500).json({ message: "Error tracking order", error: error.message });
   }
 };
 
+// 🔹 Cancel order (User & Admin)
 export const cancelOrder = async (req, res) => {
   try {
     const { orderId } = req.params;
     const userId = req.user?.id;
 
+    const { data: order, error: orderError } = await supabase
+      .from("order")
+      .select()
+      .eq("id", orderId)
+      .single();
 
-    // ✅ Use orderId field, not id
-    const order = await prisma.order.findUnique({
-      where: { id: orderId }    });
-
+    if (orderError) throw orderError;
     if (!order) {
       return res.status(404).json({ message: "Order not found." });
     }
 
-    if (order.userId !== userId && req.user.role !== "admin") {
+    if (order.user_id !== userId && req.user.role !== "admin") {
       return res
         .status(403)
         .json({ message: "Unauthorized to cancel this order." });
@@ -455,55 +523,71 @@ export const cancelOrder = async (req, res) => {
         .json({ message: "Order cannot be canceled after it has been processed." });
     }
 
-    await prisma.order.update({
-      where: { id: orderId }, // ✅ FIXED
-      data: { status: "Canceled" },
-    });
+    // Fetch order items for restocking
+    let restockSucceeded = 0;
+    let restockFailed = 0;
+    try {
+      const { data: items, error: itemsErr } = await supabase
+        .from("order_item")
+        .select("product_id, quantity")
+        .eq("order_id", orderId);
+      if (itemsErr) {
+        console.warn("⚠️ Could not fetch order items for restock:", itemsErr);
+      } else if (Array.isArray(items)) {
+        for (const it of items) {
+          const { error: incErr } = await incrementProductQuantity(it.product_id, it.quantity);
+            if (incErr) {
+              restockFailed++;
+              console.warn("⚠️ Restock failed for product", it.product_id, incErr);
+            } else {
+              restockSucceeded++;
+              console.log(`🔄 Restocked product ${it.product_id} by ${it.quantity}`);
+            }
+        }
+      }
+    } catch (e) {
+      console.error("❌ Unexpected error during restock loop:", e);
+    }
 
-    console.log(`✅ Order ${orderId} has been canceled.`);
-    res.json({ message: "Order successfully canceled." });
+    await supabase
+      .from("order")
+      .update({ status: "Canceled" })
+      .eq("id", orderId);
+
+    console.log(`✅ Order ${orderId} canceled. Restock summary: success=${restockSucceeded} failed=${restockFailed}`);
+    res.json({ message: "Order successfully canceled.", restock: { success: restockSucceeded, failed: restockFailed } });
   } catch (error) {
     console.error("❌ Error canceling order:", error);
     res.status(500).json({ message: "Error canceling order", details: error.message });
   }
 };
 
-// 🔹 Get a single order
+// 🔹 Get order by ID (Public)
 export const getOrderById = async (req, res) => {
   try {
     const { id } = req.params;
-    const order = await prisma.order.findUnique({
-      where: { id },
-      include: {
-        user: { select: { id, name, email } },
-        orderItem: { include: { product: true } },
-      },
-    });
+    if (!id) return res.status(400).json({ message: "Order ID required" });
 
-    if (!order) return res.status(404).json({ message: "Order not found" });
+    const { data: order, error } = await supabase
+      .from("order")
+      .select("*, order_item!fk_order(*, product!fk_product(title, price))")
+      .eq("id", id)
+      .single();
 
-    res.json(order);
-  } catch (error) {
-    res
-      .status(500)
-      .json({ message: "Error fetching order", error: error.message });
+    if (error) {
+      return res.status(404).json({ message: "Order not found", details: error.message });
+    }
+
+    const cleaned = {
+      ...order,
+      totalAmount: order.total_amount,
+      trackingCode: order.tracking_code,
+      shippingInfo: order.shipping_info || null,
+    };
+
+    res.json(cleaned);
+  } catch (err) {
+    console.error("❌ Error fetching order by ID:", err);
+    res.status(500).json({ message: "Error fetching order by ID", details: err.message });
   }
-};
-
-export const sendShippingNotification = async (orderId) => {
-  const order = await prisma.order.findUnique({ where: { id: orderId } });
-  if (!order || !order.email || !order.trackingCode) return;
-
-  await sendEmail(
-    order.email,
-    "🎉 Your Order Has Shipped!",
-    `
-      <p>Hey Diva💅</p>
-      <p>Your order has officially shipped!</p>
-      <p><strong>Tracking Code:</strong> ${order.trackingCode}</p>
-      <p>You can expect your order soon. Thanks again for shopping with us 💖</p>
-    `
-  );
-
-  console.log(`📦 Shipping email sent to ${order.email}`);
 };

@@ -1,7 +1,4 @@
-import pkg from "@prisma/client";
-const { PrismaClient } = pkg;
-
-const prisma = new PrismaClient();
+import supabase from "../../supabaseClient.js";
 
 // 🔹 Get All Users (Admin Only)
 export const getAllUsers = async (req, res) => {
@@ -16,12 +13,15 @@ export const getAllUsers = async (req, res) => {
         .json({ message: "Page and limit must be positive numbers." });
     }
 
-    const totalUsers = await prisma.user.count();
-    const users = await prisma.user.findMany({
-      skip: (page - 1) * limit,
-      take: limit,
-      select: { id: true, email: true, role: true, createdAt: true },
-    });
+    const { count: totalUsers, error: countError } = await supabase
+      .from("user")
+      .select("id", { count: "exact", head: true });
+    if (countError) throw countError;
+    const { data: users, error } = await supabase
+      .from("user")
+      .select("id, email, role, created_at")
+      .range((page - 1) * limit, page * limit - 1);
+    if (error) throw error;
 
     res.json({
       page,
@@ -51,20 +51,26 @@ export const updateUserRole = async (req, res) => {
     }
 
     // ✅ Ensure user exists
-    const user = await prisma.user.findUnique({ where: { id: userId } });
+    const { data: user, error: findError } = await supabase
+      .from("user")
+      .select("*")
+      .eq("id", userId)
+      .single();
     if (!user) {
       return res.status(404).json({ message: "User not found." });
     }
 
     // ✅ Update user role
-    const updatedUser = await prisma.user.update({
-      where: { id: userId },
-      data: { role },
-    });
+    const { data: updatedUser, error } = await supabase
+      .from("user")
+      .update({ role })
+      .eq("id", userId)
+      .select()
+      .single();
+    if (error) throw error;
 
     res.json({ message: `User role updated to ${role}`, user: updatedUser });
   } catch (error) {
-    console.error("❌ Error updating user role:", error);
     res
       .status(500)
       .json({ message: "Error updating user role", error: error.message });
@@ -80,9 +86,8 @@ export const deleteUser = async (req, res) => {
       return res.status(403).json({ message: "You cannot delete yourself." });
     }
 
-    await prisma.user.delete({
-      where: { id: userId },
-    });
+    const { error } = await supabase.from("user").delete().eq("id", userId);
+    if (error) throw error;
 
     res.json({ message: "User deleted successfully" });
   } catch (error) {
@@ -94,24 +99,39 @@ export const deleteUser = async (req, res) => {
 
 export const getAdminDashboardStats = async (req, res) => {
   try {
-    const totalUsers = await prisma.user.count();
-    const totalOrders = await prisma.order.count();
-
-    // ✅ CORRECTED Revenue Query
-    const totalRevenue = await prisma.order.aggregate({
-      _sum: { totalAmount: true }, // ✅ Using `totalAmount` from the `Order` model
-    });
-
-    res.json({
-      totalUsers,
-      totalOrders,
-      totalRevenue: totalRevenue._sum.totalAmount || 0, // ✅ Fix response field
-    });
+    const { count: totalUsers, error: userError } = await supabase
+      .from("user")
+      .select("id", { count: "exact", head: true });
+    if (userError) throw userError;
+    const { count: totalOrders, error: orderError } = await supabase
+      .from("order")
+      .select("id", { count: "exact", head: true });
+    if (orderError) throw orderError;
+    const { data: revenueData, error: revenueError } = await supabase
+      .from("order")
+      .select("total_amount")
+      .not("total_amount", "is", null);
+    if (revenueError) throw revenueError;
+    const totalRevenue = revenueData.reduce(
+      (sum, o) => sum + (o.total_amount || 0),
+      0
+    );
+    res.json({ totalUsers, totalOrders, totalRevenue });
   } catch (error) {
     res
       .status(500)
       .json({ message: "Error fetching admin stats", error: error.message });
   }
+};
+
+const mapAdminProductRow = (row) => {
+  if (!row) return row;
+  return {
+    ...row,
+    bestSeller: row.best_seller,
+    brandSegment: row.brand_segment || row.brandSegment,
+    categorySlug: row.category_slug || row.categorySlug,
+  };
 };
 
 export const getAllProducts = async (req, res) => {
@@ -124,6 +144,11 @@ export const getAllProducts = async (req, res) => {
       sort,
       page = 1,
       limit = 10,
+      brand_segment,
+      brandSegment,
+      category: categorySlug,
+      category_slug,
+      categorySlug: qsCategorySlug,
     } = req.query;
     page = parseInt(page);
     limit = parseInt(limit);
@@ -134,71 +159,80 @@ export const getAllProducts = async (req, res) => {
         .json({ message: "Page and limit must be positive numbers." });
     }
 
-    // Build filters dynamically
-    let filters = {};
-    if (categoryId) filters.categoryId = categoryId;
-    if (minPrice || maxPrice) {
-      filters.price = {};
-      if (minPrice) filters.price.gte = parseFloat(minPrice);
-      if (maxPrice) filters.price.lte = parseFloat(maxPrice);
-    }
-    if (search) {
-      filters.title = { contains: search, mode: "insensitive" }; // Case-insensitive search
-    }
+    const effectiveBrand = (brand_segment || brandSegment || "").trim();
+    const effectiveCategorySlug = (categorySlug || category_slug || qsCategorySlug || "").trim();
 
-    // Get total count for pagination
-    const totalProducts = await prisma.product.count({ where: filters });
+    let query = supabase.from("product").select("*, category:category!product_category_id_fkey(id, name)");
+    if (categoryId) query = query.eq("category_id", categoryId);
+    if (effectiveBrand) query = query.eq("brand_segment", effectiveBrand.toLowerCase());
+    if (effectiveCategorySlug) query = query.eq("category_slug", effectiveCategorySlug.toLowerCase());
+    if (minPrice) query = query.gte("price", parseFloat(minPrice));
+    if (maxPrice) query = query.lte("price", parseFloat(maxPrice));
+    if (search) query = query.ilike("title", `%${search}%`);
 
-    // Fetch products with filters, sorting, and pagination
-    const products = await prisma.product.findMany({
-      where: filters,
-      skip: (page - 1) * limit,
-      take: limit,
-      orderBy:
-        sort === "price_asc"
-          ? { price: "asc" }
-          : sort === "price_desc"
-          ? { price: "desc" }
-          : { createdAt: "desc" }, // Default to newest first
-      include: { category: true }, // Include category info
-    });
+    if (sort === "price_asc") query = query.order("price", { ascending: true });
+    else if (sort === "price_desc") query = query.order("price", { ascending: false });
+    else query = query.order("created_at", { ascending: false });
+
+    query = query.range((page - 1) * limit, page * limit - 1);
+
+    const { data: products, error } = await query;
+    if (error) throw error;
+
+    // Count with filters
+    let countQuery = supabase.from("product").select("id", { count: "exact", head: true });
+    if (categoryId) countQuery = countQuery.eq("category_id", categoryId);
+    if (effectiveBrand) countQuery = countQuery.eq("brand_segment", effectiveBrand.toLowerCase());
+    if (effectiveCategorySlug) countQuery = countQuery.eq("category_slug", effectiveCategorySlug.toLowerCase());
+    if (minPrice) countQuery = countQuery.gte("price", parseFloat(minPrice));
+    if (maxPrice) countQuery = countQuery.lte("price", parseFloat(maxPrice));
+    if (search) countQuery = countQuery.ilike("title", `%${search}%`);
+
+    const { count: totalProducts, error: countError } = await countQuery;
+    if (countError) throw countError;
 
     res.json({
       page,
       limit,
       totalProducts,
       totalPages: Math.ceil(totalProducts / limit),
-      products,
+      products: (products || []).map(mapAdminProductRow),
     });
   } catch (error) {
     res.status(500).json({ message: "Server error", error: error.message });
   }
 };
 
-
 export const updateProduct = async (req, res) => {
   const { id } = req.params;
-  const { title, description, price, categoryId, bestSeller } = req.body;
-  const image = req.file ? `/uploads/${req.file.filename}` : undefined; // ✅ Update only if new image
-
+  const { title, description, price, bestSeller, quantity, brandSegment, brand_segment, categorySlug, category_slug } = req.body;
+  const image = req.file ? `/uploads/${req.file.filename}` : undefined;
   try {
     if (req.user.role !== "admin") {
       return res.status(403).json({ message: "Access denied: Admins only" });
     }
+    let effectiveBrandSegment = (brandSegment || brand_segment || "").trim().toLowerCase();
+    let effectiveCategorySlug = (categorySlug || category_slug || "").trim().toLowerCase();
 
-    // ✅ Ensure category exists
-    if (categoryId) {
-      const category = await prisma.category.findUnique({ where: { id: categoryId } });
-      if (!category) return res.status(400).json({ message: "Invalid category ID" });
-    }
+    const updateData = {
+      ...(title != null ? { title } : {}),
+      ...(description != null ? { description } : {}),
+      ...(price != null ? { price: parseFloat(price) } : {}),
+      ...(bestSeller != null ? { best_seller: bestSeller === "true" || bestSeller === true } : {}),
+      ...(quantity != null ? { quantity: parseInt(quantity, 10) } : {}),
+      ...(image ? { image } : {}),
+      brand_segment: effectiveBrandSegment,
+      category_slug: effectiveCategorySlug,
+    };
 
-    // ✅ Update Product
-    const updatedProduct = await prisma.product.update({
-      where: { id },
-      data: { title, description, price: parseFloat(price), image, categoryId, bestSeller: bestSeller === "true" },
-    });
-
-    res.json(updatedProduct);
+    const { data: updatedProduct, error } = await supabase
+      .from("product")
+      .update(updateData)
+      .eq("id", id)
+      .select("*, category:category!product_category_id_fkey(id, name)")
+      .single();
+    if (error) throw error;
+    res.json(mapAdminProductRow(updatedProduct));
   } catch (error) {
     res.status(500).json({ message: "Error updating product", error: error.message });
   }

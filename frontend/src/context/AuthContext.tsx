@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 
 interface User {
   id: string;
+  userId?: string; // Add userId for JWT compatibility
   name: string;
   email: string;
   token: string;

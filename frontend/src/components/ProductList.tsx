@@ -10,58 +10,73 @@ interface Product {
   image: string;
 }
 
-export default function ProductList() {
+interface ProductListProps {
+  embedded?: boolean; // if true, suppress own heading container
+  limit?: number; // customizable limit
+}
+
+export default function ProductList({ embedded = false, limit = 3 }: ProductListProps) {
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    fetch("${process.env.NEXT_PUBLIC_API_URL}/products")
+    fetch(`${process.env.NEXT_PUBLIC_API_URL}/products`)
       .then(async (res) => {
         if (!res.ok) throw new Error(`HTTP error! Status: ${res.status}`);
         return res.json();
       })
       .then((data) => {
         if (Array.isArray(data.products)) {
-          setProducts(data.products.slice(0, 3)); // ✅ Limit to 3 featured products
+          setProducts(data.products.slice(0, limit));
         } else {
           setError("Invalid response from server");
         }
       })
       .catch((error) => setError(error.message))
       .finally(() => setLoading(false));
-  }, []);
+  }, [limit]);
+
+  const grid = (
+    <div className="w-full flex justify-center">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 mt-6 w-full max-w-6xl">
+        {loading && !error && (
+          Array.from({ length: limit }).map((_, i) => (
+            <div key={i} className="rounded-3xl h-72 bg-white/50 backdrop-blur-md border border-white/70 shadow-inner animate-pulse" />
+          ))
+        )}
+        {error && !loading && (
+          <p className="col-span-full text-center text-sm text-red-500">{error}</p>
+        )}
+        {!loading && !error && (
+          products.length > 0 ? (
+            products.map((product) => (
+              <div key={product.id} className="group relative rounded-3xl overflow-hidden bg-white/65 backdrop-blur-xl border border-white/80 shadow-[0_6px_18px_-6px_rgba(0,0,0,0.25)] transition hover:shadow-[0_10px_26px_-6px_rgba(0,0,0,0.28)] hover:-translate-y-0.5">
+                <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition bg-[radial-gradient(circle_at_80%_20%,rgba(255,255,255,0.85),transparent_60%)]" />
+                <ProductCard product={product} />
+              </div>
+            ))
+          ) : (
+            <p className="col-span-full text-center text-[#222] dark:text-[#f3f3f7] text-sm">No products available</p>
+          )
+        )}
+      </div>
+    </div>
+  );
+
+  if (embedded) return grid;
 
   return (
-    <section className="mt-12 text-center">
-      {/* 💖 Header */}
-      <h2 className="text-3xl font-bold glitch text-white">✨ FEATURED NAILS ✨</h2>
-      <p className="text-gray-800 text-sm mt-2">
-        Explore our trending designs - handpicked for you!
-      </p>
-
-      {/* ⏳ Loading & Error States */}
-      {loading && <p className="text-lg text-white tracking-widest animate-pulse mt-4">AND LOADING...</p>}
-      {error && <p className="text-red-500 mt-4">{error}</p>}
-
-      {/* 🛍 Product Grid */}
-      <div className="flex justify-center">
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 mt-6 w-full max-w-6xl">
-          {products.length > 0 ? (
-            products.map((product) => <ProductCard key={product.id} product={product} />)
-          ) : (
-            !loading && <p className="text-gray-400">No products available</p>
-          )}
-        </div>
-      </div>
-
-      {/* 🔗 View All Products Button */}
-      <div className="mt-6">
+    <section className="mt-16 text-center px-4">
+      <h2 className="text-3xl font-extrabold tracking-wide bg-clip-text text-transparent bg-gradient-to-r from-pink-600 via-violet-600 to-indigo-600 drop-shadow-sm">Featured Nails</h2>
+      <p className="text-[#222] dark:text-[#f3f3f7] text-sm mt-2 max-w-xl mx-auto">Explore our trending designs – hand‑picked for you!</p>
+      {grid}
+      <div className="mt-8">
         <a
           href="/shop"
-          className="bg-pink-500 hover:bg-pink-700 text-white px-6 py-3 rounded-lg text-lg shadow-md transition transform hover:scale-105"
+          className="inline-flex items-center gap-2 bg-gradient-to-r from-pink-500 to-fuchsia-500 hover:from-pink-600 hover:to-fuchsia-600 text-white px-7 py-3 rounded-full text-sm font-semibold shadow-md hover:shadow-lg transition border border-pink-400/40"
         >
-          View All Products
+          View All Products <span className="text-xs">→</span>
         </a>
       </div>
     </section>

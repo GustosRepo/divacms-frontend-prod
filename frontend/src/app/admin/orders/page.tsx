@@ -9,6 +9,13 @@ interface Order {
   totalAmount: number;
   status: string;
   trackingCode: string;
+  // Shipping fields
+  address?: string | null;
+  city?: string | null;
+  country?: string | null;
+  zip?: string | null;
+  shipping_info?: any;
+  phone?: string | null;
 }
 
 export default function ManageOrders() {
@@ -17,6 +24,7 @@ export default function ManageOrders() {
   const [orders, setOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState(true);
   const [message, setMessage] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     if (!user || !user.isAdmin) {
@@ -26,15 +34,22 @@ export default function ManageOrders() {
 
     const fetchOrders = async () => {
       try {
-        const res = await fetch("${process.env.NEXT_PUBLIC_API_URL}/orders/admin/orders", {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/orders/admin/orders`, {
           headers: { Authorization: `Bearer ${user.token}` },
         });
 
-        if (!res.ok) throw new Error("Failed to fetch orders.");
+        if (!res.ok) {
+          let errMsg = `Failed to fetch orders. Status: ${res.status}`;
+          try {
+            const errJson = await res.json();
+            errMsg += ` | ${errJson.message || JSON.stringify(errJson)}`;
+          } catch {}
+          throw new Error(errMsg);
+        }
         const data = await res.json();
-
         setOrders(data.orders);
       } catch (err) {
+        setError(err instanceof Error ? err.message : String(err));
         console.error("Error fetching orders:", err);
       } finally {
         setLoading(false);
@@ -46,6 +61,8 @@ export default function ManageOrders() {
 
   if (loading)
     return <p className="text-center text-white">Loading orders...</p>;
+  if (error)
+    return <p className="text-center text-red-500">{error}</p>;
 
   // 🔹 Handle Order Status Update with Tracking Number
   async function handleStatusChange(orderId: string, newStatus: string) {
@@ -138,16 +155,18 @@ export default function ManageOrders() {
         <thead>
           <tr className="bg-blue-500">
             <th className="p-3">Customer</th>
+            <th className="p-3">Shipping Address</th>
             <th className="p-3">Total Amount</th>
             <th className="p-3">Status</th>
             <th className="p-3">Tracking</th>
+            <th className="p-3">Phone</th>
             <th className="p-3">Actions</th>
           </tr>
         </thead>
         <tbody>
           {orders.length === 0 && (
             <tr>
-              <td colSpan={5} className="text-center p-3">
+              <td colSpan={7} className="text-center p-3">
                 No orders found
               </td>
             </tr>
@@ -156,7 +175,20 @@ export default function ManageOrders() {
             orders.map((order) => (
               <tr key={order.id} className="border-b border-gray-600">
                 <td className="p-3">{order.customerEmail || "Guest"}</td>
-                <td className="p-3">${order.totalAmount.toFixed(2)}</td>
+                <td className="p-3">
+                  {order.shipping_info?.address || order.address ? (
+                    <div className="text-sm text-gray-200">
+                      <div>{order.shipping_info?.address || order.address}</div>
+                      <div>
+                        {order.shipping_info?.city || order.city}{order.shipping_info?.city || order.city ? ", " : ""}{order.shipping_info?.zip || order.zip}
+                      </div>
+                      <div>{order.shipping_info?.country || order.country}</div>
+                    </div>
+                  ) : (
+                    <span className="text-gray-400">No address</span>
+                  )}
+                </td>
+                <td className="p-3">{typeof order.totalAmount === "number" ? `$${order.totalAmount.toFixed(2)}` : <span className="text-gray-400">N/A</span>}</td>
                 <td className="p-3">
                   <select
                     value={order.status}
@@ -177,6 +209,14 @@ export default function ManageOrders() {
                   ):(
                     <span className="text-gray-400">Not Available</span>
                   )}
+                </td>
+                <td className="p-3">
+                  {order.shipping_info?.phone
+                    ? order.shipping_info.phone
+                    : order.phone
+                    ? order.phone
+                    : <span className="text-gray-400">No phone</span>
+                  }
                 </td>
                 <td className="p-3">
                   <button

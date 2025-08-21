@@ -80,13 +80,13 @@ export default function CheckoutPage() {
   const handleOrderSubmit = async (data: CheckoutFormData, pointsUsed: number) => {
 
     try {
-      const res = await fetch("${process.env.NEXT_PUBLIC_API_URL}/checkout/create-checkout-session", {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/checkout/create-checkout-session`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${user.token}`,
         },
-        body: JSON.stringify({ items: cartItems, pointsUsed }),
+        body: JSON.stringify({ items: cartItems, pointsUsed, shippingInfo: data, metadata: { userId: user.id, email: user.email } }),
       });
 
       if (!res.ok) {

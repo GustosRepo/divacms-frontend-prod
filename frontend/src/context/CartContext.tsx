@@ -1,13 +1,19 @@
 "use client";
 import { createContext, useContext, useState, useEffect } from "react";
 
-interface CartItem {
+// add these fields to your CartItem type
+export type CartItem = {
   id: string;
   title: string;
   price: number;
-  image: string;
   quantity: number;
-}
+  image: string;
+  // 👇 new (all optional to avoid breaking existing code)
+  weightOz?: number;
+  lengthIn?: number;
+  widthIn?: number;
+  heightIn?: number;
+};
 
 interface CartContextType {
   cart: CartItem[];

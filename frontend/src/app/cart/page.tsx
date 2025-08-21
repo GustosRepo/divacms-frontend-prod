@@ -29,46 +29,50 @@ export default function CartPage() {
           </div>
         ) : (
           <div className="mt-6 space-y-6">
-            {cart.map((product) => (
-              <div key={product.id} className="flex items-center justify-between bg-black/20 p-4 rounded-lg shadow-lg">
-                <Image
-                  src={
-                    product.image.startsWith("http")
-                      ? product.image
-                      : `${process.env.NEXT_PUBLIC_API_URL}${product.image}`
-                  }
-                  alt={product.title}
-                  width={80}
-                  height={80}
-                  className="rounded-lg object-cover"
-                />
+            {cart.map((product) => {
+              const rawImage = product.image || "";
+              const imageSrc = rawImage
+                ? rawImage.startsWith("http")
+                  ? rawImage
+                  : `${process.env.NEXT_PUBLIC_API_URL}${rawImage}`
+                : "/placeholder.jpg"; // fallback (ensure exists in public)
+              return (
+                <div key={product.id} className="flex items-center justify-between bg-black/20 p-4 rounded-lg shadow-lg">
+                  <Image
+                    src={imageSrc}
+                    alt={product.title}
+                    width={80}
+                    height={80}
+                    className="rounded-lg object-cover"
+                  />
 
-                <div className="flex-1 px-4">
-                  <h2 className="text-lg font-bold">{product.title}</h2>
-                  <p className="text-gray-300">${product.price.toFixed(2)} x {product.quantity}</p>
+                  <div className="flex-1 px-4">
+                    <h2 className="text-lg font-bold">{product.title}</h2>
+                    <p className="text-gray-300">${product.price.toFixed(2)} x {product.quantity}</p>
 
-                  {/* Quantity Selector */}
-                  <div className="flex items-center mt-2 space-x-2">
-                    <label className="text-sm">Qty:</label>
-                    <select
-                      className="px-2 py-1 text-black rounded-lg bg-white shadow-md"
-                      value={product.quantity}
-                      onChange={(e) => updateQuantity(product.id, Number(e.target.value))}
-                    >
-                      {[...Array(10).keys()].map((num) => (
-                        <option key={num + 1} value={num + 1}>
-                          {num + 1}
-                        </option>
-                      ))}
-                    </select>
+                    {/* Quantity Selector */}
+                    <div className="flex items-center mt-2 space-x-2">
+                      <label className="text-sm">Qty:</label>
+                      <select
+                        className="px-2 py-1 text-black rounded-lg bg-white shadow-md"
+                        value={product.quantity}
+                        onChange={(e) => updateQuantity(product.id, Number(e.target.value))}
+                      >
+                        {[...Array(10).keys()].map((num) => (
+                          <option key={num + 1} value={num + 1}>
+                            {num + 1}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+
+                    <button className="text-red-500 text-sm mt-2" onClick={() => removeFromCart(product.id)}>
+                      Remove
+                    </button>
                   </div>
-
-                  <button className="text-red-500 text-sm mt-2" onClick={() => removeFromCart(product.id)}>
-                    Remove
-                  </button>
                 </div>
-              </div>
-            ))}
+              );
+            })}
 
             {/* Subtotal */}
             <div className="bg-black/20 p-4 rounded-lg shadow-lg text-center text-xl font-bold">

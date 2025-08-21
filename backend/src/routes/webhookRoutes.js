@@ -4,7 +4,8 @@ import { stripeWebhookHandler } from "../webhooks/stripeWebhook.js";
 
 const router = express.Router();
 
-// 🛑 DO NOT parse body here — this route expects raw body
-router.post("/", express.raw({ type: "application/json" }), stripeWebhookHandler);
+// Raw body is applied in server.js for this mount path.
+// Keeping it here too can break Stripe signature verification.
+router.post("/", stripeWebhookHandler);
 
 export default router;

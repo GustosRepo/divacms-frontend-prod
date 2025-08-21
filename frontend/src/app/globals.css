@@ -8,6 +8,11 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
+  --pink-bg-1: #efdde4;
+  --pink-bg-2: #d9b5c5;
+  --pink-bg-3: #c094a7;
+  --surface: rgba(255,255,255,0.65);
+  --surface-border: #ecc5d5;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -17,15 +22,73 @@
   }
 }
 
+/* Dark mode overrides */
+.dark body {
+  color: #e6e6eb;
+  background: radial-gradient(circle at 30% 20%, #1d1f29, #0d0e12 70%);
+}
+
+.dark:root {
+  --surface: rgba(255,255,255,0.06);
+  --surface-border: rgba(255,255,255,0.12);
+}
+
+/* Reduced motion utility */
+.reduce-motion * { animation: none !important; transition: none !important; }
+
+/* Brand theme tokens (can be targeted in components if needed) */
+:root.brand-nails { --brand-accent: 255 105 180; }
+:root.brand-toys { --brand-accent: 13 148 136; }
+:root.brand-boutique { --brand-accent: 217 119 6; }
+
+/* Helper class for accent text */
+.text-brand-accent { color: rgb(var(--brand-accent)); }
+
+/* Smooth theme transitions */
+body { transition: background 0.6s ease, color 0.3s ease; }
+
 /* 🎀 Global Styles */
 body {
   font-family: 'IBM Plex Mono', monospace;
-  background: linear-gradient(to bottom, #ffcccb, #dda0dd, #add8e6); /* Soft sky gradient */
-  color: #111;
-  text-transform: uppercase;
+  background: linear-gradient(135deg,var(--pink-bg-1) 0%, var(--pink-bg-2) 45%, var(--pink-bg-3) 100%);
+  text-transform: none; /* remove global uppercase for readability */
+  font-weight: 500;
+  color: #222;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.18), 0 0px 0px #fff;
   position: relative;
   overflow-x: hidden;
 }
+.dark body {
+  color: #e6e6eb;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.55);
+}
+
+/* Remove global stroke for all text */
+body, body * { -webkit-text-stroke: 0 !important; }
+
+/* Card and heading improvements */
+.surface-card, .card, .rounded-3xl, .rounded-xl {
+  color: #2a2a2a;
+  font-weight: 600;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.13);
+}
+.dark .surface-card, .dark .card, .dark .rounded-3xl, .dark .rounded-xl {
+  color: #f3f3f7;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.55);
+}
+
+h1, h2, h3, h4, h5, h6 {
+  color: #222;
+  font-weight: 700;
+  text-shadow: 0 2px 6px rgba(0,0,0,0.13);
+}
+.dark h1, .dark h2, .dark h3, .dark h4, .dark h5, .dark h6 {
+  color: #f3f3f7;
+  text-shadow: 0 2px 6px rgba(0,0,0,0.55);
+}
+
+/* surface utility */
+.surface-card { background: var(--surface); border: 1px solid var(--surface-border); backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px); }
 
 /* ✨ Glitch Effect */
 @keyframes glitch {
@@ -53,7 +116,7 @@ body::before {
   left: 0;
   width: 100%;
   height: 100%;
-  background: url('/static/noise.png'); /* Add noise texture */
+  background: url('/noise.png'); /* Add noise texture */
   opacity: 0.1;
   z-index: -1;
   pointer-events: none;

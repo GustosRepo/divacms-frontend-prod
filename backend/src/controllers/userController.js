@@ -1,88 +1,69 @@
-import pkg from "@prisma/client";
-const { PrismaClient } = pkg;
-const prisma = new PrismaClient();
+import supabase from "../../supabaseClient.js";
 
-// ✅ Fetch user shipping info
+// Fetch user shipping info
 export const getShippingInfo = async (req, res) => {
   try {
     const userId = req.params.userId;
-    const user = await prisma.user.findUnique({
-      where: { id: userId },
-      select: { name: true, email: true, address: true, city: true, zip: true, country: true },
-    });
-
+    const { data: user, error } = await supabase
+      .from("user")
+      .select("name, email, address, city, zip, country")
+      .eq("id", userId)
+      .single();
     if (!user) return res.status(404).json({ message: "User not found" });
-
     res.json(user);
   } catch (error) {
     res.status(500).json({ message: "Server error", error: error.message });
   }
 };
 
-// ✅ Update user profile (name, address, city, zip, country)
+// Update user profile (name, address, city, zip, country)
 export const updateUserInfo = async (req, res) => {
   const { id, name, email, address, city, zip, country } = req.body;
-
   try {
-    console.log("🔹 Received profile update request for user:", id);
-
     if (!id) {
-      console.error("❌ Missing user ID in request");
       return res.status(400).json({ message: "User ID is required" });
     }
-
-    const updatedUser = await prisma.user.update({
-      where: { id },
-      data: {
-        name: name || undefined, 
-        email: email || undefined, 
-        address: address || undefined, 
-        city: city || undefined, // 🔥 Ensure these get updated
-        zip: zip || undefined, 
+    const { data: updatedUser, error } = await supabase
+      .from("user")
+      .update({
+        name: name || undefined,
+        email: email || undefined,
+        address: address || undefined,
+        city: city || undefined,
+        zip: zip || undefined,
         country: country || undefined,
-        updatedAt: new Date(), // ✅ Make sure updatedAt changes
-      },
-    });
-
-    console.log("✅ Profile updated successfully:", updatedUser);
+        updated_at: new Date().toISOString(),
+      })
+      .eq("id", id)
+      .select()
+      .single();
+    if (error) throw error;
     res.status(200).json({ message: "Profile updated", user: updatedUser });
-
   } catch (error) {
-    console.error("❌ Error updating profile:", error);
     res.status(500).json({ message: "Internal Server Error", error: error.message });
   }
 };
 
-export const getUserInfo= async (req, res) => {
+export const getUserInfo = async (req, res) => {
   try {
     const userId = req.params.userId;
-
     if (!userId) {
       return res.status(400).json({ message: "User ID is required." });
     }
-
-    const user = await prisma.user.findUnique({
-      where: { id: userId },
-      select: {
-        id: true,
-        name: true,
-        email: true,
-        address: true,
-        city: true,
-        zip: true,
-        country: true,
-        points: true,
-        isAdmin: true,
-      },
-    });
-
+    // Security: Only allow users to access their own data
+    if (req.user.id !== userId) {
+      return res.status(403).json({ message: "Forbidden: You can only access your own user data." });
+    }
+    const { data: user, error } = await supabase
+      .from("user")
+      .select("id, name, email, address, city, zip, country, points, is_admin")
+      .eq("id", userId)
+      .single();
     if (!user) {
       return res.status(404).json({ message: "User not found." });
     }
-
     res.json(user);
   } catch (error) {
-    console.error("❌ Error fetching user profile:", error);
-    res.status(500).json({ message: "Error fetching user profile", error: error.message });
+    res.status(500).json({ message: "Server error", error: error.message });
   }
 };

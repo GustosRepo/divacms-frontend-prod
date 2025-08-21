@@ -10,76 +10,119 @@ interface Product {
   image: string;
 }
 
-export default function BestSellers() {
+interface BestSellersProps {
+  embedded?: boolean; // when true, omit outer section & heading (parent provides container/heading)
+  limit?: number; // allow overriding number of items shown
+}
+
+export default function BestSellers({ embedded = false, limit = 1 }: BestSellersProps) {
   const [bestSellers, setBestSellers] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    fetch("${process.env.NEXT_PUBLIC_API_URL}/products/best-sellers")
+    fetch(`${process.env.NEXT_PUBLIC_API_URL}/products/best-sellers`)
       .then(async (res) => {
-        if (!res.ok) {
-          throw new Error(`HTTP error! Status: ${res.status}`);
-        }
+        if (!res.ok) throw new Error(`HTTP error! Status: ${res.status}`);
         return res.json();
       })
       .then((data) => {
-        if (Array.isArray(data.bestSellers)) {
-          setBestSellers(data.bestSellers.slice(0, 1)); // ✅ Show only 1 Best-Seller
+        // Accept both { bestSellers: [...] } and direct array response
+        if (Array.isArray(data)) {
+          setBestSellers(data.slice(0, limit));
+        } else if (Array.isArray(data.bestSellers)) {
+          setBestSellers(data.bestSellers.slice(0, limit));
         } else {
-          setError("Invalid response from server");
+          setError("No best-seller data found");
         }
       })
       .catch((error) => setError(error.message))
       .finally(() => setLoading(false));
-  }, []);
+  }, [limit]);
+
+  const content = (
+    <div className="w-full flex justify-center">
+      <div className="w-full max-w-md">
+        {/* Loading skeleton */}
+        {loading && (
+          <div className="animate-pulse grid gap-4">
+            {Array.from({ length: limit }).map((_, i) => (
+              <div key={i} className="rounded-2xl h-72 bg-white/40 backdrop-blur-md border border-white/60 shadow-inner" />
+            ))}
+          </div>
+        )}
+        {error && !loading && (
+          <p className="text-sm text-red-500 text-center mt-2">{error}</p>
+        )}
+        {!loading && !error && (
+          bestSellers.length > 0 ? (
+            <div className="grid gap-6">
+              {bestSellers.map((product) => {
+                const imgSrc = product.image?.startsWith("http")
+                  ? product.image
+                  : `${process.env.NEXT_PUBLIC_API_URL}${product.image}`;
+                return (
+                  <div
+                    key={product.id}
+                    className="group relative rounded-3xl p-4 sm:p-5 bg-white/65 backdrop-blur-xl border border-white/80 shadow-[0_6px_20px_-6px_rgba(0,0,0,0.25)] overflow-hidden transition hover:shadow-[0_10px_28px_-6px_rgba(0,0,0,0.3)]"
+                  >
+                    <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition bg-[radial-gradient(circle_at_80%_20%,rgba(255,255,255,0.85),transparent_60%)]" />
+                    <div className="relative flex flex-col md:flex-row gap-4 md:gap-6 items-center">
+                      <div className="rounded-2xl overflow-hidden w-full md:w-1/2 aspect-[4/3] bg-gradient-to-br from-pink-100 via-rose-100 to-fuchsia-100 border border-pink-200 shadow-inner surface-card">
+                        {imgSrc ? (
+                          <Image
+                            src={imgSrc}
+                            alt={product.title}
+                            width={600}
+                            height={450}
+                            className="w-full h-full object-cover object-center mix-blend-normal"
+                          />
+                        ) : (
+                          <div className="w-full h-full flex items-center justify-center text-pink-400 text-sm">No Image</div>
+                        )}
+                      </div>
+                      <div className="flex-1 text-center md:text-left">
+                        <h3 className="text-lg font-extrabold tracking-wide bg-clip-text text-transparent bg-gradient-to-r from-pink-600 via-fuchsia-600 to-violet-600">
+                          {product.title}
+                        </h3>
+                        <p className="mt-2 text-xs sm:text-sm text-[#222] dark:text-[#f3f3f7] line-clamp-4">{product.description}</p>
+                        <div className="mt-4 flex flex-col sm:flex-row sm:items-center gap-3">
+                          <span className="inline-flex items-center justify-center px-4 py-2 rounded-full bg-pink-200/70 text-pink-800 text-sm font-semibold border border-pink-300 shadow-sm">
+                            ${product.price.toFixed(2)}
+                          </span>
+                          <a
+                            href={`/products/${product.id}`}
+                            className="inline-flex justify-center px-5 py-2 rounded-full bg-gradient-to-r from-pink-500 to-fuchsia-500 text-white text-sm font-semibold shadow hover:shadow-lg transition border border-pink-400/50"
+                          >
+                            View Product
+                          </a>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          ) : (
+            <p className="text-[#222] dark:text-[#f3f3f7] text-sm text-center">No best-seller available</p>
+          )
+        )}
+      </div>
+    </div>
+  );
+
+  if (embedded) return content;
 
   return (
-    <section className="text-center mt-10">
-      {/* 💖 Title - Centered */}
-      <h2 className="text-3xl font-bold glitch text-white">
-        💖 BEST-SELLING NAILS 💖
-      </h2>
-      <p className="text-gray-800 text-sm mt-2">
-        Our most popular style - get yours before it sells out!
-      </p>
-
-      {/* ⏳ Loading State */}
-      {loading && (
-        <p className="text-lg  text-gray-900 tracking-widest animate-pulse mt-4">
-          LOADING BEST SELLER...
+    <section className="mt-16 pb-2 text-center px-4">
+      <div className="relative rounded-3xl bg-white/65 dark:bg-white/10 backdrop-blur-xl border border-white/80 dark:border-white/10 shadow-[0_8px_24px_-8px_rgba(0,0,0,0.18)] dark:shadow-[0_4px_20px_-4px_rgba(0,0,0,0.5)] p-6 sm:p-10 max-w-2xl mx-auto overflow-hidden transition-colors">
+        <h2 className="text-3xl font-extrabold tracking-wide bg-clip-text text-transparent bg-gradient-to-r from-pink-600 via-fuchsia-600 to-violet-600 drop-shadow-sm">
+          Best‑Selling Nails
+        </h2>
+        <p className="text-[#222] dark:text-[#f3f3f7] text-sm mt-2 max-w-xl mx-auto">
+          Our most loved style – grab it before it sells out!
         </p>
-      )}
-
-      {/* ❌ Error State */}
-      {error && <p className="text-red-500 mt-4">{error}</p>}
-
-      {/* 🛍 Best-Selling Product (ONLY ONE) */}
-      <div className="flex justify-center mt-6">
-        <div className="max-w-md">
-          {bestSellers.length > 0 ? (
-            bestSellers.map((product) => (
-              <div key={product.id} className="bg-white rounded-lg p-4 shadow-lg">
-                <Image
-                  src={
-                    product.image.startsWith("http")
-                      ? product.image
-                      : `${process.env.NEXT_PUBLIC_API_URL}${product.image}`
-                  }
-                  alt={product.title}
-                  width={400}
-                  height={400}
-                  className="rounded-lg object-cover"
-                />
-                <h3 className="font-bold mt-2">{product.title}</h3>
-                <p className="text-gray-500">{product.description}</p>
-                <p className="font-bold mt-1">${product.price.toFixed(2)}</p>
-              </div>
-            ))
-          ) : (
-            !loading && <p className="text-gray-800">No best-seller available</p>
-          )}
-        </div>
+        <div className="mt-8">{content}</div>
       </div>
     </section>
   );

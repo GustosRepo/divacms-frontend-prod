@@ -4,16 +4,16 @@ import { useRouter } from "next/navigation";
 import { useAuth } from "../../context/AuthContext";
 import Link from "next/link";
 
+type Order = {
+  id: string;
+  status: string;           // e.g. "Pending", "Shipped"
+  total_amount: number;     // dollars (from your table)
+  tracking_code: string;    // e.g. "Processing" or carrier code
+};
+
 export default function OrderHistoryPage() {
   const { user } = useAuth();
   const router = useRouter();
-
-  interface Order {
-    id: string;
-    status: string;
-    totalAmount: number;
-    trackingCode: string;
-  }
 
   const [orders, setOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState(true);
@@ -25,38 +25,45 @@ export default function OrderHistoryPage() {
       return;
     }
 
-    fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/orders/my-orders`, {
-      headers: {
-        Authorization: `Bearer ${user?.token || ""}`,
-      },
-    })
-      .then((res) => res.json())
-      .then((data) => setOrders(data))
-      .catch(() => setError("Failed to load orders."))
-      .finally(() => setLoading(false));
+    (async () => {
+      try {
+        const res = await fetch(
+          `${process.env.NEXT_PUBLIC_API_URL}/api/orders/my-orders`,
+          { headers: { Authorization: `Bearer ${user?.token || ""}` } }
+        );
+        if (!res.ok) throw new Error("Failed to load orders");
+        const data = (await res.json()) as Order[];
+        setOrders(data ?? []);
+      } catch (e) {
+        setError("Failed to load orders.");
+      } finally {
+        setLoading(false);
+      }
+    })();
   }, [user, router]);
 
   const cancelOrder = async (orderId: string) => {
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/orders/${orderId}/cancel`, {
-        method: "PUT", // <-- Correct method!
-        headers: {
-          Authorization: `Bearer ${user?.token || ""}`,
-        },
-      });
-  
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/api/orders/${orderId}/cancel`,
+        {
+          method: "PUT",
+          headers: { Authorization: `Bearer ${user?.token || ""}` },
+        }
+      );
       if (!res.ok) throw new Error("Failed to cancel order");
-  
+
       setOrders((prev) =>
-        prev.map((order) =>
-          order.id === orderId ? { ...order, status: "CANCELLED" } : order
-        )
+        prev.map((o) => (o.id === orderId ? { ...o, status: "Cancelled" } : o))
       );
     } catch (err) {
       console.error(err);
       setError("Could not cancel order.");
     }
   };
+
+  const fmtMoney = (n?: number) =>
+    typeof n === "number" && !Number.isNaN(n) ? `$${n.toFixed(2)}` : "N/A";
 
   if (loading) return <p className="text-center text-white">Loading orders...</p>;
   if (error) return <p className="text-center text-red-500">{error}</p>;
@@ -66,44 +73,51 @@ export default function OrderHistoryPage() {
       <h1 className="text-3xl font-bold text-center">📦 My Orders</h1>
 
       {orders.length === 0 ? (
-        <p className="text-gray-400 text-center mt-6">You haven&apos;t placed any orders yet.</p>
+        <p className="text-gray-400 text-center mt-6">
+          You haven&apos;t placed any orders yet.
+        </p>
       ) : (
         <div className="mt-6 space-y-6">
-          {orders.map((order) => (
-            <div
-              key={order.id}
-              className="bg-black/20 p-6 rounded-lg shadow-lg"
-            >
-              <h2 className="text-lg font-bold">
-                Order <span className="text-pink-400">#{order.id}</span>
-              </h2>
-              <p className="text-gray-300">Status: {order.status}</p>
-              <p className="text-gray-300">
-                Total: <span className="font-bold">${order.totalAmount}</span>
-              </p>
-              <p className="text-gray-300">Tracking: {order.trackingCode}</p>
+          {orders.map((order) => {
+            const isPending =
+              order.status?.toLowerCase() === "pending" ||
+              order.status?.toLowerCase() === "processing";
 
-              <Link
-                href={
-                  user
-                    ? `/track-order?orderId=${order.id}&email=${user.email}`
-                    : "#"
-                }
-                className="mt-2 inline-block bg-pink-500 hover:bg-pink-700 px-4 py-2 rounded-md text-sm text-white"
-              >
-                View Order
-              </Link>
+            return (
+              <div key={order.id} className="bg-black/20 p-6 rounded-lg shadow-lg">
+                <h2 className="text-lg font-bold">
+                  Order <span className="text-pink-400">#{order.id}</span>
+                </h2>
 
-              {order.status === "PENDING" && (
-                <button
-                  onClick={() => cancelOrder(order.id)}
-                  className="ml-2 inline-block bg-red-600 hover:bg-red-800 px-4 py-2 rounded-md text-sm text-white"
+                <p className="text-gray-300">
+                  Status: {order.status?.toUpperCase() || "PENDING"}
+                </p>
+
+                <p><strong>TOTAL:</strong> {fmtMoney(order.total_amount)}</p>
+                <p><strong>TRACKING:</strong> {order.tracking_code || "N/A"}</p>
+
+                <Link
+                  href={
+                    user
+                      ? `/track-order?orderId=${order.id}&email=${user.email}`
+                      : "#"
+                  }
+                  className="mt-2 inline-block bg-pink-500 hover:bg-pink-700 px-4 py-2 rounded-md text-sm text-white"
                 >
-                  Cancel Order
-                </button>
-              )}
-            </div>
-          ))}
+                  View Order
+                </Link>
+
+                {isPending && (
+                  <button
+                    onClick={() => cancelOrder(order.id)}
+                    className="ml-2 inline-block bg-red-600 hover:bg-red-800 px-4 py-2 rounded-md text-sm text-white"
+                  >
+                    Cancel Order
+                  </button>
+                )}
+              </div>
+            );
+          })}
         </div>
       )}
     </div>

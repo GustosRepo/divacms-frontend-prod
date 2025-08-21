@@ -22,7 +22,7 @@ export default function AdminDashboard() {
   useEffect(() => {
     const fetchStats = async () => {
       try {
-        const res = await fetch("${process.env.NEXT_PUBLIC_API_URL}/admin/dashboard-stats", {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/admin/dashboard-stats`, {
           headers: { Authorization: `Bearer ${user?.token}` },
         });
 

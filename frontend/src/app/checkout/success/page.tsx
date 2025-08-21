@@ -20,7 +20,7 @@ export default function SuccessPage() {
   
       const finalizePoints = async () => {
         try {
-          const response = await fetch("${process.env.NEXT_PUBLIC_API_URL}/checkout/finalize-points", {
+          const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/checkout/finalize-points`, {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
@@ -52,9 +52,9 @@ export default function SuccessPage() {
         <p className="mt-4">Your order has been successfully placed.</p>
 
         {orderId && (
-          <p className="mt-2 text-gray-400">
-            Order Reference: <strong>{orderId}</strong>
-          </p>
+            <p className="mt-2 text-gray-400 break-words">
+            Order Reference: <strong className="break-all">{orderId}</strong>
+            </p>
         )}
 
         <button

@@ -39,23 +39,25 @@ export default function ProductPage() {
   if (!product) return <p className="text-red-500 text-center mt-6">PRODUCT NOT FOUND.</p>;
 
   return (
-    <div className="container mx-auto px-6 py-10 text-white">
+    <div className="container mx-auto px-2 sm:px-4 md:px-8 py-10 text-white mt-28">
       <div className="flex flex-col md:flex-row items-center gap-10">
-        <Image
-          src={product.image.startsWith("http") ? product.image : `${process.env.NEXT_PUBLIC_API_URL}${product.image}`}
-          alt={product.title}
-          width={500}
-          height={500}
-          className="rounded-lg shadow-lg object-cover"
-        />
-
-        <div className="text-center md:text-left">
-          <h1 className="text-4xl font-bold">{product.title}</h1>
-          <p className="text-lg mt-2">{product.description}</p>
-          <p className="text-2xl font-semibold text-pink-500 mt-4">${product.price.toFixed(2)}</p>
-
-          {/* Quantity Selector */}
-          <div className="flex items-center mt-6 space-x-3">
+        <div className="w-full md:w-1/2 flex justify-center">
+          <div className="w-full max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg">
+            <Image
+              src={product.image.startsWith("http") ? product.image : `${process.env.NEXT_PUBLIC_API_URL}${product.image}`}
+              alt={product.title}
+              width={400}
+              height={400}
+              className="rounded-lg shadow-lg object-cover w-full h-auto"
+              priority
+            />
+          </div>
+        </div>
+        <div className="w-full md:w-1/2 text-center md:text-left">
+          <h1 className="text-3xl md:text-4xl font-bold break-words">{product.title}</h1>
+          <p className="text-base md:text-lg mt-2 break-words">{product.description}</p>
+          <p className="text-xl md:text-2xl font-semibold text-pink-500 mt-4">${product.price.toFixed(2)}</p>
+          <div className="flex flex-col sm:flex-row items-center mt-6 space-y-2 sm:space-y-0 sm:space-x-3">
             <label className="text-lg">Quantity:</label>
             <select
               className="px-3 py-2 text-black rounded-lg bg-white shadow-md"
@@ -69,23 +71,20 @@ export default function ProductPage() {
               ))}
             </select>
           </div>
-
-          {/* Add to Cart Button */}
           <button
-            className="mt-6 bg-pink-500 hover:bg-pink-700 text-white px-6 py-3 rounded-lg text-lg shadow-md transition transform hover:scale-105"
+            className="mt-6 bg-pink-500 hover:bg-pink-700 text-white px-6 py-3 rounded-lg text-lg shadow-md transition transform hover:scale-105 w-full sm:w-auto"
             onClick={() => addToCart({ ...product, quantity })}
+            aria-label={`Add ${product.title} to cart`}
           >
             Add to Cart
           </button>
         </div>
       </div>
-
-      {/* ✅ Pop-up Notification */}
       {cartNotification && (
-        <div className="fixed bottom-10 right-10 bg-black/80 text-white px-6 py-3 rounded-lg shadow-lg flex items-center space-x-4 animate-fade-in">
+        <div className="fixed bottom-4 right-4 bg-black/80 text-white px-6 py-3 rounded-lg shadow-lg flex flex-col sm:flex-row items-center space-y-2 sm:space-y-0 sm:space-x-4 animate-fade-in z-50">
           <span>🎉 Item added to cart!</span>
           <Link href="/cart">
-            <button className="bg-pink-500 hover:bg-pink-700 text-white px-4 py-2 rounded-lg text-sm">
+            <button className="bg-pink-500 hover:bg-pink-700 text-white px-4 py-2 rounded-lg text-sm w-full sm:w-auto">
               Go to Cart
             </button>
           </Link>
