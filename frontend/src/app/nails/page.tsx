@@ -12,9 +12,9 @@ const nailsConfig: BrandConfig = {
   tagline: 'Luxury press-on artistry. Express every mood in minutes.',
   tags: ['Handcrafted', 'Reusable', 'Salon-Free', 'Trendy', 'Custom'],
   categories: [
-    { title: 'Signature Sets', desc: 'Core curated looks', slug: 'signature' },
-    { title: 'Limited Drops', desc: 'Seasonal exclusives', slug: 'limited' },
-    { title: 'Custom Orders', desc: 'Personalized designs', slug: 'custom' },
+    { title: 'Signature Sets', desc: 'Core curated looks', slug: 'signature-sets' },
+    { title: 'Limited Drops', desc: 'Seasonal exclusives', slug: 'limited-drops' },
+    { title: 'Custom Orders', desc: 'Personalized designs', slug: 'custom-orders' },
   ],
   theme: {
     gradient: 'from-pink-100 via-purple-200 to-blue-200',

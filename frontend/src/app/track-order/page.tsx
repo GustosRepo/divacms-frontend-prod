@@ -38,7 +38,7 @@ export default function TrackOrderPage() {
 
   return (
     <div className="container mx-auto px-6 py-10 text-white">
-      <h1 className="text-3xl font-bold text-center text-pink-500">Track Your Order</h1>
+      <h1 className="font-shuneva text-3xl font-bold text-center text-pink-500">Track Your Order</h1>
 
       <div className="mt-6 bg-black/20 p-6 rounded-lg shadow-lg max-w-md mx-auto">
         <input

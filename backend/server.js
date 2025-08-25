@@ -11,8 +11,14 @@ import webhookRoutes from "./src/routes/webhookRoutes.js";
 
 const app = express();
 
-// 🛑 RAW BODY MIDDLEWARE FIRST — THIS MUST BE ABOVE express.json()
-app.use("/api/webhooks/stripe", express.raw({ type: "application/json" }), webhookRoutes);
+// Diagnostic request logger (temporary) – logs every incoming request
+app.use((req, _res, next) => {
+  console.log(`[REQ] ${req.method} ${req.originalUrl}`);
+  next();
+});
+
+// 🛑 RAW BODY MIDDLEWARE FIRST — broaden type in case of content-type variance
+app.use("/api/webhooks/stripe", express.raw({ type: () => true }), webhookRoutes);
 
 // ✅ Other middleware BELOW raw webhook handler
 app.use(cors({ origin: "http://localhost:3000", credentials: true }));
@@ -30,6 +36,7 @@ import userRoutes from "./src/routes/userRoutes.js";
 import checkoutRoutes from "./src/routes/checkout.js";
 import emailRoutes from "./src/routes/emailRoutes.js";
 import analyticsRoutes from "./src/routes/analyticsRoutes.js";
+import blogRoutes from "./src/routes/blogRoutes.js";
 
 app.use("/auth", authRoutes);
 app.use("/orders", orderRoutes);
@@ -40,6 +47,7 @@ app.use("/users", userRoutes);
 app.use("/checkout", checkoutRoutes);
 app.use("/email", emailRoutes);
 app.use("/analytics", analyticsRoutes);
+app.use("/api/blog", blogRoutes);
 
 // ✅ Health route
 app.get("/protected", (req, res) => {

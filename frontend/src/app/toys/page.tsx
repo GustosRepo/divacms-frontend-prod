@@ -12,9 +12,9 @@ const toysConfig: BrandConfig = {
   tagline: 'Curated art toys, vinyl figures, and limited collectibles. Elevate your shelf.',
   tags: ['Vinyl', 'Designer', 'Blind Box', 'Limited', 'Resin'],
   categories: [
-    { title: 'Vinyl Figures', desc: 'Bold sculpts & iconic lines', slug: 'vinyl' },
-    { title: 'Blind Boxes', desc: 'Mystery collectibles', slug: 'blind-box' },
-    { title: 'Limited Editions', desc: 'Short runs & exclusives', slug: 'limited' },
+    { title: 'Vinyl Figures', desc: 'Bold sculpts & iconic lines', slug: 'vinyl-figures' },
+    { title: 'Blind Boxes', desc: 'Mystery collectibles', slug: 'blind-boxes' },
+    { title: 'Limited Editions', desc: 'Short runs & exclusives', slug: 'limited-editions' },
   ],
   theme: {
     gradient: 'from-indigo-100 via-sky-200 to-teal-200',

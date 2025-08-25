@@ -10,10 +10,10 @@ export default function AboutSection({ embedded = true }: AboutSectionProps) {
     <div className="relative pt-24 rounded-3xl p-8 bg-white/55 backdrop-blur-xl border border-white/70 shadow-[0_6px_20px_-6px_rgba(0,0,0,0.25)] overflow-hidden">
       <div className="absolute inset-0 opacity-0 hover:opacity-100 transition bg-[radial-gradient(circle_at_80%_20%,rgba(255,255,255,0.85),transparent_60%)]" />
       <div className="relative flex flex-col items-center text-center">
-        <h2 className="text-3xl font-extrabold tracking-wide drop-shadow-lg">
+        <h2 className="font-shuneva text-3xl font-extrabold tracking-wide drop-shadow-lg">
           About Us
         </h2>
-        <p className="text-sm mt-3 max-w-2xl font-medium leading-relaxed">
+        <p className="font-shuneva text-sm mt-3 max-w-2xl font-medium leading-relaxed">
           Diva Factory is your pastel Y2K destination for luxury press-on nails,
           collectible toys, and kawaii boutique finds! We handcraft every nail
           set, curate the cutest toys, and source unique accessories so you can
@@ -24,7 +24,7 @@ export default function AboutSection({ embedded = true }: AboutSectionProps) {
             <div className="rounded-xl overflow-hidden bg-white/70 backdrop-blur">
               <Image
                 src="/uploads/frontpgabout.png"
-                alt="About Diva Factory Nails"
+                alt="About Diva Factory "
                 width={600}
                 height={380}
                 className="w-full h-auto object-cover"

@@ -25,9 +25,9 @@ export default function ProductCard({ product }: { product: Product }) {
           priority
         />
       </div>
-      <h3 className="font-bold mt-2 break-words text-base md:text-lg">{product.title}</h3>
-      <p className="text-[#222] dark:text-[#f3f3f7] break-words text-sm md:text-base">{product.description}</p>
-      <p className="font-bold mt-1 text-pink-500 text-base md:text-lg">${product.price.toFixed(2)}</p>
+      <h3 className="font-shuneva font-bold mt-2 break-words text-base md:text-lg">{product.title}</h3>
+      <p className="font-shuneva text-[#222] dark:text-[#f3f3f7] break-words text-sm md:text-base">{product.description}</p>
+      <p className="font-shuneva font-bold mt-1 text-pink-500 text-base md:text-lg">${product.price.toFixed(2)}</p>
     </div>
   );
 }

@@ -8,11 +8,12 @@ export default function Home() {
   return (
     <>
       <Hero />
-      <BestSellers />
-      <AboutSection />
-      <ProductList />
-      <Testimonials />
-
+      <div className="max-w-screen-xl mx-auto px-4 sm:px-6 md:px-8 space-y-16">
+        <BestSellers />
+        <AboutSection />
+        <ProductList />
+        <Testimonials />
+      </div>
     </>
   );
 }

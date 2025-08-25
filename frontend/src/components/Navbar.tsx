@@ -52,7 +52,7 @@ export default function Navbar() {
         />
       </motion.div>
       {/* Desktop Menu */}
-      <div className="hidden md:flex items-center gap-6 text-sm font-medium">
+      <div className="hidden md:flex items-center gap-6 text-sm font-medium font-shuneva">
         <Link href="/" className="hover:text-pink-500">Home</Link>
         <Link href="/shop" className="hover:text-pink-500">Shop</Link>
         <Link href="/toys" className="hover:text-pink-500">Toys</Link>
@@ -67,7 +67,7 @@ export default function Navbar() {
           </span>
         )}</Link>
         <Link href="/track-order">
-          <button className="bg-pink-500 hover:bg-pink-600 text-white px-3 py-1.5 rounded-md shadow-sm">Track</button>
+          <button className="font-shuneva bg-pink-500 hover:bg-pink-600 text-white px-3 py-1.5 rounded-md shadow-sm">Track</button>
         </Link>
         {/* Brand Theme Selector */}
         {/*
@@ -103,34 +103,34 @@ export default function Navbar() {
           <div className="flex items-center gap-3">
             <Link
               href={user?.isAdmin ? "/admin" : "/dashboard"}
-              className="text-xs bg-pink-500 px-3 py-1.5 rounded-md text-white"
+              className="font-shuneva text-xs bg-pink-500 px-3 py-1.5 rounded-md text-white"
             >
               Profile
             </Link>
             <button
               onClick={logout}
-              className="text-red-500 text-xs hover:underline"
+              className="font-shuneva text-red-500 text-xs hover:underline"
             >
               Logout
             </button>
           </div>
         ) : (
-          <Link href="/login" className="text-pink-500 hover:text-pink-400">
+          <Link href="/login" className="font-shuneva text-pink-500 hover:text-pink-400">
             Login
           </Link>
         )}
       </div>
       {/* Mobile Menu */}
       {menuOpen && (
-        <div className="absolute top-full left-0 w-full backdrop-blur-md bg-white/80 dark:bg-[#141720]/80 flex flex-col items-center py-4 md:hidden text-sm font-medium border-b border-white/30 dark:border-white/10">
+        <div className="absolute top-full left-0 w-full backdrop-blur-md bg-white/80 dark:bg-[#141720]/80 flex flex-col items-center py-4 md:hidden text-sm font-medium font-shuneva border-b border-white/30 dark:border-white/10">
           {[['/', 'Home'], ['/shop', 'Shop'], ['/toys', 'Toys'], ['/nails', 'Nails'], ['/boutique', 'Boutique'], ['/about', 'About'], ['/blog', 'Blog'], ['/contact', 'Contact']].map(([href, label]) => (
             <Link key={href} href={href} className="py-2 w-full text-center hover:text-pink-500" onClick={() => setMenuOpen(false)}>
               {label}
             </Link>
           ))}
           <div className="flex gap-3 mt-3">
-            <button onClick={toggleDark} className="px-3 py-1 rounded-md bg-pink-500 text-white text-xs">{dark ? 'Light' : 'Dark'}</button>
-            <button onClick={() => setReducedMotion(!reducedMotion)} className="px-3 py-1 rounded-md bg-white/60 dark:bg-white/10 text-xs border border-white/30 dark:border-white/10">{reducedMotion ? 'Motion' : 'Reduce'}</button>
+            <button onClick={toggleDark} className="font-shuneva px-3 py-1 rounded-md bg-pink-500 text-white text-xs">{dark ? 'Light' : 'Dark'}</button>
+            <button onClick={() => setReducedMotion(!reducedMotion)} className="font-shuneva px-3 py-1 rounded-md bg-white/60 dark:bg-white/10 text-xs border border-white/30 dark:border-white/10">{reducedMotion ? 'Motion' : 'Reduce'}</button>
           </div>
             {/* 
             <div className="mt-3">
@@ -152,20 +152,20 @@ export default function Navbar() {
             )}
           </Link>
           <Link href="/track-order" className="py-2 w-full text-center" onClick={() => setMenuOpen(false)}>
-            <button className="bg-pink-500 hover:bg-pink-600 text-white px-4 py-2 rounded-md w-full">Track Order</button>
+            <button className="font-shuneva bg-pink-500 hover:bg-pink-600 text-white px-4 py-2 rounded-md w-full">Track Order</button>
           </Link>
           {user ? (
             <div className="flex flex-col items-center w-full">
               <Link
                 href={user?.isAdmin ? "/admin" : "/dashboard"}
-                className="text-xs bg-pink-500 px-3 py-1.5 rounded-md w-full text-center text-white"
+                className="font-shuneva text-xs bg-pink-500 px-3 py-1.5 rounded-md w-full text-center text-white"
                 onClick={() => setMenuOpen(false)}
               >
                 Profile
               </Link>
               <button
                 onClick={() => { logout(); setMenuOpen(false); }}
-                className="text-red-500 text-xs hover:underline w-full py-2"
+                className="font-shuneva text-red-500 text-xs hover:underline w-full py-2"
               >
                 Logout
               </button>
@@ -173,7 +173,7 @@ export default function Navbar() {
           ) : (
             <Link
               href="/login"
-              className="text-xs bg-pink-500 px-3 py-1.5 rounded-md w-full text-center text-white"
+              className="font-shuneva text-xs bg-pink-500 px-3 py-1.5 rounded-md w-full text-center text-white"
               onClick={() => setMenuOpen(false)}
             >
               Login

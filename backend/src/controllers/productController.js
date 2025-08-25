@@ -392,7 +392,8 @@ export const getProductsByCategory = async (req, res) => {
     const { data: products, error } = await supabase
       .from("product")
       .select("*, category:category!product_category_id_fkey(id, name)")
-      .eq("categoryId", categoryId);
+    // Use correct foreign key column (category_id) if schema follows snake_case
+    .eq("category_id", categoryId);
     if (error) throw error;
     res.json(products);
   } catch (error) {

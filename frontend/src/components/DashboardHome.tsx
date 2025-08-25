@@ -12,7 +12,7 @@ const DashboardHome: React.FC<DashboardHomeProps> = ({ userName, points }) => {
         🎉 Welcome, {userName}! 💖
       </h1>
       <p className="text-lg text-gray-300 mt-2">
-        Thank you for being a part of Diva Factory Nails! ✨
+        Thank you for being a part of Diva Factory! ✨
       </p>
 
       {/* Diva Points Card */}

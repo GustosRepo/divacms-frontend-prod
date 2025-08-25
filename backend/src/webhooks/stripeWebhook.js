@@ -40,6 +40,10 @@ export const stripeWebhookHandler = async (req, res) => {
   try {
     if (event.type === "checkout.session.completed") {
       const session = event.data.object || event.object || {};
+  console.log("📝 Raw session.id:", session.id, "has metadata?", !!session.metadata);
+  console.log("📝 session.metadata:", session.metadata);
+  // Preview raw body length for signature context
+  console.log("📝 Raw body length:", Buffer.isBuffer(req.body) ? req.body.length : (typeof req.body === 'string' ? req.body.length : 'n/a'));
       const inserted = await processCheckoutSession(session); // ← no res passed
 
       console.log("📦 Webhook metadata received:", session?.metadata || null);
@@ -60,9 +64,11 @@ const parseItemsFromSession = async (session) => {
   // 1) Prefer metadata.items (your checkout code sends it)
   try {
     const rawItems = session?.metadata?.items;
+  console.log("🔍 parseItemsFromSession: raw metadata.items =", rawItems);
     if (rawItems) {
       const parsed = typeof rawItems === "string" ? JSON.parse(rawItems) : rawItems;
       if (Array.isArray(parsed)) {
+    console.log("🔍 Parsed metadata.items array length:", parsed.length);
         // Support compact form {id,q,p}
         return parsed.map(it => ({
           id: it.id,
@@ -82,6 +88,7 @@ const parseItemsFromSession = async (session) => {
         limit: 100,
         expand: ["data.price.product"],
       });
+  console.log("🔍 Stripe line items fetched count:", li.data?.length || 0);
       return li.data
         .map((row) => {
           const internalId = row?.price?.product?.metadata?.internal_id;
@@ -327,6 +334,7 @@ const processCheckoutSession = async (session) => {
     // existing shipping_fee kept for backward compatibility
     shipping_fee,
     total_amount, // dollars
+  points_used, // ADD: persist loyalty points consumed
     tracking_code,
     tracking_url,
     label_url,
@@ -382,6 +390,7 @@ const processCheckoutSession = async (session) => {
     for (const it of items) {
       try {
         const qty = Number(it.quantity || 1);
+  console.log("🛠 Attempting decrement for product", it.id, "qty", qty);
         const { error: decErr } = await decrementProductQuantity(it.id, qty);
         if (decErr) {
           console.warn("⚠️ decrementProductQuantity error for", it.id, decErr);

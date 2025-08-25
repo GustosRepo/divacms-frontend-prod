@@ -32,12 +32,13 @@ const extractFormData = (req, res, next) => {
 };
 
 // 🔹 Product Routes
+// Order matters: place more specific routes before generic ":id" to avoid shadowing
 router.get("/", getAllProducts);
 router.post("/", isAdminMiddleware, upload.single("image"), extractFormData, addProduct);
 router.get("/best-sellers", getBestSellers);
+router.get("/category/:categoryId", getProductsByCategory); // must come before ":id"
+router.get("/admin/products", isAdminMiddleware, getAllProducts); // must come before ":id"
 router.get("/:id", getProductById);
-router.get("/category/:categoryId", getProductsByCategory);
-router.get("/admin/products", isAdminMiddleware, getAllProducts);
 router.put("/:id", isAdminMiddleware, upload.single("image"), extractFormData, updateProduct);
 router.delete("/:id", isAdminMiddleware, deleteProduct);
 

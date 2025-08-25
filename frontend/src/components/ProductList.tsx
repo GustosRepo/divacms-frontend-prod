@@ -68,13 +68,13 @@ export default function ProductList({ embedded = false, limit = 3 }: ProductList
 
   return (
     <section className="mt-16 text-center px-4">
-      <h2 className="text-3xl font-extrabold tracking-wide bg-clip-text text-transparent bg-gradient-to-r from-pink-600 via-violet-600 to-indigo-600 drop-shadow-sm">Featured Nails</h2>
-      <p className="text-[#222] dark:text-[#f3f3f7] text-sm mt-2 max-w-xl mx-auto">Explore our trending designs – hand‑picked for you!</p>
+      <h2 className="font-shuneva text-3xl font-extrabold tracking-wide bg-clip-text text-transparent bg-gradient-to-r from-pink-600 via-violet-600 to-indigo-600 drop-shadow-sm">Featured Nails</h2>
+      <p className="font-shuneva text-[#222] dark:text-[#f3f3f7] text-sm mt-2 max-w-xl mx-auto">Explore our trending designs – hand‑picked for you!</p>
       {grid}
       <div className="mt-8">
         <a
           href="/shop"
-          className="inline-flex items-center gap-2 bg-gradient-to-r from-pink-500 to-fuchsia-500 hover:from-pink-600 hover:to-fuchsia-600 text-white px-7 py-3 rounded-full text-sm font-semibold shadow-md hover:shadow-lg transition border border-pink-400/40"
+          className="font-shuneva inline-flex items-center gap-2 bg-gradient-to-r from-pink-500 to-fuchsia-500 hover:from-pink-600 hover:to-fuchsia-600 text-white px-7 py-3 rounded-full text-sm font-semibold shadow-md hover:shadow-lg transition border border-pink-400/40"
         >
           View All Products <span className="text-xs">→</span>
         </a>

@@ -14,7 +14,11 @@ export default {
       backdropBlur: {
         'xl': '20px',
       },
-      
+      fontFamily: {
+        'shuneva': ['var(--font-shuneva)', 'serif'],
+        'sans': ['var(--font-geist-sans)', 'sans-serif'],
+        'mono': ['var(--font-geist-mono)', 'monospace'],
+      },
     },
   },
   plugins: [],

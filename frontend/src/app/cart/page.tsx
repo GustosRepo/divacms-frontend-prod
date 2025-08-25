@@ -18,7 +18,7 @@ export default function CartPage() {
   return (
     <div className="flex items-center justify-center min-h-screen text-white">
       <div className="w-full max-w-4xl p-6">
-        <h1 className="text-4xl font-bold text-center">🛍️ YOUR CART</h1>
+        <h1 className="font-shuneva text-4xl font-bold text-center">🛍️ YOUR CART</h1>
         <p className="text-center text-pink-400 mt-2">
           {cart.length > 0 ? `You have ${cart.length} item(s) in your cart!` : "Your cart is empty."}
         </p>
@@ -47,7 +47,7 @@ export default function CartPage() {
                   />
 
                   <div className="flex-1 px-4">
-                    <h2 className="text-lg font-bold">{product.title}</h2>
+                    <h2 className="font-shuneva text-lg font-bold">{product.title}</h2>
                     <p className="text-gray-300">${product.price.toFixed(2)} x {product.quantity}</p>
 
                     {/* Quantity Selector */}

@@ -116,10 +116,10 @@ export default function Shop() {
     <div className="pt-28 pb-16 space-y-16">
       {/* Brand Hub Section */}
       <section className="space-y-6">
-        <h1 className="text-3xl md:text-4xl font-extrabold tracking-tight text-white text-center">
+        <h1 className="font-shuneva text-3xl md:text-4xl font-extrabold tracking-tight text-white text-center">
           {brandMeta ? brandMeta.name : 'Explore Our Brand Segments'}
         </h1>
-        <p className="text-center text-white/80 max-w-2xl mx-auto">
+        <p className="font-shuneva text-center text-white/80 max-w-2xl mx-auto">
           {brandMeta ? brandMeta.tagline : 'Choose a brand to enter a tailored shopping experience.'}
         </p>
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
@@ -132,9 +132,9 @@ export default function Shop() {
                 className={`relative rounded-2xl overflow-hidden p-6 bg-gradient-to-br ${cfg.gradient} shadow transition group ${active ? 'ring-2 ring-offset-2 ring-white/60' : 'hover:shadow-xl'}`}
               >
                 <div className="relative z-10">
-                  <h3 className={`text-xl font-bold ${cfg.accent.replace('text-', 'group-hover:text-')}`}>{cfg.name.replace('Diva Factory ', '')}</h3>
-                  <p className="mt-2 text-sm text-gray-700 font-medium">{cfg.tagline}</p>
-                  <span className={`mt-4 inline-block text-[11px] font-semibold tracking-wide px-3 py-1 rounded-full border ${cfg.chip}`}>{active ? 'Selected' : 'Enter'}</span>
+                  <h3 className={`font-shuneva text-xl font-bold ${cfg.accent.replace('text-', 'group-hover:text-')}`}>{cfg.name.replace('Diva Factory ', '')}</h3>
+                  <p className="font-shuneva mt-2 text-sm text-gray-700 font-medium">{cfg.tagline}</p>
+                  <span className={`font-shuneva mt-4 inline-block text-[11px] font-semibold tracking-wide px-3 py-1 rounded-full border ${cfg.chip}`}>{active ? 'Selected' : 'Enter'}</span>
                 </div>
                 <div className="absolute -right-8 -bottom-8 w-40 h-40 bg-white/30 rounded-full blur-2xl" />
               </Link>
@@ -147,21 +147,21 @@ export default function Shop() {
       {!activeBrand && (
         <section className="container mx-auto px-4 md:px-6">
           <div className="flex items-center justify-between mb-6">
-            <h2 className="text-2xl font-bold text-white">Trending Across All Brands</h2>
-            <span className="text-xs text-white/50">Auto-sampled</span>
+            <h2 className="font-shuneva text-2xl font-bold text-white">Trending Across All Brands</h2>
+            {/* <span className="font-shuneva text-xs text-white/50">Auto-sampled</span> */}
           </div>
-          {loading && <p className="text-white/80">Loading trending...</p>}
-          {error && <p className="text-red-400">{error}</p>}
+          {loading && <p className="font-shuneva text-white/80">Loading trending...</p>}
+          {error && <p className="font-shuneva text-red-400">{error}</p>}
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4 gap-5">
-            {!loading && !error && trendingProducts.length === 0 && <p className="text-gray-300 col-span-full">No products yet.</p>}
+            {!loading && !error && trendingProducts.length === 0 && <p className="font-shuneva text-gray-300 col-span-full">No products yet.</p>}
             {trendingProducts.map(p => (
               <div key={p.id} className="bg-white rounded-lg p-4 shadow hover:shadow-lg transition relative">
-                <div className="absolute top-2 left-2 text-[10px] uppercase tracking-wide px-2 py-0.5 rounded-full bg-black/70 text-white">{p._brand || 'brand'}</div>
+                <div className="font-shuneva absolute top-2 left-2 text-[10px] uppercase tracking-wide px-2 py-0.5 rounded-full bg-black/70 text-white">{p._brand || 'brand'}</div>
                 <Link href={`/products/${p.id}`}>
                   <Image src={p.image ? (p.image.startsWith('http') ? p.image : `${process.env.NEXT_PUBLIC_API_URL}${p.image}`) : '/placeholder.jpg'} alt={p.title} width={400} height={400} className="rounded-md object-cover" />
                 </Link>
-                <h3 className="mt-2 font-semibold text-sm text-gray-900 line-clamp-1">{p.title}</h3>
-                <p className="text-pink-600 font-bold text-sm mt-1">${p.price.toFixed(2)}</p>
+                <h3 className="font-shuneva mt-2 font-semibold text-sm text-gray-900 line-clamp-1">{p.title}</h3>
+                <p className="font-shuneva text-pink-600 font-bold text-sm mt-1">${p.price.toFixed(2)}</p>
               </div>
             ))}
           </div>

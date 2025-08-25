@@ -7,14 +7,14 @@ export const metadata = {
 };
 
 const boutiqueConfig: BrandConfig = {
-  brand: 'boutique',
+  brand: 'accessories',
   displayName: 'Diva Factory Boutique',
   tagline: 'Kawaii lifestyle & pastel finds across accessories & decor.',
   tags: ['Kawaii', 'Pastel', 'Curated', 'Lifestyle', 'Giftable'],
   categories: [
-    { title: 'Kawaii Plush', desc: 'Soft & huggable', slug: 'plush' },
-    { title: 'Everyday Accessories', desc: 'Pins, clips & charms', slug: 'accessories' },
-    { title: 'Desk & Decor', desc: 'Aesthetic workspace items', slug: 'decor' },
+    { title: 'Everyday Essentials', desc: 'Pins, clips & charms', slug: 'everyday-essentials' },
+    { title: 'Seasonal Highlights', desc: 'Limited seasonal collections', slug: 'seasonal-highlights' },
+    { title: 'Statement Pieces', desc: 'Bold & eye-catching items', slug: 'statement-pieces' },
   ],
   theme: {
     gradient: 'from-amber-100 via-rose-200 to-pink-200',
@@ -25,7 +25,7 @@ const boutiqueConfig: BrandConfig = {
     glow1: 'bg-amber-300/40',
     glow2: 'bg-rose-300/30'
   },
-  ctaHref: '/shop?brand_segment=boutique'
+  ctaHref: '/shop?brand_segment=accessories'
 };
 
 export default function BoutiqueLanding() { return <BrandLanding config={boutiqueConfig}/>; }

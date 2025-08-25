@@ -104,10 +104,10 @@ export default function Testimonials({ embedded = true, type }: { embedded?: boo
 
   return (
     <section className="mt-20 text-center px-4">
-      <h2 className="text-3xl font-extrabold tracking-wide text-black dark:text-[#f3f3f7] drop-shadow-lg font-sans">
+      <h2 className="font-shuneva text-3xl font-extrabold tracking-wide text-black dark:text-[#f3f3f7] drop-shadow-lg">
         Customer Love
       </h2>
-      <p className="text-black dark:text-[#f3f3f7] text-base mt-2 font-bold font-sans drop-shadow-lg">What our divas are saying!</p>
+      <p className="font-shuneva text-black dark:text-[#f3f3f7] text-base mt-2 font-bold drop-shadow-lg">What our divas are saying!</p>
       {body}
     </section>
   );
