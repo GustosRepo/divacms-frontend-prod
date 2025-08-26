@@ -67,22 +67,58 @@ export default function MyOrders() {
         }
         if (!response.ok) throw new Error(`Failed to fetch orders (status ${response.status}).`);
         const data = await response.json();
-        const extracted = Array.isArray(data)
-          ? data
-          : Array.isArray(data?.orders)
-            ? data.orders
-            : [];
+        const extractedRaw = Array.isArray(data) ? data : (Array.isArray(data?.orders) ? data.orders : []);
+        // helpers to coerce values safely
+        const getString = (obj: Record<string, unknown>, keys: string[]) => {
+          for (const k of keys) {
+            const v = obj[k];
+            if (v == null) continue;
+            return String(v);
+          }
+          return "";
+        };
+        const getNumber = (obj: Record<string, unknown>, keys: string[]) => {
+          for (const k of keys) {
+            const v = obj[k];
+            if (typeof v === 'number') return v;
+            if (typeof v === 'string' && v.trim() !== '') {
+              const n = Number(v);
+              if (!Number.isNaN(n)) return n;
+            }
+          }
+          return undefined;
+        };
+
+        const extracted: Order[] = (extractedRaw as unknown[]).map((it) => {
+          const item = (it || {}) as Record<string, unknown>;
+          return {
+            id: getString(item, ['id', 'order_id']),
+            status: getString(item, ['status']) || 'Unknown',
+            totalAmount: getNumber(item, ['total_amount', 'total']),
+            subtotal: getNumber(item, ['subtotal']),
+            taxAmount: getNumber(item, ['tax_amount']),
+            shippingFee: getNumber(item, ['shipping_fee']),
+            discountAmount: getNumber(item, ['discount_amount']),
+            trackingCode: getString(item, ['tracking_code']),
+            trackingUrl: getString(item, ['tracking_url']),
+            carrier: getString(item, ['carrier']),
+            service: getString(item, ['service']),
+            createdAt: getString(item, ['created_at', 'createdAt']) || undefined,
+          };
+        });
+
         // NEW: sort newest first by createdAt (fallback to id if no createdAt)
-        extracted.sort((a: any, b: any) => {
+        extracted.sort((a: Order, b: Order) => {
           const at = a.createdAt ? new Date(a.createdAt).getTime() : 0;
           const bt = b.createdAt ? new Date(b.createdAt).getTime() : 0;
           if (bt !== at) return bt - at; // newer first
           return (b.id || "").localeCompare(a.id || "");
         });
         setOrders(extracted);
-      } catch (err: any) {
-        if (err?.name === "AbortError") return; // ignore aborts
-        setError(err instanceof Error ? err.message : "An error occurred");
+      } catch (err) {
+  const e = err as unknown;
+  if (typeof (e as any)?.name === 'string' && (e as any).name === "AbortError") return; // ignore aborts
+  setError(err instanceof Error ? err.message : String(err ?? 'An error'));
       } finally {
         setLoading(false);
       }
@@ -165,9 +201,9 @@ export default function MyOrders() {
       <div className="flex items-center justify-between flex-wrap gap-4">
         <h1 className="text-3xl font-bold">📦 My Orders</h1>
         <div className="flex items-center gap-3">
-          <select
-            value={groupBy}
-            onChange={(e) => setGroupBy(e.target.value as any)}
+      <select
+        value={groupBy}
+        onChange={(e) => setGroupBy(e.target.value as unknown as "none" | "status" | "month")}
             className="bg-gray-800 text-sm px-3 py-2 rounded border border-white/10"
             title="Group orders"
           >

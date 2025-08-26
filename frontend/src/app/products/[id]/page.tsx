@@ -66,67 +66,77 @@ export default function ProductPage() {
         </div>
 
         {/* Product Details */}
-        <div className="w-full md:w-1/2 text-center md:text-left px-2">
-          <h1 className="text-3xl md:text-4xl font-bold break-words">{product.title}</h1>
-          {(product.brandSegment || product.brand_segment) && (
-            <p className="mt-2 text-sm uppercase tracking-wide text-pink-300">Brand: {(product.brandSegment || product.brand_segment)}</p>
-          )}
-          {(product.categorySlug || product.category_slug) && (
-            <p className="text-xs text-white/60 mt-1">Category: {(product.categorySlug || product.category_slug)}</p>
-          )}
-          <p className="text-base md:text-lg mt-2 break-words">{product.description}</p>
-          <p className="text-xl md:text-2xl font-semibold text-pink-500 mt-4">${product.price.toFixed(2)}</p>
+        <div className="w-full md:w-1/2 px-2">
+          <div className="bg-gradient-to-br from-black/40 via-black/30 to-black/20 border border-white/10 rounded-xl p-6 shadow-xl backdrop-blur-md">
+            <h1 className="font-shuneva text-4xl md:text-5xl lg:text-6xl font-extrabold leading-tight text-white drop-shadow-lg break-words">
+              {product.title}
+            </h1>
 
-          {/* Product Features */}
-          <ul className="mt-4 text-gray-300 text-sm space-y-2">
-            <li>✅ Long-lasting wear</li>
-            <li>✅ Reusable & easy to apply</li>
-            <li>✅ Custom sizing available</li>
-            <li>✅ Handmade with love 💖</li>
-          </ul>
+            {(product.brandSegment || product.brand_segment) && (
+              <p className="font-shuneva mt-3 text-sm uppercase tracking-wide text-pink-200 drop-shadow-sm">
+          Brand: <span className="font-bold text-pink-300">{product.brandSegment || product.brand_segment}</span>
+              </p>
+            )}
 
-          {/* Quantity Selector */}
-          <div className="flex flex-col sm:flex-row items-center mt-6 space-y-2 sm:space-y-0 sm:space-x-3">
-            <label className="text-lg">Quantity:</label>
-            <select
-              className="px-3 py-2 text-black rounded-lg bg-white shadow-md"
-              value={quantity}
-              onChange={(e) => setQuantity(Number(e.target.value))}
-              aria-label="Select quantity"
+            {(product.categorySlug || product.category_slug) && (
+              <p className="font-shuneva text-sm text-fuchsia-200 mt-1 drop-shadow-sm">
+          Category: <span className="font-bold text-fuchsia-300">{product.categorySlug || product.category_slug}</span>
+              </p>
+            )}
+
+            <p className="font-shuneva text-base md:text-lg mt-4 leading-relaxed text-white/90 drop-shadow-sm break-words">
+              {product.description}
+            </p>
+
+            <p className="font-shuneva text-2xl md:text-3xl font-semibold text-rose-400 mt-6 drop-shadow-md">
+              ${product.price.toFixed(2)}
+            </p>
+
+            {/* Quantity Selector */}
+            <div className="flex flex-col sm:flex-row items-center mt-6 space-y-2 sm:space-y-0 sm:space-x-3">
+              <label className="font-shuneva text-lg text-white">Quantity:</label>
+              <select
+          className="px-3 py-2 text-black rounded-lg bg-white shadow-md font-shuneva"
+          value={quantity}
+          onChange={(e) => setQuantity(Number(e.target.value))}
+          aria-label="Select quantity"
+              >
+          {[...Array(10).keys()].map((num) => (
+            <option key={num + 1} value={num + 1}>
+              {num + 1}
+            </option>
+          ))}
+              </select>
+            </div>
+
+            {/* Add to Cart Button */}
+            <button
+              className="font-shuneva mt-6 bg-pink-500 hover:bg-pink-700 text-white px-6 py-3 rounded-lg text-lg shadow-md transition transform hover:scale-105 w-full sm:w-auto drop-shadow-lg"
+              onClick={() => addToCart({ ...product, quantity })}
+              aria-label={`Add ${product.title} to cart`}
             >
-              {[...Array(10).keys()].map((num) => (
-                <option key={num + 1} value={num + 1}>
-                  {num + 1}
-                </option>
-              ))}
-            </select>
+              Add to Cart
+            </button>
           </div>
-
-          {/* Add to Cart Button */}
-          <button
-            className="mt-6 bg-pink-500 hover:bg-pink-700 text-white px-6 py-3 rounded-lg text-lg shadow-md transition transform hover:scale-105 w-full sm:w-auto"
-            onClick={() => addToCart({ ...product, quantity })}
-            aria-label={`Add ${product.title} to cart`}
-          >
-            Add to Cart
-          </button>
         </div>
       </div>
 
       {/* Customer Reviews Section */}
-      <div className="mt-16">
-        <h2 className="text-2xl font-bold text-center">💖 Customer Reviews 💖</h2>
-        <div className="mt-6 flex flex-col gap-6">
-          <div className="bg-black/20 p-4 rounded-lg shadow-lg">
-            <p className="text-lg">&quot;Absolutely love these nails! So easy to apply and lasted weeks!&quot;</p>
-            <p className="text-sm text-gray-400 mt-2">⭐⭐⭐⭐⭐ - Emily R.</p>
-          </div>
-          <div className="bg-black/20 p-4 rounded-lg shadow-lg">
-            <p className="text-lg">&quot;The quality is amazing! The cutest press-on nails ever!&quot;</p>
-            <p className="text-sm text-gray-400 mt-2">⭐⭐⭐⭐⭐ - Sophia L.</p>
+      {/*
+        <div className="mt-16">
+          <h2 className="text-2xl font-bold text-center">💖 Customer Reviews 💖</h2>
+          <div className="mt-6 flex flex-col gap-6">
+            <div className="bg-black/20 p-4 rounded-lg shadow-lg">
+          <p className="text-lg">&quot;Absolutely love these nails! So easy to apply and lasted weeks!&quot;</p>
+          <p className="text-sm text-gray-400 mt-2">⭐⭐⭐⭐⭐ - Emily R.</p>
+            </div>
+            <div className="bg-black/20 p-4 rounded-lg shadow-lg">
+          <p className="text-lg">&quot;The quality is amazing! The cutest press-on nails ever!&quot;</p>
+          <p className="text-sm text-gray-400 mt-2">⭐⭐⭐⭐⭐ - Sophia L.</p>
+            </div>
           </div>
         </div>
-      </div>
+      */}
     </div>
   );
 }

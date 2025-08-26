@@ -14,7 +14,17 @@ interface Order {
   city?: string | null;
   country?: string | null;
   zip?: string | null;
-  shipping_info?: any;
+  shipping_info?: {
+    name?: string | null;
+    phone?: string | null;
+    address_line1?: string | null;
+    address_line2?: string | null;
+    city?: string | null;
+    state?: string | null;
+    country?: string | null;
+    postal_code?: string | null;
+  [key: string]: unknown;
+  } | null;
   phone?: string | null;
 }
 
@@ -178,11 +188,11 @@ export default function ManageOrders() {
                 <td className="p-3">
                   {order.shipping_info?.address || order.address ? (
                     <div className="text-sm text-gray-200">
-                      <div>{order.shipping_info?.address || order.address}</div>
+                      <div>{String(order.shipping_info?.address ?? order.address ?? '')}</div>
                       <div>
-                        {order.shipping_info?.city || order.city}{order.shipping_info?.city || order.city ? ", " : ""}{order.shipping_info?.zip || order.zip}
+                        {String(order.shipping_info?.city ?? order.city ?? '')}{(order.shipping_info?.city || order.city) ? ", " : ""}{String(order.shipping_info?.zip ?? order.zip ?? '')}
                       </div>
-                      <div>{order.shipping_info?.country || order.country}</div>
+                      <div>{String(order.shipping_info?.country ?? order.country ?? '')}</div>
                     </div>
                   ) : (
                     <span className="text-gray-400">No address</span>

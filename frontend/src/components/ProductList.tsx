@@ -1,6 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import ProductCard from "./ProductCard";
+import Link from "next/link";
 
 interface Product {
   id: string;
@@ -72,12 +73,12 @@ export default function ProductList({ embedded = false, limit = 3 }: ProductList
       <p className="font-shuneva text-[#222] dark:text-[#f3f3f7] text-sm mt-2 max-w-xl mx-auto">Explore our trending designs – hand‑picked for you!</p>
       {grid}
       <div className="mt-8">
-        <a
+        <Link
           href="/shop"
           className="font-shuneva inline-flex items-center gap-2 bg-gradient-to-r from-pink-500 to-fuchsia-500 hover:from-pink-600 hover:to-fuchsia-600 text-white px-7 py-3 rounded-full text-sm font-semibold shadow-md hover:shadow-lg transition border border-pink-400/40"
         >
           View All Products <span className="text-xs">→</span>
-        </a>
+        </Link>
       </div>
     </section>
   );

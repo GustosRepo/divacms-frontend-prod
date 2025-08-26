@@ -90,6 +90,17 @@ h1, h2, h3, h4, h5, h6 {
 /* surface utility */
 .surface-card { background: var(--surface); border: 1px solid var(--surface-border); backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px); }
 
+/* Ensure blog/cards force readable text color even if parent sets global text color */
+.blog-card {
+  color: #000 !important;
+}
+.blog-card * {
+  color: inherit !important;
+}
+.dark .blog-card {
+  color: #e6e6eb !important;
+}
+
 /* ✨ Glitch Effect */
 @keyframes glitch {
   0%, 100% { transform: translate(0); }

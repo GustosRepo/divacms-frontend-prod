@@ -238,13 +238,13 @@ export default function BlogPostPage() {
           </div>
         ) : (
           /* Display Mode */
-          <article className="bg-white/70 dark:bg-white/5 backdrop-blur-xl border border-white/70 dark:border-white/10 rounded-2xl p-8 shadow-[0_6px_18px_-6px_rgba(0,0,0,0.25)] dark:shadow-[0_4px_16px_-4px_rgba(0,0,0,0.6)]">
+          <article className="blog-card bg-white text-black dark:text-gray-200 backdrop-blur-xl border border-white/70 rounded-2xl p-8 shadow-[0_6px_18px_-6px_rgba(0,0,0,0.25)] dark:shadow-[0_4px_16px_-4px_rgba(0,0,0,0.6)]">
             {/* Post Header */}
             <header className="mb-8">
-              <h1 className="font-shuneva text-4xl md:text-5xl font-extrabold mb-4 leading-tight">
+              <h1 className="font-shuneva text-4xl md:text-5xl font-extrabold mb-4 leading-tight text-black dark:text-gray-100">
                 {post.title}
               </h1>
-              <p className="font-shuneva text-sm text-gray-500 dark:text-gray-400">
+              <p className="font-shuneva text-sm text-gray-600 dark:text-gray-400">
                 Published on {new Date(post.created_at).toLocaleDateString('en-US', {
                   year: 'numeric',
                   month: 'long',
@@ -252,9 +252,8 @@ export default function BlogPostPage() {
                 })}
               </p>
             </header>
-
             {/* Post Content */}
-            <div className="prose prose-lg max-w-none">
+            <div className="prose prose-lg max-w-none text-black dark:text-gray-200">
               <div className="font-shuneva text-lg leading-relaxed whitespace-pre-wrap">
                 {post.content}
               </div>

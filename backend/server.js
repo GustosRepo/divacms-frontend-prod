@@ -11,6 +11,10 @@ import webhookRoutes from "./src/routes/webhookRoutes.js";
 
 const app = express();
 
+// When running behind a proxy (DigitalOcean App Platform / load balancers)
+// trust proxy so req.ip and secure cookies work correctly.
+app.set("trust proxy", true);
+
 // Diagnostic request logger (temporary) – logs every incoming request
 app.use((req, _res, next) => {
   console.log(`[REQ] ${req.method} ${req.originalUrl}`);
@@ -21,10 +25,15 @@ app.use((req, _res, next) => {
 app.use("/api/webhooks/stripe", express.raw({ type: () => true }), webhookRoutes);
 
 // ✅ Other middleware BELOW raw webhook handler
-app.use(cors({ origin: "http://localhost:3000", credentials: true }));
+// Allow the frontend origin to be configured via environment (Vercel URL).
+const FRONTEND_ORIGIN = process.env.CLIENT_URL || process.env.FRONTEND_URL || "http://localhost:3000";
+app.use(cors({ origin: FRONTEND_ORIGIN, credentials: true }));
 app.use(express.json()); // This parses body — cannot go above webhook!
 app.use(express.urlencoded({ extended: true }));
 app.use("/uploads", express.static(path.join(process.cwd(), "uploads")));
+
+// Simple health check (useful for load-balancers / DigitalOcean health probes)
+app.get("/health", (_req, res) => res.status(200).json({ ok: true }));
 
 // ✅ Other routes
 import authRoutes from "./src/routes/auth.js";

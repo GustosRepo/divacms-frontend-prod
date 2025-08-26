@@ -153,27 +153,40 @@ export default function BlogPage() {
 
   return (
     <main className="relative min-h-screen px-4 py-24 overflow-x-hidden">
+      <div className="max-w-7xl mx-auto px-4 md:px-6">
       {/* light mode subtle overlays */}
       <div aria-hidden className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_25%_20%,rgba(255,255,255,0.5),transparent_60%)] dark:opacity-0 transition" />
       <div aria-hidden className="pointer-events-none absolute inset-0 bg-[linear-gradient(135deg,rgba(255,255,255,0.25)_0%,rgba(255,255,255,0)_50%)] dark:opacity-0 transition" />
       {/* dark mode atmospheric glow */}
       <div aria-hidden className="pointer-events-none absolute inset-0 opacity-0 dark:opacity-100 dark:bg-[radial-gradient(circle_at_30%_25%,rgba(255,255,255,0.10),transparent_70%)] transition" />
 
-      <div className="relative container mx-auto">
+  <div className="relative">
         {/* Page Title */}
-        <header className="text-center mb-16">
-          <h1 className="font-shuneva text-5xl md:text-6xl font-extrabold tracking-widest drop-shadow-md">
-            💖 Nail Care & Tips
-          </h1>
-          <p className="font-shuneva max-w-2xl mx-auto text-lg leading-relaxed font-medium mt-4">
-            Keep your nails looking flawless with our expert tips & tricks!
-          </p>
+        <header id="blog-hero" className="text-center mb-16">
+          <div className="max-w-3xl mx-auto text-center">
+            <p className="text-pink-500 font-semibold mb-2">Latest from the Diva Desk</p>
+
+            <h1
+              id="blog-title"
+              aria-describedby="blog-desc"
+              className="font-shuneva text-5xl md:text-6xl font-extrabold tracking-tight drop-shadow-md bg-clip-text text-transparent bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-600"
+            >
+              💖 Diva Updates & Beauty Tips
+            </h1>
+
+            <p
+              id="blog-desc"
+              className="font-shuneva max-w-2xl mx-auto text-2xl leading-relaxed font-bold mt-4 "
+            >
+              Bite-sized updates, expert tips, and quick how-tos to keep your salon game fierce — curated for stylists and beauty lovers alike.
+            </p>
+          </div>
           
           {/* Admin Toggle - Only show for logged in admins */}
           {isAdmin && (
             <button
               onClick={() => setIsAdminMode(!isAdminMode)}
-              className="font-shuneva mt-6 bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white font-semibold px-6 py-2 rounded-lg transition duration-300 focus:ring-2 focus:ring-purple-500/60 focus:outline-none shadow-md hover:shadow-lg"
+              className="font-shuneva mt-6 bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white font-semibold px-6 py-2 rounded-lg transition duration-300 focus:outline-none focus-visible:ring-4 focus-visible:ring-offset-2 focus-visible:ring-purple-500/40 shadow-md hover:shadow-lg"
             >
               {isAdminMode ? "Exit Admin" : "✏️ Edit Blog"}
             </button>
@@ -186,45 +199,50 @@ export default function BlogPage() {
             <h2 className="font-shuneva text-2xl font-bold mb-4">
               {editingPost ? "Edit Post" : "Add New Post"}
             </h2>
-            
-            <div className="space-y-4">
+
+            <form className="space-y-4" onSubmit={(e) => { e.preventDefault(); editingPost ? handleUpdatePost() : handleAddPost(); }}>
+              <label htmlFor="post-title" className="sr-only">Post title</label>
               <input
+                id="post-title"
                 type="text"
                 placeholder="Post Title (e.g., 💅 Amazing Nail Tips)"
                 value={formData.title}
                 onChange={(e) => setFormData({...formData, title: e.target.value})}
-                className="font-shuneva w-full p-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white/70 dark:bg-white/5 backdrop-blur-sm focus:ring-2 focus:ring-pink-500/60 focus:outline-none"
+                className="font-shuneva w-full p-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white/70 dark:bg-white/5 backdrop-blur-sm focus:outline-none focus-visible:ring-4 focus-visible:ring-pink-500/40"
               />
-              
+
+              <label htmlFor="post-content" className="sr-only">Post content</label>
               <textarea
+                id="post-content"
                 placeholder="Full content..."
                 value={formData.content}
                 onChange={(e) => setFormData({...formData, content: e.target.value})}
                 rows={6}
-                className="font-shuneva w-full p-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white/70 dark:bg-white/5 backdrop-blur-sm focus:ring-2 focus:ring-pink-500/60 focus:outline-none"
+                className="font-shuneva w-full p-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white/70 dark:bg-white/5 backdrop-blur-sm focus:outline-none focus-visible:ring-4 focus-visible:ring-pink-500/40"
               />
-            </div>
-            
-            <div className="flex gap-4 mt-6">
-              <button
-                onClick={editingPost ? handleUpdatePost : handleAddPost}
-                className="font-shuneva bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white font-semibold px-6 py-2 rounded-lg transition duration-300 focus:ring-2 focus:ring-green-500/60 focus:outline-none shadow-md hover:shadow-lg"
-              >
-                {editingPost ? "Update Post" : "Add Post"}
-              </button>
-              
-              {editingPost && (
+
+              <div className="flex gap-4 mt-2">
                 <button
-                  onClick={() => {
-                    setEditingPost(null);
-                    setFormData({ title: "", content: "" });
-                  }}
-                  className="font-shuneva bg-gray-500 hover:bg-gray-600 text-white font-semibold px-6 py-2 rounded-lg transition duration-300 focus:ring-2 focus:ring-gray-500/60 focus:outline-none shadow-md hover:shadow-lg"
+                  type="submit"
+                  className="font-shuneva bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white font-semibold px-6 py-2 rounded-lg transition duration-300 focus:outline-none focus-visible:ring-4 focus-visible:ring-green-500/40 shadow-md hover:shadow-lg"
                 >
-                  Cancel
+                  {editingPost ? "Update Post" : "Add Post"}
                 </button>
-              )}
-            </div>
+
+                {editingPost && (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setEditingPost(null);
+                      setFormData({ title: "", content: "" });
+                    }}
+                    className="font-shuneva bg-gray-500 hover:bg-gray-600 text-white font-semibold px-6 py-2 rounded-lg transition duration-300 focus:outline-none focus-visible:ring-4 focus-visible:ring-gray-500/40 shadow-md hover:shadow-lg"
+                  >
+                    Cancel
+                  </button>
+                )}
+              </div>
+            </form>
           </div>
         )}
 
@@ -247,54 +265,46 @@ export default function BlogPage() {
             ) : (
               posts.map((post) => {
                 return (
-                  <div
-                    key={post.id}
-                    className="relative rounded-2xl overflow-hidden bg-white/70 dark:bg-white/5 backdrop-blur-xl border border-white/70 dark:border-white/10 shadow-[0_6px_18px_-6px_rgba(0,0,0,0.25)] dark:shadow-[0_4px_16px_-4px_rgba(0,0,0,0.6)] transform transition-all duration-300 hover:scale-[1.025] hover:shadow-[0_10px_28px_-6px_rgba(0,0,0,0.32)] dark:hover:shadow-[0_8px_24px_-6px_rgba(0,0,0,0.7)]"
-                  >
-                    {/* Admin Controls - Only show for logged in admins in admin mode */}
-                    {isAdmin && isAdminMode && (
-                      <div className="absolute top-2 right-2 z-10 flex gap-2">
-                        <button
-                          onClick={() => handleEditPost(post)}
-                          className="bg-blue-500 hover:bg-blue-600 text-white p-2 rounded-full shadow-lg transition duration-300 focus:ring-2 focus:ring-blue-500/60 focus:outline-none"
-                          title="Edit post"
-                        >
-                          ✏️
-                        </button>
-                        <button
-                          onClick={() => handleDeletePost(post.id)}
-                          className="bg-red-500 hover:bg-red-600 text-white p-2 rounded-full shadow-lg transition duration-300 focus:ring-2 focus:ring-red-500/60 focus:outline-none"
-                          title="Delete post"
-                        >
-                          🗑️
-                        </button>
+                  <article key={post.id} className="relative">
+                    <Link
+                      href={`/blog/${post.id}`}
+                      aria-label={`Read full post ${post.title}`}
+                      className="blog-card group block relative rounded-2xl overflow-hidden bg-white text-black dark:text-gray-200 backdrop-blur-xl border border-white/70 shadow-[0_6px_18px_-6px_rgba(0,0,0,0.25)] transform transition-all duration-300 hover:scale-[1.025] hover:shadow-[0_10px_28px_-6px_rgba(0,0,0,0.32)] focus:outline-none focus-visible:ring-4 focus-visible:ring-offset-2 focus-visible:ring-pink-500/30"
+                    >
+                      {/* Admin Controls - Only show for logged in admins in admin mode */}
+                      {isAdmin && isAdminMode && (
+                        <div className="absolute top-2 right-2 z-10 flex gap-2">
+                          <button
+                            onClick={(e) => { e.stopPropagation(); e.preventDefault(); handleEditPost(post); }}
+                            className="bg-blue-500 hover:bg-blue-600 text-white p-2 rounded-full shadow-lg transition duration-300 focus:outline-none focus-visible:ring-4 focus-visible:ring-blue-500/40"
+                            title="Edit post"
+                          >
+                            ✏️
+                          </button>
+                          <button
+                            onClick={(e) => { e.stopPropagation(); e.preventDefault(); handleDeletePost(post.id); }}
+                            className="bg-red-500 hover:bg-red-600 text-white p-2 rounded-full shadow-lg transition duration-300 focus:outline-none focus-visible:ring-4 focus-visible:ring-red-500/40"
+                            title="Delete post"
+                          >
+                            🗑️
+                          </button>
+                        </div>
+                      )}
+
+                      <div className="p-6">
+                        <h2 className="font-shuneva dark:!text-black text-2xl font-bold mb-3">{post.title}</h2>
+                        <p className="font-shuneva dark:!text-black mb-4">{getExcerpt(post.content)}</p>
+                        <p className="font-shuneva text-sm text-gray-500 mb-4 dark:!text-black">{new Date(post.created_at).toLocaleDateString()}</p>
+                        <span className="inline-block mt-2 font-shuneva bg-gradient-to-r from-pink-500 to-purple-500 text-white font-semibold px-4 py-2 rounded-lg dark:!text-black">Read Full Post →</span>
                       </div>
-                    )}
-
-                    {/* Content Container */}
-                    <div className="p-6">
-                      <h2 className="font-shuneva text-2xl font-bold mb-3">{post.title}</h2>
-                      <p className="font-shuneva text-gray-600 dark:text-gray-300 mb-4">
-                        {getExcerpt(post.content)}
-                      </p>
-                      <p className="font-shuneva text-sm text-gray-500 mb-4">
-                        {new Date(post.created_at).toLocaleDateString()}
-                      </p>
-
-                      {/* Read Full Post Button */}
-                      <Link
-                        href={`/blog/${post.id}`}
-                        className="font-shuneva bg-gradient-to-r from-pink-500 to-purple-500 hover:from-pink-600 hover:to-purple-600 text-white font-semibold px-4 py-2 rounded-lg w-full transition duration-300 focus:ring-2 focus:ring-pink-500/60 focus:outline-none shadow-md hover:shadow-lg block text-center"
-                      >
-                        Read Full Post →
-                      </Link>
-                    </div>
-                  </div>
+                    </Link>
+                  </article>
                 );
               })
             )}
           </div>
         )}
+      </div>
       </div>
     </main>
   );

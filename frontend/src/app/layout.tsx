@@ -3,12 +3,8 @@ import { Geist, Geist_Mono } from "next/font/google";
 import localFont from "next/font/local";
 import Navbar from "../components/Navbar";
 import "./globals.css";
-import { CartProvider } from "@/context/CartContext";
-import { AuthProvider } from "@/context/AuthContext";
-import CartNotification from "@/components/CartNotification";
 import Footer from "@/components/Footer";
-import { Toaster } from "react-hot-toast"; // ✅ Import Toaster for notifications
-import { ThemeProvider } from "@/context/ThemeContext";
+import Providers from "./providers";
 
 const geistSans = Geist({ variable: "--font-geist-sans", subsets: ["latin"] });
 const geistMono = Geist_Mono({ variable: "--font-geist-mono", subsets: ["latin"] });
@@ -27,19 +23,15 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable} ${shuneva.variable} antialiased min-h-screen flex flex-col text-white transition-colors duration-300`}>
-        <ThemeProvider>
-          <AuthProvider>
-            <CartProvider>
-              <Navbar />
-              <CartNotification />
-              <Toaster position="top-right" reverseOrder={false} />
-              <main className="flex-1 w-full">{children}</main>
-              <Footer />
-            </CartProvider>
-          </AuthProvider>
-        </ThemeProvider>
+        {/* Skip link for keyboard users */}
+        <a href="#content" className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 bg-white text-black px-3 py-2 rounded">Skip to content</a>
+        <Providers>
+          <Navbar />
+          <main id="content" role="main" tabIndex={-1} className="flex-1 w-full">{children}</main>
+          <Footer />
+        </Providers>
       </body>
     </html>
   );

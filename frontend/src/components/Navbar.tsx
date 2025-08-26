@@ -73,7 +73,7 @@ export default function Navbar() {
         {/*
         <select
           value={brand ?? ''}
-          onChange={(e) => setBrand(e.target.value ? (e.target.value as any) : null)}
+          onChange={(e) => setBrand(e.target.value ? (e.target.value as 'nails' | 'toys' | 'boutique') : null)}
           className="bg-white/60 dark:bg-white/10 border border-white/40 dark:border-white/10 rounded-md px-2 py-1 text-xs outline-none focus:ring-2 focus:ring-pink-400/50"
           title="Set preferred brand theme"
         >
@@ -136,7 +136,7 @@ export default function Navbar() {
             <div className="mt-3">
             <select
               value={brand ?? ''}
-              onChange={(e) => setBrand(e.target.value ? (e.target.value as any) : null)}
+              onChange={(e) => setBrand(e.target.value ? (e.target.value as 'nails'|'toys'|'boutique') : null)}
               className="bg-white/70 dark:bg-white/10 border border-white/40 dark:border-white/10 rounded-md px-2 py-1 text-xs"
             >
               {brandOptions.map(o => <option key={o.key ?? 'all'} value={o.key ?? ''}>{o.label}</option>)}

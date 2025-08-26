@@ -92,7 +92,7 @@ export default function BestSellers({ embedded = false, limit = 1 }: BestSellers
                           </span>
                           <a
                             href={`/products/${product.id}`}
-                            className="inline-flex justify-center px-5 py-2 rounded-full bg-gradient-to-r from-pink-500 to-fuchsia-500 text-white text-sm font-semibold shadow hover:shadow-lg transition border border-pink-400/50"
+                            className="font-shuneva inline-flex justify-center px-5 py-2 rounded-full bg-gradient-to-r from-pink-500 to-fuchsia-500 text-white text-sm font-semibold shadow hover:shadow-lg transition border border-pink-400/50"
                           >
                             View Product
                           </a>

@@ -26,8 +26,9 @@ export default function AdminCategoriesPage() {
       if (!res.ok) throw new Error('Failed to load categories');
       const data = await res.json();
       setCategories(data);
-    } catch (e:any) {
-      setError(e.message);
+    } catch (err) {
+      const e = err as Error | undefined;
+      setError(e?.message ?? String(err));
     } finally { setLoading(false); }
   };
 
@@ -47,7 +48,7 @@ export default function AdminCategoriesPage() {
       if (!res.ok) throw new Error('Save failed');
       await load();
       resetForm();
-    } catch (e:any) { alert(e.message); } finally { setSaving(false); }
+  } catch (err) { const e = err as Error | undefined; alert(e?.message ?? String(err)); } finally { setSaving(false); }
   };
 
   const edit = (c: Category) => {
@@ -61,7 +62,7 @@ export default function AdminCategoriesPage() {
       const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/categories/${id}`, { method: 'DELETE', headers: { Authorization: `Bearer ${user.token}` } });
       if (!res.ok) throw new Error('Delete failed');
       await load();
-    } catch (e:any) { alert(e.message); }
+  } catch (err) { const e = err as Error | undefined; alert(e?.message ?? String(err)); }
   };
 
   return (
@@ -116,7 +117,7 @@ export default function AdminCategoriesPage() {
                 <tr key={c.id} className="border-t border-white/10 hover:bg-white/5">
                   <td className="p-2">{c.name}</td>
                   <td className="p-2">{c.slug}</td>
-                  <td className="p-2 capitalize">{c.brand_segment || (c as any).brandSegment}</td>
+                  <td className="p-2 capitalize">{c.brand_segment || c.brandSegment}</td>
                   <td className="p-2 max-w-xs truncate" title={c.description}>{c.description}</td>
                   <td className="p-2 flex gap-2">
                     <button onClick={()=>edit(c)} className="px-2 py-1 text-xs rounded bg-blue-500">Edit</button>
