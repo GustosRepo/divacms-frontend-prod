@@ -121,6 +121,7 @@ export const createOrder = async (req, res) => {
     trackingCode,
     shippingInfo,
     pointsUsed,
+    isLocalPickup,
   } = req.body;
 
   console.log("[createOrder] Incoming order data:", req.body);
@@ -146,7 +147,16 @@ export const createOrder = async (req, res) => {
     let discount = 0;
     if (pointsUsed === 50) discount = totalAmount * 0.05;
     if (pointsUsed === 100) discount = totalAmount * 0.1;
-    const finalTotal = Math.max(0, Number(totalAmount) - discount);
+
+    // If local pickup, shipping is $0 (ignore any shipping fee in totalAmount)
+    let finalTotal;
+    let shippingNote = null;
+    if (isLocalPickup) {
+      finalTotal = Math.max(0, Number(totalAmount) - discount); // totalAmount should already be without shipping
+      shippingNote = 'Local Pickup: No shipping fee.';
+    } else {
+      finalTotal = Math.max(0, Number(totalAmount) - discount); // fallback, you can add shipping fee logic here if needed
+    }
 
     // 1) Insert order
     const orderPayload = {
@@ -157,6 +167,7 @@ export const createOrder = async (req, res) => {
       tracking_code: trackingCode || "Processing",
       shipping_info: shippingInfo,
       points_used: pointsUsed || 0,
+      shipping_note: shippingNote,
     };
 
     const { data: newOrder, error: orderError } = await supabase

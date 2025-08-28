@@ -16,6 +16,8 @@ type Product = {
   category_slug?: string;
 };
 
+// Note: For better SEO, consider converting this to a Server Component
+// and using generateMetadata() instead of client-side metadata
 export default function ProductPage() {
   const { id } = useParams();
   const { addToCart } = useCart(); // Use Cart Context

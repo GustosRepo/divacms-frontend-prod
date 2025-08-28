@@ -8,6 +8,12 @@ const nextConfig = {
     // Temporarily ignore TypeScript build errors during deployment. Plan: fix types & re-enable.
     ignoreBuildErrors: true,
   },
+  images: {
+    domains: [
+      'fsitfoxofpsynhncpxjs.supabase.co',
+      'localhost'
+    ],
+  },
 };
 
 module.exports = nextConfig;

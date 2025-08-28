@@ -166,19 +166,26 @@ export default function BlogPage() {
           <div className="max-w-3xl mx-auto text-center">
             <p className="text-pink-500 font-semibold mb-2">Latest from the Diva Desk</p>
 
-            <h1
-              id="blog-title"
-              aria-describedby="blog-desc"
-              className="font-shuneva text-5xl md:text-6xl font-extrabold tracking-tight drop-shadow-md bg-clip-text text-transparent bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-600"
-            >
-              💖 Diva Updates & Beauty Tips
-            </h1>
+<h1
+  id="blog-title"
+  aria-describedby="blog-desc"
+  className="font-shuneva text-5xl md:text-6xl font-extrabold tracking-tight drop-shadow-md bg-clip-text text-transparent bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-600"
+>
+  Kawaii Culture & Style Tips{' '}
+  <span
+    className="inline-block align-[-0.1em] text-white"
+    style={{ fontFamily: 'Apple Color Emoji, Segoe UI Emoji, Noto Color Emoji' }}
+    aria-hidden="true"
+  >
+    💖
+  </span>
+</h1>
 
             <p
               id="blog-desc"
               className="font-shuneva max-w-2xl mx-auto text-2xl leading-relaxed font-bold mt-4 "
             >
-              Bite-sized updates, expert tips, and quick how-tos to keep your salon game fierce — curated for stylists and beauty lovers alike.
+              Collectible guides, kawaii culture, and Y2K style tips — curated for Vegas's kawaii community and beyond.
             </p>
           </div>
           
@@ -192,6 +199,74 @@ export default function BlogPage() {
             </button>
           )}
         </header>
+
+        {/* Featured Posts Section */}
+        <section className="mb-16">
+          <div className="text-center mb-8">
+            <h2 className="font-shuneva text-3xl md:text-4xl font-bold bg-gradient-to-r from-pink-500 to-purple-500 bg-clip-text text-transparent mb-4">
+              ✨ Featured Guides
+            </h2>
+            <p className="text-gray-800 dark:text-gray-100">
+              Your complete guide to kawaii culture, collectibles & Y2K style
+            </p>
+          </div>
+          
+          <div className="grid md:grid-cols-3 gap-6 mb-8">
+            <Link href="/blog/collectibles-bae" className="group">
+              <div className="bg-white/80 dark:bg-white/10 backdrop-blur-xl border border-white/70 dark:border-white/20 rounded-xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 group-hover:scale-105">
+                <div className="text-4xl mb-4">🎁</div>
+                <h3 className="font-bold text-xl mb-3 group-hover:text-pink-500 transition-colors">
+                  Collectibles & Kawaii Guide
+                </h3>
+                <p className="text-gray-800 dark:text-gray-100 text-sm">
+                  Ultimate guide to Labubu collecting, Pop Mart blind boxes, and kawaii culture essentials.
+                </p>
+                <div className="mt-4 text-pink-500 font-semibold text-sm">
+                  Read Guide →
+                </div>
+              </div>
+            </Link>
+
+            <Link href="/blog/kawaii-aesthetic-guide" className="group">
+              <div className="bg-white/80 dark:bg-white/10 backdrop-blur-xl border border-white/70 dark:border-white/20 rounded-xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 group-hover:scale-105">
+                <div className="text-4xl mb-4">�</div>
+                <h3 className="font-bold text-xl mb-3 group-hover:text-pink-500 transition-colors">
+                  Kawaii Aesthetic Guide
+                </h3>
+                <p className="text-gray-800 dark:text-gray-100 text-sm">
+                  Master the kawaii aesthetic with our complete guide to cute culture and collectibles.
+                </p>
+                <div className="mt-4 text-pink-500 font-semibold text-sm">
+                  Read Guide →
+                </div>
+              </div>
+            </Link>
+
+            <Link href="/blog/y2k-nail-trends-2025" className="group">
+              <div className="bg-white/80 dark:bg-white/10 backdrop-blur-xl border border-white/70 dark:border-white/20 rounded-xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 group-hover:scale-105">
+                <div className="text-4xl mb-4">💅</div>
+                <h3 className="font-bold text-xl mb-3 group-hover:text-pink-500 transition-colors">
+                  Y2K Nail Trends 2025
+                </h3>
+                <p className="text-gray-800 dark:text-gray-100 text-sm">
+                  Discover the hottest Y2K nail trends taking over 2025. From chrome finishes to butterfly motifs.
+                </p>
+                <div className="mt-4 text-pink-500 font-semibold text-sm">
+                  Read Guide →
+                </div>
+              </div>
+            </Link>
+          </div>
+
+          <div className="text-center">
+            <Link 
+              href="/nail-guide" 
+              className="inline-flex items-center bg-gradient-to-r from-pink-500 to-purple-500 text-white font-bold py-3 px-6 rounded-full hover:shadow-lg transition-all transform hover:scale-105"
+            >
+              📚 Complete Nail Guide
+            </Link>
+          </div>
+        </section>
 
         {/* Admin Form - Only show for logged in admins in admin mode */}
         {isAdmin && isAdminMode && (
@@ -304,6 +379,93 @@ export default function BlogPage() {
             )}
           </div>
         )}
+
+        {/* More Resources Section */}
+        <section className="mt-16 pt-12 border-t border-gray-200 dark:border-gray-700">
+          <div className="text-center mb-8">
+            <h2 className="font-shuneva text-3xl md:text-4xl font-bold mb-4 flex items-center justify-center gap-3">
+              <span aria-hidden className="inline-block w-10 h-10">
+                <svg viewBox="0 0 64 64" className="w-full h-full" preserveAspectRatio="xMidYMid meet">
+                  <defs>
+                    <linearGradient id="emojiGrad" x1="0" x2="1">
+                      <stop offset="0%" stopColor="#9b5cf6" />
+                      <stop offset="50%" stopColor="#ff66b8" />
+                      <stop offset="100%" stopColor="#3b82f6" />
+                    </linearGradient>
+                  </defs>
+                  <text
+                    x="50%"
+                    y="50%"
+                    dominantBaseline="central"
+                    textAnchor="middle"
+                    fontSize="36"
+                    fontFamily="Apple Color Emoji,Segoe UI Emoji,Segoe UI Symbol,Noto Color Emoji"
+                    fill="url(#emojiGrad)"
+                  >
+                    🎯
+                  </text>
+                </svg>
+              </span>
+
+              <span className="bg-gradient-to-r from-purple-500 to-blue-500 bg-clip-text text-transparent">
+                More Resources
+              </span>
+            </h2>
+            <p className="text-gray-800 dark:text-gray-100">
+              Additional guides and information to help you succeed
+            </p>
+          </div>
+          
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <Link href="/faq" className="group">
+              <div className="bg-white/80 dark:bg-white/10 backdrop-blur-xl border border-white/70 dark:border-white/20 rounded-xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 group-hover:scale-105 text-center">
+                <div className="text-3xl mb-3">❓</div>
+                <h3 className="font-bold text-lg mb-2 group-hover:text-purple-500 transition-colors">
+                  FAQ
+                </h3>
+                <p className="text-gray-800 dark:text-gray-100 text-sm">
+                  Common questions answered
+                </p>
+              </div>
+            </Link>
+
+            <Link href="/las-vegas" className="group">
+              <div className="bg-white/80 dark:bg-white/10 backdrop-blur-xl border border-white/70 dark:border-white/20 rounded-xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 group-hover:scale-105 text-center">
+                <div className="text-3xl mb-3">🎰</div>
+                <h3 className="font-bold text-lg mb-2 group-hover:text-purple-500 transition-colors">
+                  Las Vegas
+                </h3>
+                <p className="text-gray-800 dark:text-gray-100 text-sm">
+                  Local pickup & Vegas info
+                </p>
+              </div>
+            </Link>
+
+            <Link href="/contact" className="group">
+              <div className="bg-white/80 dark:bg-white/10 backdrop-blur-xl border border-white/70 dark:border-white/20 rounded-xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 group-hover:scale-105 text-center">
+                <div className="text-3xl mb-3">💌</div>
+                <h3 className="font-bold text-lg mb-2 group-hover:text-purple-500 transition-colors">
+                  Contact Us
+                </h3>
+                <p className="text-gray-800 dark:text-gray-100 text-sm">
+                  Get in touch for help
+                </p>
+              </div>
+            </Link>
+
+            <Link href="/shop?brand_segment=nails" className="group">
+              <div className="bg-white/80 dark:bg-white/10 backdrop-blur-xl border border-white/70 dark:border-white/20 rounded-xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 group-hover:scale-105 text-center">
+                <div className="text-3xl mb-3">💅</div>
+                <h3 className="font-bold text-lg mb-2 group-hover:text-purple-500 transition-colors">
+                  Shop
+                </h3>
+                <p className="text-gray-800 dark:text-gray-100 text-sm">
+                  Browse our collection
+                </p>
+              </div>
+            </Link>
+          </div>
+        </section>
       </div>
       </div>
     </main>

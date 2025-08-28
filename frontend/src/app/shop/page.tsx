@@ -180,7 +180,7 @@ export default function Shop() {
       {/* Brand Product Listing (only when brand selected) */}
       {activeBrand && (
         <section className="-mt-8">
-          <div className="flex flex-wrap gap-3 mt-4">
+          <div className="flex flex-wrap gap-3 mt-16">
             <Link href={`/shop?brand_segment=${activeBrand}`} className={`px-3 py-1 rounded-full text-xs font-semibold border ${!activeCategory ? 'bg-white/20 text-white' : 'bg-black/20 text-white/70 hover:text-white'}`}>All</Link>
             {brandCategories.map(cat => {
               const slug = (cat.slug || cat.name.toLowerCase().replace(/[^a-z0-9]+/g,'-'));

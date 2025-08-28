@@ -58,9 +58,14 @@ export default function BestSellers({ embedded = false, limit = 1 }: BestSellers
           bestSellers.length > 0 ? (
             <div className="grid gap-6">
               {bestSellers.map((product) => {
-                const imgSrc = product.image?.startsWith("http")
-                  ? product.image
-                  : `${process.env.NEXT_PUBLIC_API_URL}${product.image}`;
+                let imgSrc;
+                if (product.image && typeof product.image === 'string' && product.image.trim() !== '') {
+                  imgSrc = product.image.startsWith('http')
+                    ? product.image
+                    : `${process.env.NEXT_PUBLIC_API_URL}${product.image}`;
+                } else {
+                  imgSrc = '/placeholder.jpg';
+                }
                 return (
                   <div
                     key={product.id}

@@ -56,21 +56,22 @@ export default function CheckoutForm({
   cartItems,
 }: CheckoutFormProps) {
   const { user } = useAuth();
-  const [formData, setFormData] = useState<CheckoutFormData>({
-    cartItems: defaultValues?.cartItems || cartItems || [],
-    pointsUsed: defaultValues?.pointsUsed || 0,
-    points: defaultValues?.points || 0,
-    shippingInfo: defaultValues?.shippingInfo || {
-      name: "",
-      phone: "",
-      address_line1: "",
-      address_line2: "",
-      city: "",
-      state: "",
-      postal_code: "",
-      country: "",
-    },
-  });
+    const [formData, setFormData] = useState<CheckoutFormData>({
+      cartItems: defaultValues?.cartItems || cartItems || [],
+      pointsUsed: defaultValues?.pointsUsed || 0,
+      points: defaultValues?.points || 0,
+      shippingInfo: defaultValues?.shippingInfo || {
+        name: "",
+        phone: "",
+        address_line1: "",
+        address_line2: "",
+        city: "",
+        state: "",
+        postal_code: "",
+        country: "",
+      },
+    });
+    const [isLocalPickup, setIsLocalPickup] = useState(false);
 
   const [selectedPoints, setSelectedPoints] = useState<number>(formData.pointsUsed || 0);
   const [discount, setDiscount] = useState<number>(0);
@@ -87,17 +88,18 @@ export default function CheckoutForm({
 
   // Fetch live shipping rate when shippingInfo or cartItems change (debounced)
   useEffect(() => {
+    if (isLocalPickup) {
+      setShippingFee(0);
+      setShippingLoading(false);
+      return;
+    }
     const s = formData.shippingInfo;
-    // require minimal address fields before fetching
     const isoCountry = getCountryCode(s?.country);
     if (!s || !s.postal_code || !isoCountry) return;
-
-    // debounce to avoid spamming Goshipoo while user types
     if (rateDebounceRef.current) window.clearTimeout(rateDebounceRef.current);
     rateDebounceRef.current = window.setTimeout(async () => {
       setShippingLoading(true);
       try {
-        // send normalized country code
         const shippingForRate = { ...s, country: isoCountry };
         const resp = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/checkout/shippo-rate`, {
           method: "POST",
@@ -105,7 +107,6 @@ export default function CheckoutForm({
           body: JSON.stringify({ shippingInfo: shippingForRate, items: cartItems }),
         });
         if (!resp.ok) {
-          console.warn("⚠️ Shippo rate call failed (non-ok)");
           setShippingFee(5);
           return;
         }
@@ -113,17 +114,15 @@ export default function CheckoutForm({
         const fee = Number(json?.shipping_fee ?? (json?.shipping_fee_cents ? json.shipping_fee_cents / 100 : 5));
         setShippingFee(Number.isFinite(fee) ? fee : 5);
       } catch (err) {
-        console.warn("⚠️ Error fetching live shipping rate:", err);
         setShippingFee(5);
       } finally {
         setShippingLoading(false);
       }
     }, 600);
-
     return () => {
       if (rateDebounceRef.current) window.clearTimeout(rateDebounceRef.current);
     };
-  }, [formData.shippingInfo.postal_code, formData.shippingInfo.country, formData.shippingInfo.state, JSON.stringify(cartItems), user?.token]);
+  }, [formData.shippingInfo.postal_code, formData.shippingInfo.country, formData.shippingInfo.state, JSON.stringify(cartItems), user?.token, isLocalPickup]);
 
   const totalDisplayed = Number((totalAfterDiscount + (shippingFee ?? 5)).toFixed(2));
 
@@ -167,28 +166,39 @@ export default function CheckoutForm({
         country: isoCountry,
       };
 
-      // 1) Fetch live shipping rate from backend (Goshipoo). If it fails, fallback to $5
-      setShippingLoading(true);
+      // 1) If local pickup, shipping fee is $0. Otherwise, fetch live shipping rate from backend (Goshipoo). If it fails, fallback to $5
       let shipping_fee = 5.0;
       let shipping_fee_cents = 500;
-      try {
-        const rateResp = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/checkout/shippo-rate`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json", Authorization: `Bearer ${user?.token}` },
-          body: JSON.stringify({ shippingInfo, items: cartItems }),
-        });
-        if (rateResp.ok) {
-          const rateJson = await rateResp.json();
-          shipping_fee = Number(rateJson?.shipping_fee ?? rateJson?.shipping_fee_cents / 100 ?? 5);
-          shipping_fee_cents = Number(rateJson?.shipping_fee_cents ?? Math.round(shipping_fee * 100));
-        } else {
-          console.warn("⚠️ Shippo rate returned non-ok, falling back to $5");
+      if (isLocalPickup) {
+        shipping_fee = 0;
+        shipping_fee_cents = 0;
+        setShippingFee(0);
+      } else {
+        setShippingLoading(true);
+        try {
+          const rateResp = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/checkout/shippo-rate`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json", Authorization: `Bearer ${user?.token}` },
+            body: JSON.stringify({ shippingInfo, items: cartItems }),
+          });
+          if (rateResp.ok) {
+            const rateJson = await rateResp.json();
+            if (rateJson?.shipping_fee != null) {
+              shipping_fee = Number(rateJson.shipping_fee);
+              shipping_fee_cents = Number(rateJson?.shipping_fee_cents ?? Math.round(shipping_fee * 100));
+            } else if (rateJson?.shipping_fee_cents != null) {
+              shipping_fee = Number(rateJson.shipping_fee_cents) / 100;
+              shipping_fee_cents = Number(rateJson.shipping_fee_cents);
+            } else {
+              shipping_fee = 5;
+              shipping_fee_cents = 500;
+            }
+          }
+        } catch (err) {
+        } finally {
+          setShippingLoading(false);
+          setShippingFee(shipping_fee);
         }
-      } catch (err) {
-        console.warn("⚠️ Failed to fetch Shippo rate, using fallback $5", err);
-      } finally {
-        setShippingLoading(false);
-        setShippingFee(shipping_fee);
       }
 
       // Build request body including shipping fee metadata (cents)
@@ -204,6 +214,7 @@ export default function CheckoutForm({
         totalAmount: Number((totalAfterDiscount + shipping_fee).toFixed(2)),
         // ✅ send the full address to backend so webhook can persist it
         shippingInfo,
+        isLocalPickup,
         // include shipping fee in metadata as cents for backend to persist reliably
         metadata: {
           pointsUsed: String(selectedPoints),
@@ -252,7 +263,17 @@ export default function CheckoutForm({
   };
 
   return (
-    <form onSubmit={handleSubmit} className="p-6 bg-black/30 rounded-lg">
+  <form onSubmit={handleSubmit} className="p-6 bg-black/30 rounded-lg">
+      <div className="flex items-center mt-2 mb-2">
+        <input
+          type="checkbox"
+          id="localPickup"
+          checked={isLocalPickup}
+          onChange={(e) => setIsLocalPickup(e.target.checked)}
+          className="mr-2"
+        />
+        <label htmlFor="localPickup" className="text-white">Local Pickup (Free Shipping)</label>
+      </div>
       <h2 className="text-xl font-bold text-pink-500">Shipping Details</h2>
 
       <input
@@ -314,7 +335,7 @@ export default function CheckoutForm({
       <div className="text-white mt-4 text-lg space-y-1">
         <div><strong>Subtotal:</strong> ${subtotal.toFixed(2)}</div>
         <div><strong>Discount:</strong> -${discountAmount.toFixed(2)}</div>
-        <div><strong>Shipping:</strong> ${shippingFee !== null ? shippingFee.toFixed(2) : "..."} {shippingLoading ? "(fetching)" : ""}</div>
+        <div><strong>Shipping:</strong> {isLocalPickup ? "$0.00 (Local Pickup)" : shippingFee !== null ? `$${shippingFee.toFixed(2)}` : "..."} {shippingLoading && !isLocalPickup ? "(fetching)" : ""}</div>
         <div className="pt-2"><strong>Total:</strong> ${totalDisplayed.toFixed(2)}</div>
       </div>
 
