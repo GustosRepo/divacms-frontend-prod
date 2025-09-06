@@ -74,37 +74,37 @@ export default function Y2KNailTrends2025() {
         </header>
 
         <div className="prose prose-lg prose-invert max-w-none">
-          <h2 className="text-3xl font-bold text-pink-200 mt-12 mb-6">1. Holographic Everything 🌈</h2>
+          <h2 className="font-shuneva text-3xl font-bold text-pink-200 mt-12 mb-6">1. Holographic Everything 🌈</h2>
           <p className="text-gray-300 leading-relaxed mb-6">
             Nothing screams Y2K like holographic nails! These iridescent beauties shift colors in the light, creating that futuristic vibe we all craved in the early 2000s. Whether you go for full holographic coverage or subtle accent nails, this trend is perfect for making a statement.
           </p>
           <div className="bg-gradient-to-r from-purple-900/50 to-pink-900/50 rounded-lg p-6 my-8">
-            <h3 className="text-xl font-semibold text-white mb-3">💡 Pro Tip:</h3>
+            <h3 className="font-shuneva text-xl font-semibold text-white mb-3">💡 Pro Tip:</h3>
             <p className="text-gray-200">Pair holographic nails with simple outfits to let your manicure be the star of the show!</p>
           </div>
 
-          <h2 className="text-3xl font-bold text-pink-200 mt-12 mb-6">2. Chunky Glitter Galore ✨</h2>
+          <h2 className="font-shuneva text-3xl font-bold text-pink-200 mt-12 mb-6">2. Chunky Glitter Galore ✨</h2>
           <p className="text-gray-300 leading-relaxed mb-6">
             Forget subtle shimmer – 2025 is all about CHUNKY glitter! Think large hexagonal pieces, stars, and hearts embedded in clear or colored polish. This trend is playful, bold, and totally Y2K.
           </p>
 
-          <h2 className="text-3xl font-bold text-pink-200 mt-12 mb-6">3. French Tips with a Twist 💅</h2>
+          <h2 className="font-shuneva text-3xl font-bold text-pink-200 mt-12 mb-6">3. French Tips with a Twist 💅</h2>
           <p className="text-gray-300 leading-relaxed mb-6">
             The classic French manicure gets a Y2K makeover with colored tips, glitter edges, and fun shapes. Think neon pink tips, silver chrome finishes, or even gradient rainbow effects.
           </p>
 
-          <h2 className="text-3xl font-bold text-pink-200 mt-12 mb-6">4. Butterfly and Flower Motifs 🦋</h2>
+          <h2 className="font-shuneva text-3xl font-bold text-pink-200 mt-12 mb-6">4. Butterfly and Flower Motifs 🦋</h2>
           <p className="text-gray-300 leading-relaxed mb-6">
             Delicate butterfly and flower nail art dominated the early 2000s, and they're making a sweet comeback. These feminine designs work beautifully on press-on nails and add that perfect kawaii touch.
           </p>
 
-          <h2 className="text-3xl font-bold text-pink-200 mt-12 mb-6">5. Chrome and Metallic Finishes 🔮</h2>
+          <h2 className="font-shuneva text-3xl font-bold text-pink-200 mt-12 mb-6">5. Chrome and Metallic Finishes 🔮</h2>
           <p className="text-gray-300 leading-relaxed mb-6">
             Mirror-like chrome nails were the ultimate status symbol in Y2K culture. Today's versions are more wearable but just as stunning, with rose gold, silver, and oil-slick finishes leading the pack.
           </p>
 
           <div className="bg-gradient-to-r from-pink-900/50 to-purple-900/50 rounded-lg p-8 my-12 text-center">
-            <h3 className="text-2xl font-bold text-white mb-4">Ready to Rock Y2K Nails? 💖</h3>
+            <h3 className="font-shuneva text-2xl font-bold text-white mb-4">Ready to Rock Y2K Nails? 💖</h3>
             <p className="text-gray-200 mb-6">Shop our curated collection of Y2K-inspired press-on nails and join the nostalgic nail revolution!</p>
             <Link 
               href="/shop?brand_segment=nails" 
@@ -114,7 +114,7 @@ export default function Y2KNailTrends2025() {
             </Link>
           </div>
 
-          <h2 className="text-3xl font-bold text-pink-200 mt-12 mb-6">Why Choose Press-On Nails for Y2K Trends?</h2>
+          <h2 className="font-shuneva text-3xl font-bold text-pink-200 mt-12 mb-6">Why Choose Press-On Nails for Y2K Trends?</h2>
           <p className="text-gray-300 leading-relaxed mb-6">
             Press-on nails are perfect for experimenting with bold Y2K trends without the commitment or salon costs. At Diva Factory, our luxury press-ons give you:
           </p>
@@ -126,7 +126,7 @@ export default function Y2KNailTrends2025() {
           </ul>
 
           <div className="border-l-4 border-pink-400 pl-6 my-8">
-            <p className="text-lg italic text-gray-300">
+            <p className="font-shuneva text-lg italic text-gray-300">
               "Y2K nails aren't just a trend – they're a celebration of optimism, creativity, and fearless self-expression. Embrace the chaos and let your nails tell your story!" 
             </p>
             <cite className="text-pink-200 font-semibold">- Diva Factory Design Team</cite>
@@ -135,11 +135,11 @@ export default function Y2KNailTrends2025() {
 
         {/* Related Posts */}
         <section className="mt-16 pt-12 border-t border-gray-700">
-          <h2 className="text-2xl font-bold text-white mb-8">Related Posts</h2>
+          <h2 className="font-shuneva text-2xl font-bold text-white mb-8">Related Posts</h2>
           <div className="grid md:grid-cols-2 gap-6">
             <Link href="/blog/press-on-nail-care-guide" className="group">
               <div className="bg-gradient-to-r from-purple-900/30 to-pink-900/30 rounded-lg p-6 hover:shadow-lg transition-all">
-                <h3 className="text-xl font-semibold text-white group-hover:text-pink-200 transition-colors">
+                <h3 className="font-shuneva text-xl font-semibold text-white group-hover:text-pink-200 transition-colors">
                   Ultimate Press-On Nail Care Guide
                 </h3>
                 <p className="text-gray-200 mt-2">Make your press-ons last longer with these pro tips</p>
@@ -147,7 +147,7 @@ export default function Y2KNailTrends2025() {
             </Link>
             <Link href="/blog/kawaii-aesthetic-guide" className="group">
               <div className="bg-gradient-to-r from-pink-900/30 to-purple-900/30 rounded-lg p-6 hover:shadow-lg transition-all">
-                <h3 className="text-xl font-semibold text-white group-hover:text-pink-200 transition-colors">
+                <h3 className="font-shuneva text-xl font-semibold text-white group-hover:text-pink-200 transition-colors">
                   The Ultimate Kawaii Aesthetic Guide
                 </h3>
                 <p className="text-gray-200 mt-2">Everything you need to know about kawaii culture and style</p>
