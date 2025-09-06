@@ -36,7 +36,7 @@ export default function Y2KNailTrends2025() {
       name: 'Diva Factory',
       logo: {
         '@type': 'ImageObject',
-        url: 'https://divanails.com/uploads/divanailslogo.svg'
+        url: 'https://divanails.com/uploads/divanailslogo.png'
       }
     },
     datePublished: '2025-08-27',

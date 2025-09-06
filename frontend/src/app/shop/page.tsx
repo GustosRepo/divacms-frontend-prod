@@ -127,7 +127,7 @@ export default function Shop() {
         <h1 className="font-shuneva text-3xl md:text-4xl font-extrabold tracking-tight text-white text-center">
           {brandMeta ? brandMeta.name : 'Explore Our Brand Segments'}
         </h1>
-        <p className="font-shuneva text-center text-white/80 max-w-2xl mx-auto">
+        <p className="font-shuneva text-center text-black  max-w-2xl mx-auto">
           {brandMeta ? brandMeta.tagline : 'Choose a brand to enter a tailored shopping experience.'}
         </p>
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">

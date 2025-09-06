@@ -22,8 +22,8 @@ export default function Home() {
     name: 'Diva Factory',
     description: 'Vegas kawaii paradise! Labubu collectibles, kawaii boutique accessories, and Y2K press-on nails for kawaii enthusiasts',
     url: 'https://divanails.com',
-    logo: 'https://divanails.com/uploads/divanailslogo.svg',
-    image: 'https://divanails.com/uploads/divanailslogo.svg',
+    logo: 'https://divanails.com/uploads/divanailslogo.png',
+    image: 'https://divanails.com/uploads/divanailslogo.png',
     sameAs: [
       'https://instagram.com/divanails',
       'https://tiktok.com/@divanails',

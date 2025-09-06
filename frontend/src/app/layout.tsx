@@ -30,7 +30,7 @@ export const metadata: Metadata = {
     siteName: "Diva Factory",
     images: [
       {
-        url: "/uploads/divanailslogo.svg",
+        url: "/uploads/divanailslogo.png",
         width: 800,
         height: 800,
         alt: "Diva Factory Logo"
@@ -43,7 +43,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Diva Factory | Luxury Press-On Nails & Y2K Boutique",
     description: "Premium press-on nails, collectible toys & kawaii boutique finds. Express your Y2K aesthetic.",
-    images: ["/uploads/divanailslogo.svg"],
+    images: ["/uploads/divanailslogo.png"],
   },
   robots: {
     index: true,

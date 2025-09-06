@@ -90,7 +90,7 @@ export default function BestSellers({ embedded = false, limit = 1 }: BestSellers
                         <h3 className="font-shuneva text-lg font-extrabold tracking-wide bg-clip-text text-transparent bg-gradient-to-r from-pink-600 via-fuchsia-600 to-violet-600">
                           {product.title}
                         </h3>
-                        <p className="font-shuneva mt-2 text-xs sm:text-sm text-[#222] dark:text-[#f3f3f7] line-clamp-4">{product.description}</p>
+                        <p className="font-shuneva mt-2 text-xs sm:text-sm  line-clamp-4">{product.description}</p>
                         <div className="mt-4 flex flex-col sm:flex-row sm:items-center gap-3">
                           <span className="font-shuneva inline-flex items-center justify-center px-4 py-2 rounded-full bg-pink-200/70 text-pink-800 text-sm font-semibold border border-pink-300 shadow-sm">
                             ${product.price.toFixed(2)}
@@ -120,11 +120,11 @@ export default function BestSellers({ embedded = false, limit = 1 }: BestSellers
 
   return (
     <section className="mt-16 pb-2 text-center px-4">
-      <div className="relative rounded-3xl bg-white/65 dark:bg-white/10 backdrop-blur-xl border border-white/80 dark:border-white/10 shadow-[0_8px_24px_-8px_rgba(0,0,0,0.18)] dark:shadow-[0_4px_20px_-4px_rgba(0,0,0,0.5)] p-6 sm:p-10 max-w-2xl mx-auto overflow-hidden transition-colors">
+      <div className="relative rounded-3xl dark:bg-white/10 backdrop-blur-xl border border-white/80 dark:border-white/10 shadow-[0_8px_24px_-8px_rgba(0,0,0,0.18)] dark:shadow-[0_4px_20px_-4px_rgba(0,0,0,0.5)] p-6 sm:p-10 max-w-2xl mx-auto overflow-hidden transition-colors">
         <h2 className="font-shuneva text-3xl font-extrabold tracking-wide bg-clip-text text-transparent bg-gradient-to-r from-pink-600 via-fuchsia-600 to-violet-600 drop-shadow-sm">
           Best‑Selling Nails
         </h2>
-        <p className="font-shuneva text-[#222] dark:text-[#f3f3f7] text-sm mt-2 max-w-xl mx-auto">
+        <p className="font-shuneva dark:text-pink-200 text-sm mt-2 max-w-xl mx-auto bg-gradient-to-r from-pink-600 via-fuchsia-600 to-violet-600 drop-shadow-sm">
           Our most loved style – grab it before it sells out!
         </p>
         <div className="mt-8">{content}</div>

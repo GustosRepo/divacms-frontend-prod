@@ -43,7 +43,7 @@ export default function Footer() {
               <Link href="https://instagram.com" className="block hover:text-pink-400 transition-colors">📸 Instagram</Link>
               <Link href="https://tiktok.com" className="block hover:text-pink-400 transition-colors">🎵 TikTok</Link>
               <Link href="https://facebook.com" className="block hover:text-pink-400 transition-colors">💬 Facebook</Link>
-              <Link href="mailto:hello@divanails.com" className="block hover:text-pink-400 transition-colors">📧 Email Us</Link>
+              <Link href="mailto:admin@thedivafactory.com" className="block hover:text-pink-400 transition-colors">📧 Email Us</Link>
             </div>
           </div>
         </div>

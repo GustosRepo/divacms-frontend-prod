@@ -43,7 +43,7 @@ export default function Navbar() {
         className="flex items-center gap-3"
       >
         <Image
-          src="/uploads/divanailslogo.svg"
+          src="/uploads/divanailslogo.png"
           alt="Diva Factory Logo"
             width={46}
             height={46}

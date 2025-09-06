@@ -1,37 +1,61 @@
-@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=IBM+Plex+Mono:wght@400;700&display=swap');
+/* Removed Google Fonts @import (now handled via next/font in layout for better CLS & subsetting). */
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-/* 🎨 Color Variables */
+/* 🎨 Color Variables (Option A: class-based dark mode) */
+/* Light (default) */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
-  --pink-bg-1: #d0bdc4;
-  --pink-bg-2: #b798a6;
-  --pink-bg-3: #a5778b;
+  /* Primary background scale */
+  --color-bg: #fff9e5; /* base */
+  --color-bg-accent: #ffeeb8; /* accent 1 */
+  --color-bg-alt: #fbdf7a; /* accent 2 */
+  --color-bg-strong: #f8d45d; /* strongest */
+  /* Text colors */
+  --color-fg: #221a08;
+  --color-fg-heading: #120d03;
+  --color-fg-accent: #8b3d8f;
+  /* Surfaces */
   --surface: rgba(255,255,255,0.65);
   --surface-border: #ecc5d5;
+  /* Legacy token mappings for backward compatibility */
+  --background: var(--color-bg);
+  --foreground: var(--color-fg);
+  --pastel-1: var(--color-bg);
+  --pastel-2: var(--color-bg-accent);
+  --pastel-3: var(--color-bg-alt);
+  --pastel-4: var(--color-bg-strong);
+  --pink-bg-1: var(--pastel-1);
+  --pink-bg-2: var(--pastel-2);
+  --pink-bg-3: var(--pastel-4);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
-
-/* Dark mode overrides */
-.dark body {
-  color: #e6e6eb;
-  background: radial-gradient(circle at 30% 20%, #1d1f29, #0d0e12 70%);
-}
-
+/* Dark mode variable overrides (triggered by adding class="dark" on <html> or <body>) */
 .dark:root {
+  --color-bg: #0d0e12;
+  --color-bg-accent: #1d1f29;
+  --color-bg-alt: #14161d;
+  --color-bg-strong: #1c2230;
+  --color-fg: #e8e5da;
+  --color-fg-heading: #ffffff;
+  --color-fg-accent: #ff9fe8;
   --surface: rgba(255,255,255,0.06);
   --surface-border: rgba(255,255,255,0.12);
+  /* Legacy mappings */
+  --background: var(--color-bg);
+  --foreground: var(--color-fg);
+  --pastel-1: var(--color-bg);
+  --pastel-2: var(--color-bg-accent);
+  --pastel-3: var(--color-bg-alt);
+  --pastel-4: var(--color-bg-strong);
+  --pink-bg-1: var(--pastel-1);
+  --pink-bg-2: var(--pastel-2);
+  --pink-bg-3: var(--pastel-4);
 }
+
+/* Dark mode body overrides now rely on variables only (kept for richer background style) */
+.dark body { background: radial-gradient(circle at 30% 20%, var(--color-bg-accent), var(--color-bg) 70%); }
 
 /* Reduced motion utility */
 .reduce-motion * { animation: none !important; transition: none !important; }
@@ -49,43 +73,68 @@ body { transition: background 0.6s ease, color 0.3s ease; }
 
 /* 🎀 Global Styles */
 body {
-  font-family: 'IBM Plex Mono', monospace;
-  background: linear-gradient(135deg,var(--pink-bg-1) 0%, var(--pink-bg-2) 45%, var(--pink-bg-3) 100%);
-  text-transform: none; /* remove global uppercase for readability */
-  font-weight: 500;
-  color: #222;
-  text-shadow: 0 1px 2px rgba(0,0,0,0.18), 0 0px 0px #fff;
+  font-family: var(--font-geist-sans), system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif;
+  background: linear-gradient(140deg,var(--color-bg) 0%, var(--color-bg-accent) 45%, var(--color-bg-alt) 75%, var(--color-bg-strong) 100%);
+  text-transform: none;
+  font-weight: 600;
+  color: var(--color-fg);
+  text-shadow: 0 1px 2px rgba(0,0,0,0.12);
   position: relative;
   overflow-x: hidden;
+  font-feature-settings: "liga" 1, "calt" 1;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
-.dark body {
-  color: #e6e6eb;
-  text-shadow: 0 1px 2px rgba(0,0,0,0.55);
-}
+.dark body { color: var(--color-fg); text-shadow: 0 1px 2px rgba(0,0,0,0.4); }
 
 /* Remove global stroke for all text */
 body, body * { -webkit-text-stroke: 0 !important; }
 
 /* Card and heading improvements */
 .surface-card, .card, .rounded-3xl, .rounded-xl {
-  color: #2a2a2a;
+  color: var(--color-fg);
   font-weight: 600;
   text-shadow: 0 1px 2px rgba(0,0,0,0.13);
 }
-.dark .surface-card, .dark .card, .dark .rounded-3xl, .dark .rounded-xl {
-  color: #f3f3f7;
-  text-shadow: 0 1px 2px rgba(0,0,0,0.55);
-}
+.dark .surface-card, .dark .card, .dark .rounded-3xl, .dark .rounded-xl { color: var(--color-fg); text-shadow: 0 1px 2px rgba(0,0,0,0.55); }
 
+/* Headings: Use custom display font only when applied via utility (.font-shuneva). */
 h1, h2, h3, h4, h5, h6 {
-  color: #222;
-  font-weight: 700;
-  text-shadow: 0 2px 6px rgba(0,0,0,0.13);
+  font-family: var(--font-geist-sans), system-ui, sans-serif;
+  font-weight: 800;
+  line-height: 1.15;
+  letter-spacing: -0.015em;
+  color: var(--color-fg-heading);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.696), 0 2px 4px rgba(0,0,0,0.12);
+  font-optical-sizing: auto;
+  text-wrap: balance;
 }
-.dark h1, .dark h2, .dark h3, .dark h4, .dark h5, .dark h6 {
-  color: #f3f3f7;
-  text-shadow: 0 2px 6px rgba(0,0,0,0.55);
-}
+.dark h1, .dark h2, .dark h3, .dark h4, .dark h5, .dark h6 { color: var(--color-fg-heading); text-shadow: 0 2px 4px rgba(0,0,0,0.5); }
+
+/* Responsive type scale (utility approach without overwriting Tailwind; light, but global baseline) */
+html { font-size: 16px; }
+@media (min-width: 640px) { html { font-size: 16.5px; } }
+@media (min-width: 1024px) { html { font-size: 17px; } }
+
+/* Font utility helpers */
+.font-display { font-family: var(--font-shuneva), serif; font-weight: 400; }
+.font-mono    { font-family: var(--font-geist-mono), ui-monospace, SFMono-Regular, Menlo, monospace; }
+.font-sans    { font-family: var(--font-geist-sans), system-ui, sans-serif; }
+
+/* Contrast helpers for text over light yellow */
+.text-on-pastel-dark { color: var(--color-fg-heading); }
+.text-on-pastel-soft { color: var(--color-fg); }
+.text-on-pastel-accent { color: var(--color-fg-accent); }
+
+/* Gradient text helper (avoid repeating long class chains) */
+.text-gradient-hotpink { background: linear-gradient(90deg,#ff3ea6,#ff5ed2,#a74bff); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.dark .text-gradient-hotpink { background: linear-gradient(90deg,#ffa6e4,#ff92db,#c8a2ff); }
+
+/* Optical alignment tweaks for numeric UI bits */
+.tabular-nums { font-variant-numeric: tabular-nums; }
+.slashed-zero { font-variant-numeric: slashed-zero; }
+
+/* Performance: prevent large heading flashes (FOIT) by keeping swap strategy via next/font already */
 
 /* surface utility */
 .surface-card { background: var(--surface); border: 1px solid var(--surface-border); backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px); }

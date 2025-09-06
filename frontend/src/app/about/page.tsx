@@ -67,7 +67,7 @@ export default function About() {
   } as const;
 
   return (
-    <main className="min-h-screen relative overflow-x-hidden text-gray-200">
+    <main className="min-h-screen relative overflow-x-hidden">
       {/* JSON-LD */}
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(orgJsonLd) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }} />
@@ -82,16 +82,16 @@ export default function About() {
           <div className="animate-pulse-sparkle absolute bottom-20 right-1/4 w-10 h-10 bg-[url('/star.svg')] bg-no-repeat bg-center opacity-50" />
         </div>
         <div className="container mx-auto px-6 text-center">
-          <nav className="mb-6 text-sm text-fuchsia-700" aria-label="Breadcrumb">
-            <Link href="/" className="hover:underline">Home</Link>
-            <span className="mx-2">→</span>
-            <span className="text-fuchsia-900/70">About</span>
+          <nav className="mb-6 text-sm text-on-pastel-accent" aria-label="Breadcrumb">
+            <Link href="/" className="hover:underline hover:text-on-pastel-strong transition-colors">Home</Link>
+            <span className="mx-2 opacity-70">→</span>
+            <span className="text-on-pastel-soft/90">About</span>
           </nav>
 
-          <h1 className="font-shuneva text-5xl md:text-7xl font-extrabold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-pink-500 via-fuchsia-500 to-blue-400 drop-shadow-[0_2px_12px_rgba(255,0,180,0.2)]">
+          <h1 className="font-display text-5xl md:text-7xl font-semibold tracking-tight text-gradient-hotpink drop-shadow-[0_2px_10px_rgba(0,0,0,0.15)]">
             Diva Factory
           </h1>
-          <p className="font-shuneva max-w-3xl mx-auto mt-4 text-lg text-fuchsia-700">
+          <p className="font-sans max-w-3xl mx-auto mt-4 text-base md:text-lg text-on-pastel-accent dark:text-on-pastel-accent leading-relaxed">
             Your pastel Y2K destination for <strong>kawaii collectibles</strong>, <strong>luxury press‑on nails</strong>, and <strong>curated boutique treasures</strong>—made for everyday icons in Las Vegas and beyond.
           </p>
 
@@ -102,9 +102,9 @@ export default function About() {
               {t:'Nail Artistry', d:'Salon‑grade gel, reusable wear'},
               {t:'Boutique Experience', d:'Thoughtful packaging & helpful support'},
             ].map((c)=> (
-              <div key={c.t} className="rounded-2xl border border-pink-200/60 bg-gradient-to-br from-pink-900/10 to-purple-900/10 p-5 shadow-xl">
-                <h3 className="font-shuneva font-bold text-pink-200">{c.t}</h3>
-                <p className="font-shuneva text-gray-200 text-sm mt-1">{c.d}</p>
+              <div key={c.t} className="rounded-2xl border border-white/50 bg-gradient-to-br from-pink-900/10 to-purple-900/10 p-5 shadow-xl">
+                <h3 className="font-display text-sm font-semibold text-gradient-hotpink">{c.t}</h3>
+                <p className="font-sans text-xs md:text-sm text-on-pastel-soft/90 dark:text-on-pastel-soft mt-1 leading-snug">{c.d}</p>
               </div>
             ))}
           </div>
@@ -114,44 +114,44 @@ export default function About() {
       {/* ====== OUR STORY (short + image placeholder) ====== */}
       <section className="container mx-auto px-6 py-16 grid lg:grid-cols-2 gap-10 items-center" aria-labelledby="our-story">
         <div>
-          <h2 id="our-story" className="font-shuneva text-5xl md:text-4xl font-bold text-fuchsia-600 drop-shadow-sm mb-4">Our Story</h2>
-          <p className="font-shuneva text-gray-200 mb-4 text-4xl">Founded in <strong>2025</strong> in Las Vegas, Diva Factory started as a love letter to pastel Y2K culture. What began with custom nail sets quickly expanded into a <strong>curated boutique</strong> of <strong>collectibles</strong>, <strong>press‑on nails</strong>, and <strong>accessories</strong>—all chosen to spark joy and self‑expression.</p>
-          <p className="font-shuneva text-gray-200 text-4xl">We keep our promise simple: cute, quality, and kind. Clear product details, inclusive sizing, authentic releases, and a community‑first vibe.</p>
-          <div className="mt-6 text-sm text-fuchsia-800">
-            <Link href="/shop" className="underline hover:text-fuchsia-600 mr-4">Shop All</Link>
-            <Link href="/collections/collectibles" className="underline hover:text-fuchsia-600 mr-4">Collectibles</Link>
-            <Link href="/collections/nails" className="underline hover:text-fuchsia-600 mr-4">Press‑On Nails</Link>
-            <Link href="/collections/boutique" className="underline hover:text-fuchsia-600">Boutique</Link>
+          <h2 id="our-story" className="font-display text-4xl md:text-5xl font-semibold text-gradient-hotpink drop-shadow-sm mb-6">Our Story</h2>
+          <p className="font-sans mb-4 text-base md:text-lg leading-relaxed text-on-pastel-soft">Founded in <strong>2025</strong> in Las Vegas, Diva Factory started as a love letter to pastel Y2K culture. What began with custom nail sets quickly expanded into a <strong>curated boutique</strong> of <strong>collectibles</strong>, <strong>press‑on nails</strong>, and <strong>accessories</strong>—all chosen to spark joy and self‑expression.</p>
+          <p className="font-sans text-base md:text-lg leading-relaxed text-on-pastel-soft">We keep our promise simple: cute, quality, and kind. Clear product details, inclusive sizing, authentic releases, and a community‑first vibe.</p>
+          <div className="mt-6 text-sm text-on-pastel-accent">
+            <Link href="/shop" className="underline hover:text-on-pastel-strong mr-4 transition-colors">Shop All</Link>
+            <Link href="/toys" className="underline hover:text-on-pastel-strong mr-4 transition-colors">Collectibles</Link>
+            <Link href="/nails" className="underline hover:text-on-pastel-strong mr-4 transition-colors">Press‑On Nails</Link>
+            <Link href="/boutique" className="underline hover:text-on-pastel-strong transition-colors">Boutique</Link>
           </div>
         </div>
-        <div className="rounded-2xl border-2 border-pink-200 bg-gradient-to-br from-pink-900/10 to-blue-900/10 p-6 shadow-xl text-center">
+  <div className="rounded-2xl border-2 border-white/60 bg-gradient-to-br from-pink-900/10 to-blue-900/10 p-6 shadow-xl text-center">
           <div className="h-48 md:h-64 rounded-xl bg-gradient-to-br from-pink-100 via-fuchsia-100 to-blue-100 flex items-center justify-center">
             <img
-              src="/uploads/divanailslogo.svg"
+              src="/uploads/divanailslogo.png"
               alt="Diva Factory brand logo"
               className="max-h mx-auto"
             />
           </div>
-          <p className="font-shuneva text-xs text-gray-200 mt-3">Tip: feature a mix of nails + collectibles in one hero shot for instant brand clarity.</p>
+          <p className="font-sans text-xs text-on-pastel-soft/80 mt-3">Tip: feature a mix of nails + collectibles in one hero shot for instant brand clarity.</p>
         </div>
       </section>
 
       {/* ====== HOW WE CURATE & CRAFT ====== */}
       <section className="bg-gradient-to-r from-pink-150 to-blue-150 py-16" aria-labelledby="how-it-works">
         <div className="container mx-auto px-6">
-          <h2 id="how-it-works" className="font-shuneva text-3xl md:text-4xl font-bold text-fuchsia-600 mb-8">How We Curate & Craft</h2>
+          <h2 id="how-it-works" className="font-display text-3xl md:text-4xl font-semibold text-gradient-hotpink mb-8">How We Curate & Craft</h2>
           <div className="grid md:grid-cols-3 gap-6">
             {[{n:'1',t:'Discover',d:'We scout the cutest drops and authentic releases that fit our pastel Y2K vibe.'},{n:'2',t:'Design & Finish',d:'Hand‑finish nail sets with salon‑grade gel; select accessories with quality in mind.'},{n:'3',t:'Pack & Ship',d:'Boutique‑style packaging, quick processing, and responsive support.'}].map(step => (
-              <div key={step.n} className="rounded-xl bg-gradient-to-br from-pink-900/10 to-purple-900/10 border border-white/60 p-6 shadow">
-                <div className="font-shuneva text-3xl font-bold text-pink-500">{step.n}</div>
-                <h3 className="font-shuneva text-xl font-bold mt-2">{step.t}</h3>
-                <p className="font-shuneva text-gray-200 mt-1 text-sm">{step.d}</p>
+              <div key={step.n} className="rounded-xl bg-gradient-to-br from-pink-900/10 to-purple-900/10 border border-white/50 p-6 shadow">
+                <div className="font-display text-2xl font-semibold text-gradient-hotpink">{step.n}</div>
+                <h3 className="font-display text-lg font-semibold mt-2">{step.t}</h3>
+                <p className="font-sans text-xs md:text-sm text-on-pastel-soft/90 mt-1 leading-snug">{step.d}</p>
               </div>
             ))}
           </div>
-          <div className="mt-6 text-sm flex flex-wrap gap-4">
-            <Link href="/nail-guide" className="underline text-fuchsia-700 hover:text-fuchsia-600">Nail application & care guide</Link>
-            <Link href="/blog" className="underline text-fuchsia-700 hover:text-fuchsia-600">Collectible unboxings & style tips</Link>
+          <div className="mt-6 text-sm flex flex-wrap gap-4 text-on-pastel-accent">
+            <Link href="/nail-guide" className="underline hover:text-on-pastel-strong transition-colors">Nail application & care guide</Link>
+            <Link href="/blog" className="underline hover:text-on-pastel-strong transition-colors">Collectible unboxings & style tips</Link>
           </div>
         </div>
       </section>
@@ -159,34 +159,34 @@ export default function About() {
       {/* ====== PILLARS (split) ====== */}
       <section className="container mx-auto px-6 py-16 grid lg:grid-cols-3 gap-10" aria-labelledby="pillars">
         <h2 id="pillars" className="sr-only">Our Three Pillars</h2>
-        <div className="bg-gradient-to-br from-pink-900/10 to-purple-900/10 rounded-2xl p-6 border border-pink-200 shadow-xl">
-          <h3 className="font-shuneva text-2xl font-bold text-pink-500 mb-2">Collectibles</h3>
-          <p className="font-shuneva text-gray-200">From blind boxes to plushies and desk buddies, we curate authentic, on‑theme releases that are actually in stock—no fakes, no fluff.</p>
-          <Link href="/collections/collectibles" className="underline text-pink-600 mt-2 inline-block">Shop Collectibles</Link>
+  <div className="bg-gradient-to-br from-pink-900/10 to-purple-900/10 rounded-2xl p-6 border border-white/50 shadow-xl">
+          <h3 className="font-display text-xl font-semibold text-gradient-hotpink mb-2">Collectibles</h3>
+          <p className="font-sans text-sm md:text-base text-on-pastel-soft/90">From blind boxes to plushies and desk buddies, we curate authentic, on‑theme releases that are actually in stock—no fakes, no fluff.</p>
+          <Link href="/toys" className="underline text-on-pastel-accent hover:text-on-pastel-strong mt-2 inline-block transition-colors">Shop Collectibles</Link>
         </div>
-        <div className="bg-gradient-to-br from-pink-900/10 to-purple-900/10 rounded-2xl p-6 border border-pink-200 shadow-xl">
-          <h3 className="font-shuneva text-2xl font-bold text-fuchsia-500 mb-2">Nails</h3>
-          <p className="font-shuneva text-gray-200">Premium ABS bases, salon‑grade gel finishes, inclusive sizing, and reusable wear. Cute without the salon time.</p>
-          <Link href="/collections/nails" className="underline text-fuchsia-600 mt-2 inline-block">Shop Nails</Link>
+  <div className="bg-gradient-to-br from-pink-900/10 to-purple-900/10 rounded-2xl p-6 border border-white/50 shadow-xl">
+          <h3 className="font-display text-xl font-semibold text-gradient-hotpink mb-2">Nails</h3>
+          <p className="font-sans text-sm md:text-base text-on-pastel-soft/90">Premium ABS bases, salon‑grade gel finishes, inclusive sizing, and reusable wear. Cute without the salon time.</p>
+          <Link href="/nails" className="underline text-on-pastel-accent hover:text-on-pastel-strong mt-2 inline-block transition-colors">Shop Nails</Link>
         </div>
-        <div className="bg-gradient-to-br from-pink-900/10 to-purple-900/10 rounded-2xl p-6 border border-pink-200 shadow-xl">
-          <h3 className="font-shuneva text-2xl font-bold text-blue-500 mb-2">Boutique</h3>
-          <p className="font-shuneva text-gray-200">Curated accessories and gifts that complete the look—packed with care and ready to delight.</p>
-          <Link href="/collections/boutique" className="underline text-blue-600 mt-2 inline-block">Shop Boutique</Link>
+  <div className="bg-gradient-to-br from-pink-900/10 to-purple-900/10 rounded-2xl p-6 border border-white/50 shadow-xl">
+          <h3 className="font-display text-xl font-semibold text-gradient-hotpink mb-2">Boutique</h3>
+          <p className="font-sans text-sm md:text-base text-on-pastel-soft/90">Curated accessories and gifts that complete the look—packed with care and ready to delight.</p>
+          <Link href="/boutique" className="underline text-on-pastel-accent hover:text-on-pastel-strong mt-2 inline-block transition-colors">Shop Boutique</Link>
         </div>
       </section>
 
       {/* ====== SOCIAL PROOF ====== */}
       <section className="py-16 text-center" aria-labelledby="loved-by-divas">
-        <h2 id="loved-by-divas" className="font-shuneva text-4xl font-bold text-fuchsia-600 drop-shadow-sm">
+  <h2 id="loved-by-divas" className="font-display text-4xl font-semibold text-gradient-hotpink drop-shadow-sm">
           <span aria-hidden="true" className="mr-2">💖</span> Loved by Divas
         </h2>
-        <p className="font-shuneva text-pink-700 mt-2">Real reviews from our community.</p>
+  <p className="font-sans text-on-pastel-accent mt-2">Real reviews from our community.</p>
         <div className="mt-10 flex flex-wrap justify-center gap-8">
           {["Obsessed with my press‑ons AND the kawaii plushies! Everything is so cute!","Best place for Y2K vibes! My nails, room decor, and toy collection are all from here!","Quality is amazing! My nails last weeks and the toys are collector‑worthy. 100% recommend!"].map((q, i) => (
-            <figure key={i} className="bg-gradient-to-br from-pink-900/10 to-purple-900/10 p-6 rounded-xl shadow-xl w-80 border-2 border-pink-200 hover:shadow-2xl transition transform hover:-translate-y-2">
-              <blockquote className="font-shuneva text-fuchsia-700">“{q}”</blockquote>
-              <figcaption className="font-shuneva text-sm font-bold mt-3 text-pink-500">— Customer</figcaption>
+            <figure key={i} className="bg-gradient-to-br from-pink-900/10 to-purple-900/10 p-6 rounded-xl shadow-xl w-80 border-2 border-white/60 hover:shadow-2xl transition transform hover:-translate-y-2">
+              <blockquote className="font-sans text-sm text-on-pastel-soft">“{q}”</blockquote>
+              <figcaption className="font-display text-xs font-semibold mt-3 text-gradient-hotpink">— Customer</figcaption>
             </figure>
           ))}
         </div>
@@ -194,7 +194,7 @@ export default function About() {
 
       {/* ====== FAQ (collapsible) ====== */}
       <section className="container mx-auto px-6 pb-12" aria-labelledby="about-faqs">
-        <h2 id="about-faqs" className="font-shuneva text-3xl md:text-4xl font-bold text-fuchsia-600 drop-shadow-sm mb-4">Frequently Asked Questions</h2>
+  <h2 id="about-faqs" className="font-display text-3xl md:text-4xl font-semibold text-gradient-hotpink drop-shadow-sm mb-4">Frequently Asked Questions</h2>
         <div className="space-y-4">
           {[
             {q:'What products do you carry?', a:'Three pillars: kawaii collectibles (blind boxes, plushies, figures), salon‑quality press‑on nails, and curated boutique accessories.'},
@@ -202,12 +202,12 @@ export default function About() {
             {q:'Where do you ship from?', a:'Las Vegas, NV. Processing time is separate from carrier transit time.'},
             {q:'Are your nails reusable?', a:'Yes—remove gently, clean off adhesive, and store them in their case for next time.'},
           ].map((item) => (
-            <details key={item.q} className="bg-gradient-to-br from-pink-900/10 to-purple-900/10 p-5 rounded-xl border border-white/40">
-              <summary className="font-shuneva font-semibold cursor-pointer list-none flex items-center justify-between">
+            <details key={item.q} className="bg-gradient-to-br from-pink-900/10 to-purple-900/10 p-5 rounded-xl border border-white/50">
+              <summary className="font-display font-semibold cursor-pointer list-none flex items-center justify-between">
                 <span>{item.q}</span>
-                <span className="text-pink-500 text-xl">+</span>
+                <span className="text-on-pastel-accent text-xl">+</span>
               </summary>
-              <div className="mt-3 font-shuneva text-gray-200">{item.a.includes('size & care guide') ? (<>
+              <div className="mt-3 font-sans text-on-pastel-soft">{item.a.includes('size & care guide') ? (<>
                 Yes—check our <Link href="/nail-guide" className="underline">size & care guide</Link> for measuring at home and choosing shapes/lengths.
               </>) : item.a}</div>
             </details>
@@ -218,17 +218,17 @@ export default function About() {
       {/* ====== FINAL CTA ====== */}
       <section className="bg-gradient-to-r from-pink-600/20 to-purple-600/20 py-14 text-center">
         <div className="container mx-auto px-6">
-          <h2 className="font-shuneva text-4xl font-bold text-white drop-shadow-sm mb-3">Ready to explore something cute?</h2>
-          <p className="font-shuneva text-white/90 max-w-2xl mx-auto">Discover authentic collectibles, salon‑quality press‑on nails, and boutique accessories—curated for your Y2K heart.</p>
+          <h2 className="font-display text-4xl font-semibold text-gradient-hotpink drop-shadow-sm mb-3">Ready to explore something cute?</h2>
+          <p className="font-sans text-sm md:text-base text-on-pastel-soft/90 max-w-2xl mx-auto">Discover authentic collectibles, salon‑quality press‑on nails, and boutique accessories—curated for your Y2K heart.</p>
           <div className="mt-6 flex flex-wrap items-center justify-center gap-4">
-            <Link href="/collections/collectibles" className="font-shuneva px-8 py-3 bg-gradient-to-r from-pink-500 via-fuchsia-500 to-blue-400 text-white font-semibold rounded-full shadow-lg hover:saturate-125 transition duration-300 transform hover:-translate-y-1">Shop Collectibles</Link>
-            <Link href="/collections/nails" className="font-shuneva px-8 py-3 bg-gradient-to-r from-fuchsia-500 to-blue-500 text-white font-semibold rounded-full shadow-lg hover:saturate-125 transition duration-300 transform hover:-translate-y-1">Shop Nails</Link>
-            <Link href="/collections/boutique" className="font-shuneva px-8 py-3 bg-gradient-to-r from-blue-500 to-pink-500 text-white font-semibold rounded-full shadow-lg hover:saturate-125 transition duration-300 transform hover:-translate-y-1">Shop Boutique</Link>
+            <Link href="/toys" className="font-display px-8 py-3 bg-gradient-to-r from-pink-500 via-fuchsia-500 to-blue-400 text-white font-semibold rounded-full shadow-lg hover:saturate-125 transition duration-300 transform hover:-translate-y-1">Shop Collectibles</Link>
+            <Link href="/nails" className="font-display px-8 py-3 bg-gradient-to-r from-fuchsia-500 to-blue-500 text-white font-semibold rounded-full shadow-lg hover:saturate-125 transition duration-300 transform hover:-translate-y-1">Shop Nails</Link>
+            <Link href="/boutique" className="font-display px-8 py-3 bg-gradient-to-r from-blue-500 to-pink-500 text-white font-semibold rounded-full shadow-lg hover:saturate-125 transition duration-300 transform hover:-translate-y-1">Shop Boutique</Link>
           </div>
           <div className="mt-6 text-sm text-fuchsia-100">
-            <Link href="/faq" className="underline hover:text-white mr-4">FAQ</Link>
-            <Link href="/faq/shipping-info" className="underline hover:text-white mr-4">Shipping Info</Link>
-            <Link href="/nail-guide" className="underline hover:text-white">Nail Guide</Link>
+            <Link href="/faq" className="underline hover:text-on-pastel-strong mr-4 transition-colors">FAQ</Link>
+            <Link href="/faq/shipping-info" className="underline hover:text-on-pastel-strong mr-4 transition-colors">Shipping Info</Link>
+            <Link href="/nail-guide" className="underline hover:text-on-pastel-strong transition-colors">Nail Guide</Link>
           </div>
         </div>
       </section>

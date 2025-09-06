@@ -1,5 +1,6 @@
 import { Metadata } from "next";
 import Link from "next/link";
+import ContactForm from "@/components/ContactForm";
 
 export const metadata: Metadata = {
   title: "Contact Us | Customer Service & Local Pickup | Diva Factory",
@@ -21,7 +22,7 @@ export default function ContactPage() {
     description: 'Premium press-on nails and kawaii accessories',
     url: 'https://divanails.com/contact',
     telephone: '+1-555-DIVA-123',
-    email: 'hello@divanails.com',
+  email: 'admin@thedivafactory.com',
     address: {
       '@type': 'PostalAddress',
       streetAddress: '123 Kawaii Street',
@@ -74,6 +75,11 @@ export default function ContactPage() {
             or have a custom design idea — we're here to help make your nail dreams come true!
           </p>
         </header>
+
+        {/* Contact Form */}
+        <section className="max-w-3xl mx-auto mb-20">
+          <ContactForm />
+        </section>
 
         {/* Contact Methods Grid */}
         <section className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-16">
@@ -157,9 +163,11 @@ export default function ContactPage() {
               <div>
                 <h3 className="text-lg font-bold text-white mb-2">Pickup Hours:</h3>
                 <ul className="space-y-1 ml-4 list-disc">
-                  <li>Monday - Friday: 9 AM - 5 PM</li>
-                  <li>Saturday: 10 AM - 4 PM</li>
-                  <li>Sunday: By appointment only</li>
+                  <ul className="space-y-1 ml-4 list-disc">
+                    <li>Monday - Friday: 9 AM - 5 PM</li>
+                    <li>Saturday: 10 AM - 4 PM</li>
+                    <li>Sunday: By appointment only</li>
+                  </ul>
                 </ul>
               </div>
             </div>
@@ -234,6 +242,6 @@ export default function ContactPage() {
           </div>
         </section>
       </div>
-    </>
+  </>
   );
 }

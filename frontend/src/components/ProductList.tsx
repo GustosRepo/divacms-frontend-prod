@@ -69,8 +69,12 @@ export default function ProductList({ embedded = false, limit = 3 }: ProductList
 
   return (
     <section className="mt-16 text-center px-4">
-      <h2 className="font-shuneva text-3xl font-extrabold tracking-wide bg-clip-text text-transparent bg-gradient-to-r from-pink-600 via-violet-600 to-indigo-600 drop-shadow-sm">Featured Nails</h2>
-      <p className="font-shuneva text-[#222] dark:text-[#f3f3f7] text-sm mt-2 max-w-xl mx-auto">Explore our trending designs – hand‑picked for you!</p>
+      <h2 className="font-display text-3xl font-semibold tracking-tight text-gradient-hotpink drop-shadow-sm">
+        Featured Nails
+      </h2>
+      <p className="font-display text-sm mt-2 max-w-xl mx-auto text-on-pastel-soft dark:text-on-pastel-soft">
+        Explore our trending designs – hand‑picked for you!
+      </p>
       {grid}
       <div className="mt-8">
         <Link

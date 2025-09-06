@@ -71,7 +71,7 @@ const faqs = [
     q: "What if my order arrives damaged?",
     a: (
       <p>
-        Oh no! Please email <a className="underline" href="mailto:support@divafactorynails.com">support@divafactorynails.com</a>
+  Oh no! Please email <a className="underline" href="mailto:admin@thedivafactory.com">admin@thedivafactory.com</a>
         with photos of the packaging and item within <strong>7 days</strong> of delivery. We’ll make it right.
       </p>
     ),
@@ -81,7 +81,7 @@ const faqs = [
     a: (
       <p>
         We start working on orders quickly. If you need to update shipping address, items, or cancel,
-        contact us ASAP at <a className="underline" href="mailto:support@divafactorynails.com">support@divafactorynails.com</a>.
+  contact us ASAP at <a className="underline" href="mailto:admin@thedivafactory.com">admin@thedivafactory.com</a>.
         Once shipped, we can’t modify the order.
       </p>
     ),
