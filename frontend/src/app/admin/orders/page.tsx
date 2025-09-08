@@ -46,6 +46,15 @@ export default function ManageOrders() {
   const [message, setMessage] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [filterStatus, setFilterStatus] = useState<string>("");
+  const [proofModalUrl, setProofModalUrl] = useState<string | null>(null);
+
+  // Close modal on Escape
+  useEffect(() => {
+    if (!proofModalUrl) return;
+    const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') setProofModalUrl(null); };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [proofModalUrl]);
 
   useEffect(() => {
     if (!user || !user.isAdmin) {
@@ -292,12 +301,24 @@ export default function ManageOrders() {
                     const country = (s as any).country || order.country || "";
                     const isPickup = Boolean((s as any).pickup);
                     const expIso = (s as any)?.pickup?.reservation_expires_at as string | undefined;
+                    const pay = (s as any)?.payment_status as string | undefined;
+                    const unpaid = (pay || "").toLowerCase() !== "paid";
+                    const now = Date.now();
+                    const expMs = expIso ? Date.parse(expIso) : undefined;
+                    const expired = Boolean(expMs && expMs <= now && unpaid && order.status === "awaiting_pickup");
+                    const soon = Boolean(expMs && expMs > now && (expMs - now) <= 12 * 60 * 60 * 1000 && unpaid && order.status === "awaiting_pickup");
                     if (isPickup) {
                       return (
                         <div className="text-sm text-gray-200">
                           <div className="font-semibold text-pink-300">Local Pickup</div>
                           {expIso && (
                             <div className="text-xs text-gray-400">Hold until: {new Date(expIso).toLocaleString()}</div>
+                          )}
+                          {expired && (
+                            <span className="mt-1 inline-block text-xs px-2 py-0.5 rounded bg-red-600/20 text-red-300">Expired</span>
+                          )}
+                          {!expired && soon && (
+                            <span className="mt-1 inline-block text-xs px-2 py-0.5 rounded bg-yellow-600/20 text-yellow-300">Expiring soon</span>
                           )}
                           {((s as any)?.customer?.phone || s?.phone) && (
                             <div className="text-xs mt-1">☎ {String(((s as any)?.customer?.phone) || s?.phone)}</div>
@@ -364,6 +385,18 @@ export default function ManageOrders() {
                 </td>
                 <td className="p-3">
                   <div className="flex flex-wrap items-center gap-2">
+                    {/* View payment proof if uploaded */}
+                    {(() => {
+                      const proofUrl = (order.shipping_info as any)?.payment_proof_url as string | undefined;
+                      return proofUrl ? (
+                        <button
+                          onClick={() => setProofModalUrl(proofUrl)}
+                          className="bg-white/10 hover:bg-white/20 px-3 py-1 rounded text-sm"
+                        >
+                          View Proof
+                        </button>
+                      ) : null;
+                    })()}
                     {/* Show Mark Paid whenever payment_status !== paid */}
                     {(() => {
                       const pay = (order.shipping_info as any)?.payment_status as string | undefined;
@@ -394,6 +427,24 @@ export default function ManageOrders() {
             ))}
         </tbody>
       </table>
+      {/* Proof modal */}
+      {proofModalUrl && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center">
+          <div className="absolute inset-0 bg-black/70" onClick={() => setProofModalUrl(null)} />
+          <div className="relative max-w-3xl w-full mx-4">
+            <button
+              onClick={() => setProofModalUrl(null)}
+              className="absolute right-2 top-2 z-10 bg-white/10 hover:bg-white/20 text-white rounded-full p-2"
+              aria-label="Close proof"
+            >
+              ✖
+            </button>
+            <div className="bg-gray-900 rounded-lg p-4">
+              <img src={proofModalUrl} alt="Payment proof" className="w-full h-auto rounded" />
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

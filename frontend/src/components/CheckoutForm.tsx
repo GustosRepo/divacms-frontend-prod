@@ -78,10 +78,14 @@ export default function CheckoutForm({
   const [selectedPoints, setSelectedPoints] = useState<number>(formData.pointsUsed || 0);
   const [discount, setDiscount] = useState<number>(0);
   const [loading, setLoading] = useState(false);
+  const [proofFile, setProofFile] = useState<File | null>(null);
+  const [fileError, setFileError] = useState<string | null>(null);
   // Compute subtotal and discount locally
   const subtotal = cartItems.reduce((sum, it) => sum + Number(it.price || 0) * Number(it.quantity || 1), 0);
   const discountAmount = (subtotal * discount) / 100;
   const totalAfterDiscount = Math.max(0, subtotal - discountAmount);
+  // Local pickup sales tax (8.375%)
+  const TAX_RATE = 0.08375;
 
   // shipping fee will be fetched from backend (Goshipoo) on submit; keep local state for UX
   const [shippingFee, setShippingFee] = useState<number | null>(null);
@@ -128,7 +132,8 @@ export default function CheckoutForm({
 
   // Derive shipping shown in totals: 0 for local pickup or until a rate is fetched
   const shippingDisplayed = isLocalPickup ? 0 : (shippingFee ?? 0);
-  const totalDisplayed = Number((totalAfterDiscount + shippingDisplayed).toFixed(2));
+  const taxDisplayed = isLocalPickup ? Number((totalAfterDiscount * TAX_RATE).toFixed(2)) : 0;
+  const totalDisplayed = Number((totalAfterDiscount + taxDisplayed + shippingDisplayed).toFixed(2));
 
   const handlePointsChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const points = parseInt(e.target.value);
@@ -145,12 +150,23 @@ export default function CheckoutForm({
     setLoading(true);
 
     try {
-      // If Local Pickup, call backend to create pickup order and skip Stripe
+      // If Local Pickup, call backend to create pickup order and upload proof, then route to success
       if (isLocalPickup) {
         const s = formData.shippingInfo;
         if (!s.name || !s.phone) {
           throw new Error("Please provide your name and phone for local pickup.");
         }
+        if (!proofFile) {
+          setFileError("Please upload payment confirmation for local pickup.");
+          setLoading(false);
+          return;
+        }
+        // extra guard on size/type
+        const maxBytes = 10 * 1024 * 1024; // 10MB
+        const okType = proofFile.type.startsWith("image/") || proofFile.type === "application/pdf";
+        if (!okType) { setFileError("Invalid file type. Upload an image or PDF."); setLoading(false); return; }
+        if (proofFile.size > maxBytes) { setFileError("File too large. Max 10MB."); setLoading(false); return; }
+        setFileError(null);
         // Build minimal payload the backend expects
         const payload = {
           items: cartItems.map((it) => ({ id: it.id, quantity: it.quantity })),
@@ -160,6 +176,8 @@ export default function CheckoutForm({
             phone: s.phone,
             email: (user as any)?.email || "",
           },
+          taxes: Number((totalAfterDiscount * TAX_RATE).toFixed(2)),
+          tax_rate: TAX_RATE,
           notes: undefined as unknown as string | undefined,
         };
         try {
@@ -177,6 +195,19 @@ export default function CheckoutForm({
           const serverOrderId: string = json?.order_id || `pickup_${Date.now()}`;
           const expIso: string | undefined = json?.reservation_expires_at;
           const expiresAt = expIso ? Date.parse(expIso) : (Date.now() + 48 * 60 * 60 * 1000);
+          // Upload payment proof
+          const fd = new FormData();
+          fd.append('file', proofFile);
+          const up = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/orders/${serverOrderId}/payment-proof`, {
+            method: 'POST',
+            headers: user?.token ? { Authorization: `Bearer ${user.token}` } as any : undefined,
+            body: fd
+          });
+          if (!up.ok) {
+            let m = 'Failed to upload payment proof';
+            try { const j = await up.json(); m = j?.message || m; } catch {}
+            throw new Error(m);
+          }
           try {
             localStorage.setItem("latestPickupOrder", JSON.stringify({ orderId: serverOrderId, expiresAt }));
             localStorage.removeItem("cart");
@@ -318,13 +349,33 @@ export default function CheckoutForm({
           onChange={(e) => setIsLocalPickup(e.target.checked)}
           className="mr-2"
         />
-        <label htmlFor="localPickup" className="text-white">Local Pickup (Free Shipping)</label>
+        <label htmlFor="localPickup" className="text-white">Local Pickup</label>
       </div>
       <h2 className="text-xl font-bold text-pink-500">{isLocalPickup ? "Pickup Details" : "Shipping Details"}</h2>
       {isLocalPickup && (
         <div className="mt-2 text-sm bg-white/10 border border-white/20 rounded-lg p-3">
-          <p><strong>Pickup hours:</strong> 8:00 AM – 8:00 PM</p>
-          <p className="mt-1">We’ll reserve your items for 48 hours. Pay at pickup.</p>
+          <p><strong>Pickup hours:</strong> 10:00 AM – 6:00 PM</p>
+          <p className="mt-1">We’ll reserve your items after payment confirmation.</p>
+          <p className="mt-2">Pay via Venmo, Zelle, or Cash App, then upload your payment confirmation below:</p>
+          <ul className="mt-2 list-disc list-inside space-y-1 text-white/90">
+            <li>Venmo: <span className="font-mono">@your-venmo</span></li>
+            <li>Zelle: <span className="font-mono">admin@thedivafactory.com</span></li>
+            <li>Cash App: <span className="font-mono">$yourcashapp</span></li>
+          </ul>
+          <div className="mt-3 grid grid-cols-3 gap-3 text-center text-xs">
+            <div className="bg-white/10 rounded p-2">
+              <div className="mb-1">Venmo QR</div>
+              <img src="/qr/venmo.png" alt="Venmo QR" className="mx-auto max-h-20" onError={(e)=>{(e.target as HTMLImageElement).style.display='none';}}/>
+            </div>
+            <div className="bg-white/10 rounded p-2">
+              <div className="mb-1">Zelle QR</div>
+              <img src="/qr/zelle.png" alt="Zelle QR" className="mx-auto max-h-20" onError={(e)=>{(e.target as HTMLImageElement).style.display='none';}}/>
+            </div>
+            <div className="bg-white/10 rounded p-2">
+              <div className="mb-1">Cash App QR</div>
+              <img src="/qr/cashapp.png" alt="Cash App QR" className="mx-auto max-h-20" onError={(e)=>{(e.target as HTMLImageElement).style.display='none';}}/>
+            </div>
+          </div>
         </div>
       )}
 
@@ -344,6 +395,24 @@ export default function CheckoutForm({
         placeholder="Phone (for pickup updates)"
         className="p-2 text-black rounded-lg w-full mt-2"
       />
+      {isLocalPickup && (
+        <div className="mt-3">
+          <label className="block text-sm mb-1">Upload payment confirmation (required)</label>
+          <input
+            type="file"
+            accept="image/*,application/pdf"
+            required
+            onChange={(e) => {
+              const f = e.target.files && e.target.files[0] ? e.target.files[0] : null;
+              setProofFile(f);
+              if (f) setFileError(null);
+            }}
+            className="block w-full text-sm file:bg-white/10 file:border file:border-white/20 file:px-3 file:py-1 file:rounded"
+          />
+          <p className="text-xs text-white/70 mt-1">Accepted: images or PDF. This helps us verify and hold your order.</p>
+          {fileError && <p className="text-xs text-red-400 mt-1" aria-live="polite">{fileError}</p>}
+        </div>
+      )}
       <input
         type="text"
         name="address"
@@ -400,12 +469,15 @@ export default function CheckoutForm({
       <div className="text-white mt-4 text-lg space-y-1">
         <div><strong>Subtotal:</strong> ${subtotal.toFixed(2)}</div>
         <div><strong>Discount:</strong> -${discountAmount.toFixed(2)}</div>
+        {isLocalPickup && (
+          <div><strong>Tax (8.375%):</strong> ${taxDisplayed.toFixed(2)}</div>
+        )}
         <div><strong>Shipping:</strong> {isLocalPickup ? "$0.00 (Local Pickup)" : shippingFee !== null ? `$${shippingFee.toFixed(2)}` : "..."} {shippingLoading && !isLocalPickup ? "(fetching)" : ""}</div>
         <div className="pt-2"><strong>Total:</strong> ${totalDisplayed.toFixed(2)}</div>
       </div>
 
       <button type="submit" disabled={loading} className="mt-4 bg-pink-500 text-white px-4 py-2 rounded-md w-full">
-        {loading ? "Processing..." : (isLocalPickup ? "Place Pickup Order (Pay at pickup)" : "Proceed to Payment")}
+        {loading ? "Processing..." : (isLocalPickup ? "Submit Proof & Reserve Pickup" : "Proceed to Payment")}
       </button>
     </form>
   );
