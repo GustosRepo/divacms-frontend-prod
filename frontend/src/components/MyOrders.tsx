@@ -152,7 +152,7 @@ export default function MyOrders() {
   }, [fetchOrders]);
 
   if (!user) {
-    return <p className="text-center text-white">Please log in to view your orders.</p>;
+    return <p className="text-center">Please log in to view your orders.</p>;
   }
 
   if (loading) {
@@ -197,7 +197,7 @@ export default function MyOrders() {
   }
 
   return (
-    <div className="container mx-auto px-6 py-10 text-white">
+    <div className="container mx-auto px-6 py-10">
       <div className="flex items-center justify-between flex-wrap gap-4">
         <h1 className="text-3xl font-bold">📦 My Orders</h1>
         <div className="flex items-center gap-3">

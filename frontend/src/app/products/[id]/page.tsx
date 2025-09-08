@@ -39,12 +39,12 @@ export default function ProductPage() {
       .finally(() => setLoading(false));
   }, [id]);
 
-  if (loading) return <p className="text-white text-center mt-6">Loading product...</p>;
+  if (loading) return <p className="text-center mt-6">Loading product...</p>;
   if (error) return <p className="text-red-500 text-center mt-6">Error: {error}</p>;
   if (!product) return <p className="text-red-500 text-center mt-6">PRODUCT NOT FOUND.</p>;
 
   return (
-    <div className="container mx-auto px-2 sm:px-4 md:px-8 py-10 pt-28 text-white">
+    <div className="container mx-auto px-2 sm:px-4 md:px-8 py-10 pt-28">
       <div className="flex flex-col md:flex-row items-center gap-10">
         {/* Product Image with Hover Zoom */}
         <div className="relative group w-full max-w-xs sm:max-w-sm md:max-w-md aspect-square flex items-center justify-center bg-gray-100 overflow-hidden">

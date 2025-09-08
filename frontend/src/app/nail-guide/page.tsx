@@ -105,28 +105,27 @@ export default function NailGuidePage() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
       />
-      <div className="max-w-4xl mx-auto px-4 py-24 text-white">
+      <div className="max-w-4xl mx-auto px-4 py-24">
         {/* Breadcrumbs */}
         <nav className="mb-8 text-sm">
-          <Link href="/" className="text-pink-400 hover:text-pink-300">Home</Link>
+          <Link href="/" className="text-accent hover:text-accent/80">Home</Link>
           <span className="mx-2">→</span>
-          <Link href="/blog" className="text-pink-400 hover:text-pink-300">Blog</Link>
+          <Link href="/blog" className="text-accent hover:text-accent/80">Blog</Link>
           <span className="mx-2">→</span>
-          <span className="text-gray-300">Nail Guide</span>
+          <span className="text-fg/70">Nail Guide</span>
         </nav>
 
         <header className="text-center mb-16">
           <h1 className="font-shuneva text-4xl md:text-6xl font-bold bg-gradient-to-r from-pink-400 via-purple-400 to-blue-400 bg-clip-text text-transparent mb-6">
             Complete Press-On Nails Guide{' '}
             <span
-              className="inline-block align-[-0.1em] text-white"
-              style={{ fontFamily: 'Apple Color Emoji, Segoe UI Emoji, Noto Color Emoji' }}
+              className="emoji inline-block align-[-0.1em]"
               aria-hidden="true"
             >
               💅
             </span>
           </h1>
-          <p className="text-xl text-gray-300 leading-relaxed max-w-3xl mx-auto">
+          <p className="text-xl leading-relaxed max-w-3xl mx-auto">
             Everything you need to know about press-on nails! From your first application to pro-level tips, this comprehensive guide will help you achieve salon-quality results at home.
           </p>
         </header>
@@ -366,8 +365,8 @@ export default function NailGuidePage() {
 
         {/* CTA Section */}
         <section className="bg-gradient-to-r from-pink-600/20 to-purple-600/20 rounded-xl p-8 text-center">
-          <h2 className="text-3xl font-bold text-white mb-4">Ready to Get Started? 🎉</h2>
-          <p className="text-gray-200 mb-6 max-w-2xl mx-auto">
+          <h2 className="text-3xl font-bold text-heading mb-4">Ready to Get Started? 🎉</h2>
+          <p className="mb-6 max-w-2xl mx-auto">
             Now that you know all the secrets, it's time to try our premium press-on nails! Every set includes everything you need for perfect application.
           </p>
           <div className="flex flex-wrap justify-center gap-4">

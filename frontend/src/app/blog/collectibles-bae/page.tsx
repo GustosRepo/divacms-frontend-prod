@@ -69,40 +69,39 @@ export default function CollectiblesGuide() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
-      <article className="max-w-4xl mx-auto px-4 py-24 text-white">
+      <article className="max-w-4xl mx-auto px-4 py-24">
         {/* Breadcrumbs */}
         <nav className="mb-8 text-sm">
-          <Link href="/" className="text-pink-200 hover:text-pink-300">Home</Link>
+          <Link href="/" className="text-accent hover:text-accent/80">Home</Link>
           <span className="mx-2">→</span>
-          <Link href="/blog" className="text-pink-200 hover:text-pink-300">Blog</Link>
+          <Link href="/blog" className="text-accent hover:text-accent/80">Blog</Link>
           <span className="mx-2">→</span>
-          <span className="text-gray-300">Ultimate Collectibles Guide</span>
+          <span className="text-fg/70">Ultimate Collectibles Guide</span>
         </nav>
 
         <header className="mb-12">
           <h1 className="font-shuneva text-4xl md:text-6xl font-bold bg-gradient-to-r from-pink-400 via-purple-400 to-blue-400 bg-clip-text text-transparent mb-6">
             Ultimate Collectibles &amp; Blind Box Guide{' '}
             <span
-              className="inline-block align-[-0.1em] text-white"
-              style={{ fontFamily: 'Apple Color Emoji, Segoe UI Emoji, Noto Color Emoji' }}
+              className="emoji text-accent inline-block align-[-0.1em]"
               aria-hidden="true"
             >
               🎁
             </span>
           </h1>
-          <p className="text-xl text-gray-300 leading-relaxed mb-4">
+          <p className="text-xl leading-relaxed mb-4">
             Master the art of collecting with our comprehensive guide! Learn expert strategies for Labubu hunting, Pop Mart blind box collecting, authentication tips, and building your dream kawaii collection in Las Vegas and beyond.
           </p>
-          <div className="flex items-center gap-4 text-sm text-gray-200">
+          <div className="flex items-center gap-4 text-sm text-fg/80">
             <time dateTime="2025-08-27">August 27, 2025</time>
             <span>•</span>
             <span>12 min read</span>
           </div>
         </header>
 
-        <div className="prose prose-lg prose-invert max-w-none">
+        <div className="prose prose-lg max-w-none">
           <h2 className="text-3xl font-bold text-pink-200 mt-12 mb-6">Why Collect Labubu & Pop Mart? ✨</h2>
-          <p className="text-gray-300 leading-relaxed mb-6">
+          <p className="leading-relaxed mb-6">
             Labubu and Pop Mart represent the pinnacle of kawaii designer toy collecting. These authentic collectibles combine artistic design, limited availability, and cultural significance. With proper knowledge and strategy, collecting becomes both a rewarding hobby and a smart investment in kawaii culture!
           </p>
 
@@ -112,7 +111,7 @@ export default function CollectiblesGuide() {
           </div>
 
           <h2 className="text-3xl font-bold text-pink-200 mt-12 mb-6">Step 2: Authentication & Sourcing 🔍</h2>
-          <p className="text-gray-300 leading-relaxed mb-4">
+          <p className="leading-relaxed mb-4">
             Learning to identify authentic collectibles protects your investment:
           </p>
           <ul className="list-disc list-inside text-gray-300 space-y-2 mb-6">
@@ -150,7 +149,7 @@ export default function CollectiblesGuide() {
           <p className="text-gray-300 leading-relaxed mb-4">
             Proper care preserves your collection's value and beauty:
           </p>
-          <ul className="list-disc list-inside text-gray-300 space-y-2 mb-6">
+          <ul className="list-disc list-inside space-y-2 mb-6">
             <li>Store figures in dust-free display cases or original boxes</li>
             <li>Keep away from direct sunlight to prevent fading</li>
             <li>Maintain stable temperature and humidity levels</li>
@@ -161,10 +160,10 @@ export default function CollectiblesGuide() {
           <h2 className="text-3xl font-bold text-pink-200 mt-12 mb-6">Step 4: Trading & Community 🤝</h2>
 
           <h2 className="text-3xl font-bold text-pink-200 mt-12 mb-6">Step 1: Choose Your Collecting Focus 🎯</h2>
-          <p className="text-gray-300 leading-relaxed mb-4">
+          <p className="leading-relaxed mb-4">
             Successful collecting starts with a clear strategy and focus:
           </p>
-          <ol className="list-decimal list-inside text-gray-300 space-y-3 mb-6">
+          <ol className="list-decimal list-inside space-y-3 mb-6">
             <li><strong>Pick your main series</strong> - Focus on Labubu, Molly, Pucky, or other Pop Mart favorites</li>
             <li><strong>Set a realistic budget</strong> - Decide monthly spending limits for blind boxes and chases</li>
             <li><strong>Research rarity levels</strong> - Learn about normal, secret, and chase figure probabilities</li>
@@ -173,20 +172,20 @@ export default function CollectiblesGuide() {
           </ol>
 
           <div className="border-l-4 border-pink-400 pl-6 my-8">
-            <p className="text-lg italic text-gray-300">
+            <p className="text-lg italic">
               "The key to long-lasting press-ons is starting with completely clean, oil-free nails. Skip the hand cream before application!" 
             </p>
             <cite className="text-pink-200 font-semibold">- Pro Nail Tech Tip</cite>
           </div>
 
           <h2 className="text-3xl font-bold text-pink-200 mt-12 mb-6">Step 2: Sizing & Application 📏</h2>
-          <p className="text-gray-300 leading-relaxed mb-4">
+          <p className="leading-relaxed mb-4">
             Perfect sizing ensures comfort and longevity:
           </p>
-          <p className="text-gray-300 leading-relaxed mb-4">
+          <p className="leading-relaxed mb-4">
             Building connections enhances your collecting experience:
           </p>
-          <ul className="list-disc list-inside text-gray-300 space-y-2 mb-6">
+          <ul className="list-disc list-inside space-y-2 mb-6">
             <li>Join Labubu and Pop Mart collector groups on social media</li>
             <li>Participate in trading events and meetups in Las Vegas</li>
             <li>Share unboxing videos and collection photos responsibly</li>
@@ -217,10 +216,10 @@ export default function CollectiblesGuide() {
           </div>
 
           <h2 className="text-3xl font-bold text-pink-200 mt-12 mb-6">Advanced Collecting Tips 🌟</h2>
-          <p className="text-gray-300 leading-relaxed mb-4">
+          <p className="leading-relaxed mb-4">
             Level up your collecting game with these expert strategies:
           </p>
-          <ul className="list-disc list-inside text-gray-300 space-y-2 mb-6">
+          <ul className="list-disc list-inside space-y-2 mb-6">
             <li>Track chase figure ratios and probabilities for each series</li>
             <li>Build relationships with local toy store owners for early releases</li>
             <li>Consider keeping some pieces in original packaging for value</li>
@@ -229,10 +228,10 @@ export default function CollectiblesGuide() {
           </ul>
 
           <h2 className="text-3xl font-bold text-pink-200 mt-12 mb-6">Investment & Value Tracking 💰</h2>
-          <p className="text-gray-300 leading-relaxed mb-4">
+          <p className="leading-relaxed mb-4">
             Smart collecting includes understanding market value and trends:
           </p>
-          <ol className="list-decimal list-inside text-gray-300 space-y-3 mb-6">
+          <ol className="list-decimal list-inside space-y-3 mb-6">
             <li><strong>Research historical prices</strong> - Track sold listings for market trends</li>
             <li><strong>Monitor edition sizes</strong> - Smaller runs typically appreciate faster</li>
             <li><strong>Consider condition factors</strong> - Mint condition with original packaging</li>
@@ -241,10 +240,10 @@ export default function CollectiblesGuide() {
           </ol>
 
           <h2 className="text-3xl font-bold text-pink-200 mt-12 mb-6">Building Your Collection Legacy 🏆</h2>
-          <p className="text-gray-300 leading-relaxed mb-4">
+          <p className="leading-relaxed mb-4">
             Transform collecting from hobby to passionate curation:
           </p>
-          <ul className="list-disc list-inside text-gray-300 space-y-2 mb-6">
+          <ul className="list-disc list-inside space-y-2 mb-6">
             <li>Focus on personal connection over pure market value</li>
             <li>Create themed displays that tell stories</li>
             <li>Share your collection journey with the community</li>
@@ -265,18 +264,18 @@ export default function CollectiblesGuide() {
           <h2 className="text-3xl font-bold text-pink-200 mt-12 mb-6">Common Collecting Challenges 🔧</h2>
           
           <h3 className="text-xl font-semibold text-pruple-200 mt-6 mb-3">Can't find specific figures?</h3>
-          <p className="text-gray-300 mb-4">Join trading groups and set up alerts on resale platforms. Sometimes patience pays off better than overpaying for immediate gratification.</p>
+          <p className="mb-4">Join trading groups and set up alerts on resale platforms. Sometimes patience pays off better than overpaying for immediate gratification.</p>
 
           <h3 className="text-xl font-semibold text-pruple-200 mt-6 mb-3">Worried about authenticity?</h3>
-          <p className="text-gray-300 mb-4">Always buy from reputable dealers like Diva Factory. When in doubt, ask for detailed photos and compare with official product images.</p>
+          <p className="mb-4">Always buy from reputable dealers like Diva Factory. When in doubt, ask for detailed photos and compare with official product images.</p>
 
           <h3 className="text-xl font-semibold text-pruple-200 mt-6 mb-3">Running out of display space?</h3>
-          <p className="text-gray-300 mb-4">Consider rotating displays seasonally or investing in vertical storage solutions. Quality over quantity often makes for better collections.</p>
+          <p className="mb-4">Consider rotating displays seasonally or investing in vertical storage solutions. Quality over quantity often makes for better collections.</p>
         </div>
 
         {/* Related Posts */}
         <section className="mt-16 pt-12 border-t border-gray-700">
-          <h2 className="text-2xl font-bold text-white mb-8">You Might Also Like</h2>
+          <h2 className="text-2xl font-bold text-heading mb-8">You Might Also Like</h2>
           <div className="grid md:grid-cols-2 gap-6">
             <Link href="/blog/kawaii-aesthetic-guide" className="group">
               <div className="bg-gradient-to-r from-purple-900/30 to-pink-900/30 rounded-lg p-6 hover:shadow-lg transition-all">

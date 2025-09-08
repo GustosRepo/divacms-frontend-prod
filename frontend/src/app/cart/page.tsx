@@ -16,7 +16,7 @@ export default function CartPage() {
   const subtotal = cart.reduce((acc, item) => acc + item.price * item.quantity, 0);
 
   return (
-    <div className="flex items-center justify-center min-h-screen text-white">
+    <div className="flex items-center justify-center min-h-screen">
       <div className="w-full max-w-4xl p-6">
         <h1 className="font-shuneva text-4xl font-bold text-center">🛍️ YOUR CART</h1>
         <p className="text-center text-pink-400 mt-2">

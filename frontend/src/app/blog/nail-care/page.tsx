@@ -49,31 +49,30 @@ export default function KawaiiAestheticGuide() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
-      <article className="max-w-4xl mx-auto px-4 py-24 text-white">
+      <article className="max-w-4xl mx-auto px-4 py-24">
         {/* Breadcrumbs */}
         <nav className="mb-8 text-sm">
-          <Link href="/" className="text-pink-200 hover:text-pink-100">Home</Link>
+          <Link href="/" className="text-accent hover:text-accent/80">Home</Link>
           <span className="mx-2">→</span>
-          <Link href="/blog" className="text-pink-200 hover:text-pink-100">Blog</Link>
+          <Link href="/blog" className="text-accent hover:text-accent/80">Blog</Link>
           <span className="mx-2">→</span>
-          <span className="text-gray-200">Kawaii Aesthetic Guide</span>
+          <span className="text-fg/70">Kawaii Aesthetic Guide</span>
         </nav>
 
         <header className="mb-12">
           <h1 className="font-shuneva text-4xl md:text-6xl font-bold bg-gradient-to-r from-pink-400 via-purple-400 to-blue-400 bg-clip-text text-transparent mb-6">
             The Ultimate Kawaii Aesthetic Guide{' '}
             <span
-              className="inline-block align-[-0.1em] text-white"
-              style={{ fontFamily: 'Apple Color Emoji, Segoe UI Emoji, Noto Color Emoji' }}
+              className="emoji text-accent inline-block align-[-0.1em]"
               aria-hidden="true"
             >
               🌸
             </span>
           </h1>
-          <p className="text-xl text-gray-200 leading-relaxed mb-4">
+          <p className="text-xl leading-relaxed mb-4">
             Dive into the adorable world of kawaii! This comprehensive guide covers everything from the cultural origins of kawaii to how you can incorporate this irresistibly cute aesthetic into your everyday style.
           </p>
-          <div className="flex items-center gap-4 text-sm text-gray-100">
+          <div className="flex items-center gap-4 text-sm text-fg/80">
             <time dateTime="2025-08-27">August 27, 2025</time>
             <span>•</span>
             <span>12 min read</span>

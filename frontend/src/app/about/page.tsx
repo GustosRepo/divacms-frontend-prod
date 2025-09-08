@@ -82,16 +82,16 @@ export default function About() {
           <div className="animate-pulse-sparkle absolute bottom-20 right-1/4 w-10 h-10 bg-[url('/star.svg')] bg-no-repeat bg-center opacity-50" />
         </div>
         <div className="container mx-auto px-6 text-center">
-          <nav className="mb-6 text-sm text-on-pastel-accent" aria-label="Breadcrumb">
-            <Link href="/" className="hover:underline hover:text-on-pastel-strong transition-colors">Home</Link>
+          <nav className="mb-6 text-sm" aria-label="Breadcrumb">
+            <Link href="/" className="text-accent hover:text-accent/80 transition-colors">Home</Link>
             <span className="mx-2 opacity-70">→</span>
-            <span className="text-on-pastel-soft/90">About</span>
+            <span className="text-fg/70">About</span>
           </nav>
 
           <h1 className="font-display text-5xl md:text-7xl font-semibold tracking-tight text-gradient-hotpink drop-shadow-[0_2px_10px_rgba(0,0,0,0.15)]">
             Diva Factory
           </h1>
-          <p className="font-sans max-w-3xl mx-auto mt-4 text-base md:text-lg text-on-pastel-accent dark:text-on-pastel-accent leading-relaxed">
+          <p className="font-sans max-w-3xl mx-auto mt-4 text-base md:text-lg leading-relaxed">
             Your pastel Y2K destination for <strong>kawaii collectibles</strong>, <strong>luxury press‑on nails</strong>, and <strong>curated boutique treasures</strong>—made for everyday icons in Las Vegas and beyond.
           </p>
 
@@ -104,7 +104,7 @@ export default function About() {
             ].map((c)=> (
               <div key={c.t} className="rounded-2xl border border-white/50 bg-gradient-to-br from-pink-900/10 to-purple-900/10 p-5 shadow-xl">
                 <h3 className="font-display text-sm font-semibold text-gradient-hotpink">{c.t}</h3>
-                <p className="font-sans text-xs md:text-sm text-on-pastel-soft/90 dark:text-on-pastel-soft mt-1 leading-snug">{c.d}</p>
+                <p className="font-sans text-xs md:text-sm mt-1 leading-snug">{c.d}</p>
               </div>
             ))}
           </div>

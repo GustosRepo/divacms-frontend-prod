@@ -192,7 +192,7 @@ export default function FAQPage() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
       />
-      <div className="max-w-4xl mx-auto px-4 py-24 text-white">
+      <div className="max-w-4xl mx-auto px-4 py-24">
         {/* Breadcrumbs */}
         <nav className="mb-8 text-sm">
           <Link href="/" className="text-pink-400 hover:text-pink-300">Home</Link>
@@ -204,8 +204,7 @@ export default function FAQPage() {
           <h1 className="font-shuneva text-4xl md:text-6xl font-bold bg-gradient-to-r from-pink-400 via-purple-400 to-blue-400 bg-clip-text text-transparent mb-6">
             Frequently Asked Questions{' '}
             <span
-              className="inline-block align-[-0.1em] text-white"
-              style={{ fontFamily: 'Apple Color Emoji, Segoe UI Emoji, Noto Color Emoji' }}
+              className="emoji inline-block align-[-0.1em]"
               aria-hidden="true"
             >
               🤔
@@ -263,8 +262,8 @@ export default function FAQPage() {
 
         {/* Still Have Questions Section */}
         <section className="bg-gradient-to-r from-pink-600/20 to-purple-600/20 rounded-xl p-8 text-center mt-16">
-          <h2 className="text-3xl font-bold text-white mb-4">Still Have Questions? 💭</h2>
-          <p className="text-gray-200 mb-6 max-w-2xl mx-auto">
+          <h2 className="text-3xl font-bold text-heading mb-4">Still Have Questions? 💭</h2>
+          <p className="mb-6 max-w-2xl mx-auto">
             Can't find what you're looking for? Our customer service team is here to help! We typically respond within 24 hours.
           </p>
           <div className="flex flex-wrap justify-center gap-4">

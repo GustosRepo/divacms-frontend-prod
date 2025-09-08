@@ -172,9 +172,8 @@ export default function BlogPage() {
   className="font-shuneva text-5xl md:text-6xl font-extrabold tracking-tight drop-shadow-md bg-clip-text text-transparent bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-600"
 >
   Kawaii Culture & Style Tips{' '}
-  <span
-    className="inline-block align-[-0.1em] text-white"
-    style={{ fontFamily: 'Apple Color Emoji, Segoe UI Emoji, Noto Color Emoji' }}
+<span
+    className="emoji text-accent inline-block align-[-0.1em]"
     aria-hidden="true"
   >
     💖
@@ -206,7 +205,7 @@ export default function BlogPage() {
             <h2 className="font-shuneva text-3xl md:text-4xl font-bold bg-gradient-to-r from-pink-500 to-purple-500 bg-clip-text text-transparent mb-4">
               ✨ Featured Guides
             </h2>
-            <p className="text-gray-800 dark:text-gray-100">
+            <p>
               Your complete guide to kawaii culture, collectibles & Y2K style
             </p>
           </div>
@@ -218,7 +217,7 @@ export default function BlogPage() {
                 <h3 className="font-bold text-xl mb-3 group-hover:text-pink-500 transition-colors">
                   Collectibles & Kawaii Guide
                 </h3>
-                <p className="text-gray-800 dark:text-gray-100 text-sm">
+                <p className="text-sm">
                   Ultimate guide to Labubu collecting, Pop Mart blind boxes, and kawaii culture essentials.
                 </p>
                 <div className="mt-4 text-pink-500 font-semibold text-sm">
@@ -233,7 +232,7 @@ export default function BlogPage() {
                 <h3 className="font-bold text-xl mb-3 group-hover:text-pink-500 transition-colors">
                   Kawaii Aesthetic Guide
                 </h3>
-                <p className="text-gray-800 dark:text-gray-100 text-sm">
+                <p className="text-sm">
                   Master the kawaii aesthetic with our complete guide to cute culture and collectibles.
                 </p>
                 <div className="mt-4 text-pink-500 font-semibold text-sm">
@@ -248,7 +247,7 @@ export default function BlogPage() {
                 <h3 className="font-bold text-xl mb-3 group-hover:text-pink-500 transition-colors">
                   Y2K Nail Trends 2025
                 </h3>
-                <p className="text-gray-800 dark:text-gray-100 text-sm">
+                <p className="text-sm">
                   Discover the hottest Y2K nail trends taking over 2025. From chrome finishes to butterfly motifs.
                 </p>
                 <div className="mt-4 text-pink-500 font-semibold text-sm">
@@ -399,7 +398,6 @@ export default function BlogPage() {
                     dominantBaseline="central"
                     textAnchor="middle"
                     fontSize="36"
-                    fontFamily="Apple Color Emoji,Segoe UI Emoji,Segoe UI Symbol,Noto Color Emoji"
                     fill="url(#emojiGrad)"
                   >
                     🎯
@@ -411,7 +409,7 @@ export default function BlogPage() {
                 More Resources
               </span>
             </h2>
-            <p className="text-gray-800 dark:text-gray-100">
+            <p>
               Additional guides and information to help you succeed
             </p>
           </div>
@@ -423,7 +421,7 @@ export default function BlogPage() {
                 <h3 className="font-bold text-lg mb-2 group-hover:text-purple-500 transition-colors">
                   FAQ
                 </h3>
-                <p className="text-gray-800 dark:text-gray-100 text-sm">
+                <p className="text-sm">
                   Common questions answered
                 </p>
               </div>
@@ -435,7 +433,7 @@ export default function BlogPage() {
                 <h3 className="font-bold text-lg mb-2 group-hover:text-purple-500 transition-colors">
                   Las Vegas
                 </h3>
-                <p className="text-gray-800 dark:text-gray-100 text-sm">
+                <p className="text-sm">
                   Local pickup & Vegas info
                 </p>
               </div>
@@ -447,7 +445,7 @@ export default function BlogPage() {
                 <h3 className="font-bold text-lg mb-2 group-hover:text-purple-500 transition-colors">
                   Contact Us
                 </h3>
-                <p className="text-gray-800 dark:text-gray-100 text-sm">
+                <p className="text-sm">
                   Get in touch for help
                 </p>
               </div>
@@ -459,7 +457,7 @@ export default function BlogPage() {
                 <h3 className="font-bold text-lg mb-2 group-hover:text-purple-500 transition-colors">
                   Shop
                 </h3>
-                <p className="text-gray-800 dark:text-gray-100 text-sm">
+                <p className="text-sm">
                   Browse our collection
                 </p>
               </div>

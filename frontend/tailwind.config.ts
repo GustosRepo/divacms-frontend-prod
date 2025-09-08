@@ -10,6 +10,10 @@ export default {
     extend: {
       colors: {
         'glass': 'rgba(255, 255, 255, 0.1)',
+        // Bind Tailwind tokens to CSS variables (RGB versions for alpha utility support)
+        fg: 'rgb(var(--color-fg-rgb) / <alpha-value>)',
+        heading: 'rgb(var(--color-fg-heading-rgb) / <alpha-value>)',
+        accent: 'rgb(var(--color-fg-accent-rgb) / <alpha-value>)',
       },
       backdropBlur: {
         'xl': '20px',

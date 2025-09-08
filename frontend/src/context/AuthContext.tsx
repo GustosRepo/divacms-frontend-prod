@@ -114,7 +114,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     router.push("/login");
   };
 
-  if (loading) return <p className="text-center text-white">Loading...</p>;
+  if (loading) return <p className="text-center">Loading...</p>;
 
   return (
     <AuthContext.Provider value={{ user, login, logout, updateUser }}>

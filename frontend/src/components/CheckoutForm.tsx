@@ -1,5 +1,6 @@
 "use client";
 import { useState, useEffect, useRef } from "react";
+import { useRouter } from "next/navigation";
 import { CheckoutFormData } from "@/types/checkout";
 import { loadStripe } from "@stripe/stripe-js";
 import { useAuth } from "@/context/AuthContext";
@@ -56,6 +57,7 @@ export default function CheckoutForm({
   cartItems,
 }: CheckoutFormProps) {
   const { user } = useAuth();
+  const router = useRouter();
     const [formData, setFormData] = useState<CheckoutFormData>({
       cartItems: defaultValues?.cartItems || cartItems || [],
       pointsUsed: defaultValues?.pointsUsed || 0,
@@ -124,7 +126,9 @@ export default function CheckoutForm({
     };
   }, [formData.shippingInfo.postal_code, formData.shippingInfo.country, formData.shippingInfo.state, JSON.stringify(cartItems), user?.token, isLocalPickup]);
 
-  const totalDisplayed = Number((totalAfterDiscount + (shippingFee ?? 5)).toFixed(2));
+  // Derive shipping shown in totals: 0 for local pickup or until a rate is fetched
+  const shippingDisplayed = isLocalPickup ? 0 : (shippingFee ?? 0);
+  const totalDisplayed = Number((totalAfterDiscount + shippingDisplayed).toFixed(2));
 
   const handlePointsChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const points = parseInt(e.target.value);
@@ -141,10 +145,53 @@ export default function CheckoutForm({
     setLoading(true);
 
     try {
+      // If Local Pickup, call backend to create pickup order and skip Stripe
+      if (isLocalPickup) {
+        const s = formData.shippingInfo;
+        if (!s.name || !s.phone) {
+          throw new Error("Please provide your name and phone for local pickup.");
+        }
+        // Build minimal payload the backend expects
+        const payload = {
+          items: cartItems.map((it) => ({ id: it.id, quantity: it.quantity })),
+          customer: {
+            user_id: (user as any)?.id,
+            name: s.name,
+            phone: s.phone,
+            email: (user as any)?.email || "",
+          },
+          notes: undefined as unknown as string | undefined,
+        };
+        try {
+          const resp = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/orders/pickup`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json", Authorization: `Bearer ${user?.token}` },
+            body: JSON.stringify(payload),
+          });
+          if (!resp.ok) {
+            let msg = "Failed to create pickup order.";
+            try { const e = await resp.json(); msg = e?.message || msg; } catch {}
+            throw new Error(msg);
+          }
+          const json = await resp.json();
+          const serverOrderId: string = json?.order_id || `pickup_${Date.now()}`;
+          const expIso: string | undefined = json?.reservation_expires_at;
+          const expiresAt = expIso ? Date.parse(expIso) : (Date.now() + 48 * 60 * 60 * 1000);
+          try {
+            localStorage.setItem("latestPickupOrder", JSON.stringify({ orderId: serverOrderId, expiresAt }));
+            localStorage.removeItem("cart");
+          } catch {}
+          router.push(`/checkout/success?pickup=1&order_id=${encodeURIComponent(serverOrderId)}`);
+          return;
+        } catch (err) {
+          throw err;
+        }
+      }
+
       const stripe = await stripePromise;
       if (!stripe) throw new Error("Stripe failed to load.");
 
-      // quick front-end validation so we actually send an address
+      // quick front-end validation so we actually send an address for shipping
       const s = formData.shippingInfo;
       if (!s.name || !s.address_line1 || !s.city || !s.postal_code || !s.country) {
         throw new Error("Please fill out name, address, city, ZIP/postal code, and country.");
@@ -167,8 +214,9 @@ export default function CheckoutForm({
       };
 
       // 1) If local pickup, shipping fee is $0. Otherwise, fetch live shipping rate from backend (Goshipoo). If it fails, fallback to $5
-      let shipping_fee = 5.0;
-      let shipping_fee_cents = 500;
+      // Default to 0 on the client unless a live rate is fetched
+      let shipping_fee = 0.0;
+      let shipping_fee_cents = 0;
       if (isLocalPickup) {
         shipping_fee = 0;
         shipping_fee_cents = 0;
@@ -189,9 +237,6 @@ export default function CheckoutForm({
             } else if (rateJson?.shipping_fee_cents != null) {
               shipping_fee = Number(rateJson.shipping_fee_cents) / 100;
               shipping_fee_cents = Number(rateJson.shipping_fee_cents);
-            } else {
-              shipping_fee = 5;
-              shipping_fee_cents = 500;
             }
           }
         } catch (err) {
@@ -274,7 +319,13 @@ export default function CheckoutForm({
         />
         <label htmlFor="localPickup" className="text-white">Local Pickup (Free Shipping)</label>
       </div>
-      <h2 className="text-xl font-bold text-pink-500">Shipping Details</h2>
+      <h2 className="text-xl font-bold text-pink-500">{isLocalPickup ? "Pickup Details" : "Shipping Details"}</h2>
+      {isLocalPickup && (
+        <div className="mt-2 text-sm bg-white/10 border border-white/20 rounded-lg p-3">
+          <p><strong>Pickup hours:</strong> 8:00 AM – 8:00 PM</p>
+          <p className="mt-1">We’ll reserve your items for 48 hours. Pay at pickup.</p>
+        </div>
+      )}
 
       <input
         type="text"
@@ -285,12 +336,21 @@ export default function CheckoutForm({
         className="p-2 text-black rounded-lg w-full mt-2"
       />
       <input
+        type="tel"
+        name="phone"
+        value={formData.shippingInfo.phone}
+        onChange={(e) => setFormData({ ...formData, shippingInfo: { ...formData.shippingInfo, phone: e.target.value } })}
+        placeholder="Phone (for pickup updates)"
+        className="p-2 text-black rounded-lg w-full mt-2"
+      />
+      <input
         type="text"
         name="address"
         value={formData.shippingInfo.address_line1}
         onChange={(e) => setFormData({ ...formData, shippingInfo: { ...formData.shippingInfo, address_line1: e.target.value } })}
         placeholder="Address"
-        className="p-2 text-black rounded-lg w-full mt-2"
+        className={`p-2 text-black rounded-lg w-full mt-2 ${isLocalPickup ? "opacity-50 cursor-not-allowed" : ""}`}
+        disabled={isLocalPickup}
       />
       <input
         type="text"
@@ -298,7 +358,8 @@ export default function CheckoutForm({
         value={formData.shippingInfo.city}
         onChange={(e) => setFormData({ ...formData, shippingInfo: { ...formData.shippingInfo, city: e.target.value } })}
         placeholder="City"
-        className="p-2 text-black rounded-lg w-full mt-2"
+        className={`p-2 text-black rounded-lg w-full mt-2 ${isLocalPickup ? "opacity-50 cursor-not-allowed" : ""}`}
+        disabled={isLocalPickup}
       />
       <input
         type="text"
@@ -306,7 +367,8 @@ export default function CheckoutForm({
         value={formData.shippingInfo.state}
         onChange={(e) => setFormData({ ...formData, shippingInfo: { ...formData.shippingInfo, state: e.target.value } })}
         placeholder="State / Province"
-        className="p-2 text-black rounded-lg w-full mt-2"
+        className={`p-2 text-black rounded-lg w-full mt-2 ${isLocalPickup ? "opacity-50 cursor-not-allowed" : ""}`}
+        disabled={isLocalPickup}
       />
       <input
         type="text"
@@ -314,7 +376,8 @@ export default function CheckoutForm({
         value={formData.shippingInfo.postal_code}
         onChange={(e) => setFormData({ ...formData, shippingInfo: { ...formData.shippingInfo, postal_code: e.target.value } })}
         placeholder="ZIP Code"
-        className="p-2 text-black rounded-lg w-full mt-2"
+        className={`p-2 text-black rounded-lg w-full mt-2 ${isLocalPickup ? "opacity-50 cursor-not-allowed" : ""}`}
+        disabled={isLocalPickup}
       />
       <input
         type="text"
@@ -322,7 +385,8 @@ export default function CheckoutForm({
         value={formData.shippingInfo.country}
         onChange={(e) => setFormData({ ...formData, shippingInfo: { ...formData.shippingInfo, country: e.target.value } })}
         placeholder="Country"
-        className="p-2 text-black rounded-lg w-full mt-2"
+        className={`p-2 text-black rounded-lg w-full mt-2 ${isLocalPickup ? "opacity-50 cursor-not-allowed" : ""}`}
+        disabled={isLocalPickup}
       />
 
       {/* (Optional) add a select to actually vary selectedPoints/discount */}
@@ -340,7 +404,7 @@ export default function CheckoutForm({
       </div>
 
       <button type="submit" disabled={loading} className="mt-4 bg-pink-500 text-white px-4 py-2 rounded-md w-full">
-        {loading ? "Processing..." : "Proceed to Payment"}
+        {loading ? "Processing..." : (isLocalPickup ? "Place Pickup Order (Pay at pickup)" : "Proceed to Payment")}
       </button>
     </form>
   );

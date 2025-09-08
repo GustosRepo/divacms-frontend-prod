@@ -125,25 +125,25 @@ export default function LasVegasPage() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
       <main className="relative min-h-screen px-4 py-24">
-        <div className="max-w-6xl mx-auto px-4 text-white">
+        <div className="max-w-6xl mx-auto px-4">
         {/* Breadcrumbs */}
         <nav className="mb-8 text-sm">
-          <Link href="/" className="text-pink-400 hover:text-pink-300">Home</Link>
+          <Link href="/" className="text-accent hover:text-accent/80">Home</Link>
           <span className="mx-2">→</span>
-          <span className="text-gray-300">Las Vegas</span>
+          <span className="text-fg/70">Las Vegas</span>
         </nav>
 
         <header className="text-center mb-16">
           <h1 className="font-shuneva text-4xl md:text-6xl font-bold bg-gradient-to-r from-pink-400 via-purple-400 to-blue-400 bg-clip-text text-transparent mb-6">
             Vegas Kawaii Paradise{" "}
             <span
+              className="emoji inline-block align-[-0.1em]"
               aria-hidden="true"
-              style={{ WebkitTextFillColor: "initial", color: "initial", background: "none", display: "inline-block" }}
             >
               🎁💅✨
             </span>
           </h1>
-          <p className="text-xl text-gray-100 leading-relaxed max-w-3xl mx-auto">
+          <p className="text-xl leading-relaxed max-w-3xl mx-auto">
             Vegas's ultimate kawaii destination! From Labubu collectibles & Pop Mart blind boxes to Y2K boutique accessories & custom press-on nails. Everything cute in one place!
           </p>
         </header>
@@ -188,7 +188,7 @@ export default function LasVegasPage() {
         <section className="mb-16">
           <div className="text-center mb-12">
             <h2 className="text-3xl font-bold text-pink-400 mb-4">What Makes Us Vegas's Kawaii HQ</h2>
-            <p className="text-gray-100 max-w-2xl mx-auto">
+            <p className="max-w-2xl mx-auto">
               We're not just another store - we're Vegas's complete kawaii lifestyle destination
             </p>
           </div>
@@ -488,8 +488,8 @@ export default function LasVegasPage() {
 
         {/* Call to Action */}
         <section className="text-center bg-gradient-to-r from-pink-500/20 to-purple-500/20 rounded-xl p-12">
-          <h2 className="text-3xl font-bold text-white mb-4">Ready to Start Your Collection?</h2>
-          <p className="text-gray-100 mb-8 max-w-2xl mx-auto">
+          <h2 className="text-3xl font-bold text-heading mb-4">Ready to Start Your Collection?</h2>
+          <p className="mb-8 max-w-2xl mx-auto">
             Browse our exclusive selection of Labubu collectibles and Pop Mart blind boxes. Perfect for Vegas collectors and kawaii enthusiasts!
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">

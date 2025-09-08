@@ -65,11 +65,11 @@ export default function OrderHistoryPage() {
   const fmtMoney = (n?: number) =>
     typeof n === "number" && !Number.isNaN(n) ? `$${n.toFixed(2)}` : "N/A";
 
-  if (loading) return <p className="text-center text-white">Loading orders...</p>;
+  if (loading) return <p className="text-center">Loading orders...</p>;
   if (error) return <p className="text-center text-red-500">{error}</p>;
 
   return (
-    <div className="container mx-auto px-6 py-10 text-white">
+    <div className="container mx-auto px-6 py-10">
       <h1 className="text-3xl font-bold text-center">📦 My Orders</h1>
 
       {orders.length === 0 ? (

@@ -49,40 +49,39 @@ export default function KawaiiAestheticGuide() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
-      <article className="max-w-4xl mx-auto px-4 py-24 text-white">
+      <article className="max-w-4xl mx-auto px-4 py-24">
         {/* Breadcrumbs */}
         <nav className="mb-8 text-sm">
-          <Link href="/" className="text-pink-200 hover:text-pink-100">Home</Link>
+          <Link href="/" className="text-accent hover:text-accent/80">Home</Link>
           <span className="mx-2">→</span>
-          <Link href="/blog" className="text-pink-200 hover:text-pink-100">Blog</Link>
+          <Link href="/blog" className="text-accent hover:text-accent/80">Blog</Link>
           <span className="mx-2">→</span>
-          <span className="text-gray-200">Kawaii Aesthetic Guide</span>
+          <span className="text-fg/70">Kawaii Aesthetic Guide</span>
         </nav>
 
         <header className="mb-12">
           <h1 className="font-shuneva text-4xl md:text-6xl font-bold bg-gradient-to-r from-pink-400 via-purple-400 to-blue-400 bg-clip-text text-transparent mb-6">
             The Ultimate Kawaii Aesthetic Guide{' '}
             <span
-              className="inline-block align-[-0.1em] text-white"
-              style={{ fontFamily: 'Apple Color Emoji, Segoe UI Emoji, Noto Color Emoji' }}
+              className="emoji text-accent inline-block align-[-0.1em]"
               aria-hidden="true"
             >
               🌸
             </span>
           </h1>
-          <p className="text-xl text-gray-200 leading-relaxed mb-4">
+          <p className="text-xl leading-relaxed mb-4">
             Dive into the adorable world of kawaii! This comprehensive guide covers everything from the cultural origins of kawaii to how you can incorporate this irresistibly cute aesthetic into your everyday style.
           </p>
-          <div className="flex items-center gap-4 text-sm text-gray-100">
+          <div className="flex items-center gap-4 text-sm text-fg/80">
             <time dateTime="2025-08-27">August 27, 2025</time>
             <span>•</span>
             <span>12 min read</span>
           </div>
         </header>
 
-        <div className="prose prose-lg prose-invert max-w-none">
+        <div className="prose prose-lg max-w-none">
           <h2 className="text-3xl font-bold text-pink-200 mt-12 mb-6">What is Kawaii? 🎀</h2>
-          <p className="text-gray-200 leading-relaxed mb-6">
+          <p className="leading-relaxed mb-6">
             Kawaii (かわいい) literally means "cute" in Japanese, but it's so much more than just an adjective. It's a cultural phenomenon that emerged in Japan in the 1970s and has since become a global aesthetic movement. Kawaii celebrates innocence, childlike wonder, and the beauty found in all things small and sweet.
           </p>
 
@@ -98,20 +97,20 @@ export default function KawaiiAestheticGuide() {
           </div>
 
           <h2 className="text-3xl font-bold text-pink-200 mt-12 mb-6">The History of Kawaii Culture 📚</h2>
-          <p className="text-gray-200 leading-relaxed mb-6">
+          <p className="leading-relaxed mb-6">
             Kawaii culture began in Japan during the 1970s as a form of rebellion against traditional adult responsibilities. Young people embraced childlike handwriting, cute characters, and playful fashion as a way to express individuality and reject societal pressure.
           </p>
-          <p className="text-gray-200 leading-relaxed mb-6">
+          <p className="leading-relaxed mb-6">
             The movement exploded in the 1980s with the introduction of Hello Kitty (1974) and other Sanrio characters. By the 1990s and 2000s, kawaii had merged with street fashion movements like Decora and Fairy Kei, creating the colorful, accessory-heavy styles we associate with kawaii today.
           </p>
 
           <h2 className="text-3xl font-bold text-pink-200 mt-12 mb-6">Kawaii Fashion Styles 👗</h2>
           
           <h3 className="text-2xl font-semibold text-purple-200 mt-8 mb-4">Decora Kei 🌈</h3>
-          <p className="text-gray-200 leading-relaxed mb-4">
+          <p className="leading-relaxed mb-4">
             The most extreme kawaii fashion, featuring layers upon layers of colorful accessories:
           </p>
-          <ul className="list-disc list-inside text-gray-200 space-y-2 mb-6">
+          <ul className="list-disc list-inside space-y-2 mb-6">
             <li>Dozens of hair clips and bows</li>
             <li>Multiple necklaces and bracelets</li>
             <li>Colorful leg warmers and socks</li>
@@ -119,10 +118,10 @@ export default function KawaiiAestheticGuide() {
           </ul>
 
           <h3 className="text-2xl font-semibold text-purple-200 mt-8 mb-4">Fairy Kei 🧚‍♀️</h3>
-          <p className="text-gray-200 leading-relaxed mb-4">
+          <p className="leading-relaxed mb-4">
             A softer approach to kawaii featuring:
           </p>
-          <ul className="list-disc list-inside text-gray-200 space-y-2 mb-6">
+          <ul className="list-disc list-inside space-y-2 mb-6">
             <li>Pastel colors and dreamy aesthetics</li>
             <li>Vintage 80s and 90s toy motifs</li>
             <li>Layered skirts and oversized sweaters</li>
@@ -130,10 +129,10 @@ export default function KawaiiAestheticGuide() {
           </ul>
 
           <h3 className="text-2xl font-semibold text-purple-200 mt-8 mb-4">Yume Kawaii 💫</h3>
-          <p className="text-gray-200 leading-relaxed mb-4">
+          <p className="leading-relaxed mb-4">
             "Dream kawaii" that adds darker elements to traditional cute aesthetics:
           </p>
-          <ul className="list-disc list-inside text-gray-200 space-y-2 mb-6">
+          <ul className="list-disc list-inside space-y-2 mb-6">
             <li>Pastel gothic elements</li>
             <li>Medical and hospital imagery</li>
             <li>Creepy-cute character designs</li>
@@ -141,7 +140,7 @@ export default function KawaiiAestheticGuide() {
           </ul>
 
           <div className="border-l-4 border-pink-200 pl-6 my-8">
-            <p className="text-lg italic text-gray-200">
+            <p className="text-lg italic">
               "Kawaii isn't just about looking cute – it's about finding joy in the small things and embracing your inner child. It's a form of self-care through aesthetics!" 
             </p>
             <cite className="text-pink-200 font-semibold">- Kawaii Fashion Expert</cite>
@@ -150,10 +149,10 @@ export default function KawaiiAestheticGuide() {
           <h2 className="text-3xl font-bold text-pink-200 mt-12 mb-6">How to Incorporate Kawaii into Your Style 💖</h2>
           
           <h3 className="text-2xl font-semibold text-purple-200 mt-8 mb-4">Start Small: Kawaii Accessories 🎀</h3>
-          <p className="text-gray-200 leading-relaxed mb-4">
+          <p className="leading-relaxed mb-4">
             You don't need a complete wardrobe overhaul to embrace kawaii! Start with these beginner-friendly accessories:
           </p>
-          <ul className="list-disc list-inside text-gray-200 space-y-2 mb-6">
+          <ul className="list-disc list-inside space-y-2 mb-6">
             <li><strong>Kawaii Nails:</strong> Press-on nails with cute characters, pastels, or 3D decorations</li>
             <li><strong>Hair Accessories:</strong> Colorful clips, bows, and headbands</li>
             <li><strong>Bags:</strong> Character-themed purses or bags with cute keychains</li>
@@ -180,7 +179,7 @@ export default function KawaiiAestheticGuide() {
           <h2 className="text-3xl font-bold text-pink-200 mt-12 mb-6">Kawaii Lifestyle Beyond Fashion 🏠</h2>
           
           <h3 className="text-2xl font-semibold text-purple-200 mt-8 mb-4">Kawaii Home Decor 🏡</h3>
-          <ul className="list-disc list-inside text-gray-200 space-y-2 mb-6">
+          <ul className="list-disc list-inside space-y-2 mb-6">
             <li>Plushie collections and character figurines</li>
             <li>Pastel bedding and fluffy pillows</li>
             <li>Fairy lights and star projectors</li>
@@ -189,7 +188,7 @@ export default function KawaiiAestheticGuide() {
           </ul>
 
           <h3 className="text-2xl font-semibold text-purple-200 mt-8 mb-4">Kawaii Beauty & Self-Care 💅</h3>
-          <ul className="list-disc list-inside text-gray-200 space-y-2 mb-6">
+          <ul className="list-disc list-inside space-y-2 mb-6">
             <li>Gradient "doll-like" makeup with pink blush</li>
             <li>Kawaii nail art with 3D decorations</li>
             <li>Cute skincare products and face masks</li>
@@ -198,10 +197,10 @@ export default function KawaiiAestheticGuide() {
           </ul>
 
           <h2 className="text-3xl font-bold text-pink-200 mt-12 mb-6">Kawaii in the Digital Age 📱</h2>
-          <p className="text-gray-200 leading-relaxed mb-6">
+          <p className="leading-relaxed mb-6">
             Modern kawaii culture has evolved with technology, creating new spaces for cute culture to flourish:
           </p>
-          <ul className="list-disc list-inside text-gray-200 space-y-2 mb-6">
+          <ul className="list-disc list-inside space-y-2 mb-6">
             <li><strong>Social Media:</strong> Instagram kawaii fashion accounts and TikTok aesthetic videos</li>
             <li><strong>Gaming:</strong> Animal Crossing, Kawaii games, and cute mobile apps</li>
             <li><strong>Digital Art:</strong> Kawaii illustrations and character design</li>
@@ -229,7 +228,7 @@ export default function KawaiiAestheticGuide() {
           <div className="grid md:grid-cols-2 gap-6 mb-8">
             <div>
               <h3 className="text-xl font-semibold text-purple-200 mb-3">Classic Characters</h3>
-              <ul className="text-gray-200 space-y-2">
+              <ul className="space-y-2">
                 <li>• Hello Kitty & Sanrio friends</li>
                 <li>• My Melody & Kuromi</li>
                 <li>• Rilakkuma & friends</li>
@@ -239,7 +238,7 @@ export default function KawaiiAestheticGuide() {
             </div>
             <div>
               <h3 className="text-xl font-semibold text-purple-200 mb-3">Modern Kawaii</h3>
-              <ul className="text-gray-200 space-y-2">
+              <ul className="space-y-2">
                 <li>• Molang & Piu Piu</li>
                 <li>• Aggretsuko</li>
                 <li>• Sumikko Gurashi</li>
@@ -250,10 +249,10 @@ export default function KawaiiAestheticGuide() {
           </div>
 
           <h2 className="text-3xl font-bold text-pink-200 mt-12 mb-6">Building Your Kawaii Community 👯‍♀️</h2>
-          <p className="text-gray-200 leading-relaxed mb-6">
+          <p className="leading-relaxed mb-6">
             Kawaii culture is all about spreading joy and positivity! Here's how to connect with fellow kawaii enthusiasts:
           </p>
-          <ul className="list-disc list-inside text-gray-200 space-y-2 mb-6">
+          <ul className="list-disc list-inside space-y-2 mb-6">
             <li>Follow kawaii fashion influencers and creators</li>
             <li>Join online kawaii communities and forums</li>
             <li>Attend anime conventions and kawaii meetups</li>
@@ -262,7 +261,7 @@ export default function KawaiiAestheticGuide() {
           </ul>
 
           <div className="border-l-4 border-pink-400 pl-6 my-8">
-            <p className="text-lg italic text-gray-200">
+            <p className="text-lg italic">
               "Remember, kawaii is about expressing joy and embracing what makes you happy. There's no wrong way to be kawaii – it's all about finding your own cute!" 
             </p>
             <cite className="text-pink-400 font-semibold">- Diva Factory Team</cite>
@@ -271,7 +270,7 @@ export default function KawaiiAestheticGuide() {
 
         {/* Related Posts */}
         <section className="mt-16 pt-12 border-t border-gray-700">
-          <h2 className="text-2xl font-bold text-white mb-8">Explore More Kawaii Content</h2>
+          <h2 className="text-2xl font-bold text-heading mb-8">Explore More Kawaii Content</h2>
           <div className="grid md:grid-cols-2 gap-6">
             <Link href="/blog/y2k-nail-trends-2025" className="group">
               <div className="bg-gradient-to-r from-purple-900/30 to-pink-900/30 rounded-lg p-6 hover:shadow-lg transition-all">

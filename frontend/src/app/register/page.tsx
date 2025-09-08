@@ -44,7 +44,7 @@ export default function RegisterPage() {
   };
 
   return (
-    <div className="container mx-auto px-6 py-10 text-white">
+    <div className="container mx-auto px-6 py-10">
       <h1 className="text-3xl font-bold text-center">📝 Create Account</h1>
 
       <form onSubmit={handleSubmit} className="max-w-lg mx-auto mt-6 bg-black/20 p-6 rounded-lg">

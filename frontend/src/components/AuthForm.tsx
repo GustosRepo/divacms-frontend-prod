@@ -54,7 +54,7 @@ export default function AuthForm({ isLogin = true }) {
   };
 
   return (
-    <div className="container mx-auto px-6 py-10 text-white">
+    <div className="container mx-auto px-6 py-10">
             <h1 className="font-shuneva text-3xl font-bold text-center">
         {isLogin ? "Welcome Back!" : "Join Diva Factory"}
       </h1>

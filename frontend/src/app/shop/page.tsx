@@ -124,7 +124,7 @@ export default function Shop() {
       </div>
       {/* Brand Hub Section */}
       <section className="space-y-6">
-        <h1 className="font-shuneva text-3xl md:text-4xl font-extrabold tracking-tight text-white text-center">
+        <h1 className="font-shuneva text-3xl md:text-4xl font-extrabold tracking-tight text-heading text-center">
           {brandMeta ? brandMeta.name : 'Explore Our Brand Segments'}
         </h1>
         <p className="font-shuneva text-center text-black  max-w-2xl mx-auto">
@@ -155,9 +155,9 @@ export default function Shop() {
       {!activeBrand && (
         <section>
           <div className="flex items-center justify-between mb-6">
-            <h2 className="font-shuneva text-2xl font-bold text-white">Trending Across All Brands</h2>
+            <h2 className="font-shuneva text-2xl font-bold text-heading">Trending Across All Brands</h2>
           </div>
-          {loading && <p className="font-shuneva text-white/80">Loading trending...</p>}
+          {loading && <p className="font-shuneva text-fg/80">Loading trending...</p>}
           {error && <p className="font-shuneva text-red-400">{error}</p>}
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4 gap-5">
             {!loading && !error && trendingProducts.length === 0 && <p className="font-shuneva text-gray-300 col-span-full">No products yet.</p>}
@@ -191,7 +191,7 @@ export default function Shop() {
             })}
           </div>
           <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-            <h2 className="text-2xl font-bold text-white">
+            <h2 className="text-2xl font-bold text-heading">
               {brandMeta ? `${brandMeta.name.split(' ').slice(-1)[0]} Products` : 'Products'}{activeCategory && ` • ${activeCategory}`}
             </h2>
             <div className="flex flex-wrap gap-3 items-center">
@@ -209,7 +209,7 @@ export default function Shop() {
               <Link href="/shop" className="text-xs text-white/70 hover:text-white underline">Back to Hub</Link>
             </div>
           </div>
-          {loading && <p className="text-lg text-white text-center mt-6">Loading products...</p>}
+          {loading && <p className="text-lg text-fg text-center mt-6">Loading products...</p>}
           {error && <p className="text-red-400 text-center mt-6">{error}</p>}
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mt-10">
             {!loading && !error && visibleProducts.length === 0 && <p className="text-gray-300 text-center col-span-full">No products found</p>}

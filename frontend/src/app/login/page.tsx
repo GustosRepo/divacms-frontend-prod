@@ -14,7 +14,7 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen  text-white">
+    <div className="flex items-center justify-center min-h-screen">
       <div className="w-full max-w-md p-8 bg-black/20 rounded-lg">
         <h1 className="text-3xl font-bold text-center">🔐 Login</h1>
 

@@ -51,26 +51,25 @@ export default function ContactPage() {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }} />
 
-      <div className="max-w-6xl mx-auto px-4 py-24 text-white">
+      <div className="max-w-6xl mx-auto px-4 py-24">
         {/* Breadcrumbs */}
         <nav className="mb-8 text-sm">
-          <Link href="/" className="text-pink-400 hover:text-pink-300">Home</Link>
+          <Link href="/" className="text-accent hover:text-accent/80">Home</Link>
           <span className="mx-2">→</span>
-          <span className="text-gray-300">Contact</span>
+          <span className="text-fg/70">Contact</span>
         </nav>
 
         <header className="text-center mb-16">
           <h1 className="font-shuneva text-4xl md:text-6xl font-bold bg-gradient-to-r from-pink-400 via-purple-400 to-blue-400 bg-clip-text text-transparent mb-6">
             Get In Touch!{" "}
             <span
-              className="inline-block align-[-0.1em] text-white"
-              style={{ fontFamily: "Apple Color Emoji, Segoe UI Emoji, Noto Color Emoji" }}
+              className="emoji inline-block align-[-0.1em]"
               aria-hidden="true"
             >
               💌
             </span>
           </h1>
-          <p className="text-xl text-gray-300 leading-relaxed max-w-3xl mx-auto">
+          <p className="text-xl leading-relaxed max-w-3xl mx-auto">
             We'd love to hear from you! Whether you need help with your order, want to schedule a pickup,
             or have a custom design idea — we're here to help make your nail dreams come true!
           </p>
@@ -198,8 +197,8 @@ export default function ContactPage() {
 
         {/* Social & Reviews */}
         <section className="bg-gradient-to-r from-pink-600/20 to-purple-600/20 rounded-xl p-8 text-center mb-16">
-          <h2 className="text-3xl font-bold text-white mb-6">Connect With Us! ✨</h2>
-          <p className="text-gray-200 mb-6 max-w-2xl mx-auto">
+          <h2 className="text-3xl font-bold text-heading mb-6">Connect With Us! ✨</h2>
+          <p className="mb-6 max-w-2xl mx-auto">
             Follow us for nail inspo, tutorials, and behind-the-scenes content! Tag us in your nail pics for a chance to be featured.
           </p>
           <div className="flex justify-center space-x-6 mb-8">
@@ -208,8 +207,8 @@ export default function ContactPage() {
             <a href="#" className="text-blue-400 hover:text-blue-300 text-2xl">💬 Twitter</a>
           </div>
           <div className="bg-white/10 rounded-lg p-6 max-w-md mx-auto">
-            <h3 className="text-lg font-bold text-white mb-3">Leave a Review!</h3>
-            <p className="text-gray-300 mb-4 text-sm">
+            <h3 className="text-lg font-bold text-heading mb-3">Leave a Review!</h3>
+            <p className="mb-4 text-sm">
               Love your nails? We'd love to hear about it! Reviews help other nail lovers discover us.
             </p>
             <button className="bg-gradient-to-r from-pink-500 to-purple-500 text-white font-bold py-2 px-6 rounded-full hover:shadow-lg transition-all">
@@ -222,21 +221,21 @@ export default function ContactPage() {
         <section className="text-center">
           <h2 className="text-2xl font-bold text-pink-400 mb-6">Business Hours</h2>
           <div className="bg-white/10 rounded-lg p-6 max-w-md mx-auto">
-            <div className="space-y-2 text-gray-300">
+            <div className="space-y-2">
               <div className="flex justify-between">
                 <span>Monday - Friday:</span>
-                <span className="text-white">9:00 AM - 5:00 PM PST</span>
+                <span>9:00 AM - 5:00 PM PST</span>
               </div>
               <div className="flex justify-between">
                 <span>Saturday:</span>
-                <span className="text-white">10:00 AM - 4:00 PM PST</span>
+                <span>10:00 AM - 4:00 PM PST</span>
               </div>
               <div className="flex justify-between">
                 <span>Sunday:</span>
                 <span className="text-gray-400">Closed</span>
               </div>
             </div>
-            <p className="text-sm text-gray-400 mt-4">
+            <p className="text-sm text-fg/70 mt-4">
               Response time is typically within 24 hours during business days
             </p>
           </div>

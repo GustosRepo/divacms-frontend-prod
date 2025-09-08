@@ -23,6 +23,16 @@ interface Order {
     state?: string | null;
     country?: string | null;
     postal_code?: string | null;
+    address?: string | null; // some records may store a single-line address
+    pickup?: {
+      reservation_expires_at?: string | null;
+    } | null;
+    customer?: {
+      name?: string | null;
+      email?: string | null;
+      phone?: string | null;
+      user_id?: string | null;
+    } | null;
   [key: string]: unknown;
   } | null;
   phone?: string | null;
@@ -35,6 +45,7 @@ export default function ManageOrders() {
   const [loading, setLoading] = useState(true);
   const [message, setMessage] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [filterStatus, setFilterStatus] = useState<string>("");
 
   useEffect(() => {
     if (!user || !user.isAdmin) {
@@ -44,7 +55,9 @@ export default function ManageOrders() {
 
     const fetchOrders = async () => {
       try {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/orders/admin/orders`, {
+        const url = new URL(`${process.env.NEXT_PUBLIC_API_URL}/orders/admin/orders`);
+        if (filterStatus) url.searchParams.set("status", filterStatus);
+        const res = await fetch(url.toString(), {
           headers: { Authorization: `Bearer ${user.token}` },
         });
 
@@ -67,14 +80,14 @@ export default function ManageOrders() {
     };
 
     fetchOrders();
-  }, [user, router]);
+  }, [user, router, filterStatus]);
 
   if (loading)
     return <p className="text-center text-white">Loading orders...</p>;
   if (error)
     return <p className="text-center text-red-500">{error}</p>;
 
-  // 🔹 Handle Order Status Update with Tracking Number
+  // 🔹 Handle Order Status Update with Tracking Number (shipping flow)
   async function handleStatusChange(orderId: string, newStatus: string) {
     let trackingCode = "";
 
@@ -92,13 +105,13 @@ export default function ManageOrders() {
     }
 
     try {
-      const endpoint =
-        newStatus === "Canceled"
-          ? `${process.env.NEXT_PUBLIC_API_URL}/orders/${orderId}/cancel`
-          : `${process.env.NEXT_PUBLIC_API_URL}/orders/admin/orders/${orderId}`;
+      const isCancel = newStatus === "Canceled";
+      const endpoint = isCancel
+        ? `${process.env.NEXT_PUBLIC_API_URL}/orders/${orderId}/cancel`
+        : `${process.env.NEXT_PUBLIC_API_URL}/orders/admin/orders/${orderId}`;
 
       const res = await fetch(endpoint, {
-        method: "PUT",
+        method: isCancel ? "PATCH" : "PUT",
         headers: {
           Authorization: `Bearer ${user?.token}`,
           "Content-Type": "application/json",
@@ -106,7 +119,11 @@ export default function ManageOrders() {
         body: JSON.stringify({ status: newStatus, trackingCode }),
       });
 
-      if (!res.ok) throw new Error("Failed to update order status.");
+      if (!res.ok) {
+        let msg = `Failed to update order status (${res.status}).`;
+        try { const j = await res.json(); msg = j?.message || msg; } catch {}
+        throw new Error(msg);
+      }
 
       setOrders((prevOrders) =>
         prevOrders.map((order) =>
@@ -125,6 +142,66 @@ export default function ManageOrders() {
     } catch (err) {
       console.error("❌ Error updating order status:", err);
       setMessage("❌ Failed to update order status");
+    }
+  }
+
+  // 🔹 Admin action: Mark Paid (for local pickup)
+  async function handleMarkPaid(orderId: string) {
+    try {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/orders/${orderId}/mark-paid`, {
+        method: "PATCH",
+        headers: { Authorization: `Bearer ${user?.token}` },
+      });
+      if (!res.ok) throw new Error("Failed to mark as paid");
+      setOrders(prev => prev.map(o => (
+        o.id === orderId
+          ? { ...o, shipping_info: { ...(o.shipping_info || {}), payment_status: "paid" } as any }
+          : o
+      )));
+      setMessage("✅ Marked as paid");
+      setTimeout(() => setMessage(null), 2000);
+    } catch (e) {
+      setMessage("❌ Failed to mark paid");
+      setTimeout(() => setMessage(null), 3000);
+    }
+  }
+
+  // 🔹 Admin action: Mark Picked Up
+  async function handleMarkPickedUp(orderId: string) {
+    try {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/orders/${orderId}/mark-picked-up`, {
+        method: "PATCH",
+        headers: { Authorization: `Bearer ${user?.token}` },
+      });
+      if (!res.ok) throw new Error("Failed to mark picked up");
+      setOrders(prev => prev.map(o => (
+        o.id === orderId ? { ...o, status: "picked_up" } : o
+      )));
+      setMessage("✅ Marked as picked up");
+      setTimeout(() => setMessage(null), 2000);
+    } catch (e) {
+      setMessage("❌ Failed to mark picked up");
+      setTimeout(() => setMessage(null), 3000);
+    }
+  }
+
+  // 🔹 Admin action: Cancel (restock)
+  async function handleCancel(orderId: string) {
+    if (!confirm("Cancel this order? This will restock items.")) return;
+    try {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/orders/${orderId}/cancel`, {
+        method: "PATCH",
+        headers: { Authorization: `Bearer ${user?.token}` },
+      });
+      if (!res.ok) throw new Error("Failed to cancel order");
+      setOrders(prev => prev.map(o => (
+        o.id === orderId ? { ...o, status: "canceled" } : o
+      )));
+      setMessage("✅ Order canceled");
+      setTimeout(() => setMessage(null), 2000);
+    } catch (e) {
+      setMessage("❌ Failed to cancel order");
+      setTimeout(() => setMessage(null), 3000);
     }
   }
 
@@ -161,6 +238,24 @@ export default function ManageOrders() {
     <div className="container mx-auto p-6 text-white">
       <h1 className="text-3xl font-bold text-center">Manage Orders</h1>
       {message && <p className="text-center text-green-500 mt-4">{message}</p>}
+      {/* Filters */}
+      <div className="mt-4 flex items-center gap-3">
+        <label htmlFor="statusFilter" className="text-sm text-gray-300">Filter status:</label>
+        <select
+          id="statusFilter"
+          className="bg-gray-800 border border-white/10 rounded p-2 text-sm"
+          value={filterStatus}
+          onChange={(e) => setFilterStatus(e.target.value)}
+        >
+          <option value="">All</option>
+          <option value="Pending">Pending</option>
+          <option value="Shipped">Shipped</option>
+          <option value="Delivered">Delivered</option>
+          <option value="Canceled">Canceled</option>
+          <option value="awaiting_pickup">awaiting_pickup</option>
+          <option value="picked_up">picked_up</option>
+        </select>
+      </div>
       <table className="w-full mt-6 bg-gray-800 text-white rounded-lg">
         <thead>
           <tr className="bg-blue-500">
@@ -170,13 +265,14 @@ export default function ManageOrders() {
             <th className="p-3">Status</th>
             <th className="p-3">Tracking</th>
             <th className="p-3">Phone</th>
+            <th className="p-3">Payment</th>
             <th className="p-3">Actions</th>
           </tr>
         </thead>
         <tbody>
           {orders.length === 0 && (
             <tr>
-              <td colSpan={7} className="text-center p-3">
+              <td colSpan={8} className="text-center p-3">
                 No orders found
               </td>
             </tr>
@@ -186,17 +282,45 @@ export default function ManageOrders() {
               <tr key={order.id} className="border-b border-gray-600">
                 <td className="p-3">{order.customerEmail || "Guest"}</td>
                 <td className="p-3">
-                  {order.shipping_info?.address || order.address ? (
-                    <div className="text-sm text-gray-200">
-                      <div>{String(order.shipping_info?.address ?? order.address ?? '')}</div>
-                      <div>
-                        {String(order.shipping_info?.city ?? order.city ?? '')}{(order.shipping_info?.city || order.city) ? ", " : ""}{String(order.shipping_info?.zip ?? order.zip ?? '')}
-                      </div>
-                      <div>{String(order.shipping_info?.country ?? order.country ?? '')}</div>
-                    </div>
-                  ) : (
-                    <span className="text-gray-400">No address</span>
-                  )}
+                  {(() => {
+                    const s = order.shipping_info || {};
+                    const line1 = (s as any).address_line1 || (s as any).address || order.address || "";
+                    const line2 = (s as any).address_line2 || "";
+                    const city = (s as any).city || order.city || "";
+                    const state = (s as any).state || "";
+                    const zip = (s as any).postal_code || (s as any).zip || order.zip || "";
+                    const country = (s as any).country || order.country || "";
+                    const isPickup = Boolean((s as any).pickup);
+                    const expIso = (s as any)?.pickup?.reservation_expires_at as string | undefined;
+                    if (isPickup) {
+                      return (
+                        <div className="text-sm text-gray-200">
+                          <div className="font-semibold text-pink-300">Local Pickup</div>
+                          {expIso && (
+                            <div className="text-xs text-gray-400">Hold until: {new Date(expIso).toLocaleString()}</div>
+                          )}
+                          {((s as any)?.customer?.phone || s?.phone) && (
+                            <div className="text-xs mt-1">☎ {String(((s as any)?.customer?.phone) || s?.phone)}</div>
+                          )}
+                        </div>
+                      );
+                    }
+                    if (line1 || city || country) {
+                      return (
+                        <div className="text-sm text-gray-200">
+                          {line1 && <div>{String(line1)}</div>}
+                          {line2 && <div>{String(line2)}</div>}
+                          {(city || state || zip) && (
+                            <div>
+                              {city}{city ? ", " : ""}{state}{state ? " " : ""}{zip}
+                            </div>
+                          )}
+                          {country && <div>{String(country)}</div>}
+                        </div>
+                      );
+                    }
+                    return <span className="text-gray-400">No address</span>;
+                  })()}
                 </td>
                 <td className="p-3">{typeof order.totalAmount === "number" ? `$${order.totalAmount.toFixed(2)}` : <span className="text-gray-400">N/A</span>}</td>
                 <td className="p-3">
@@ -211,6 +335,8 @@ export default function ManageOrders() {
                     <option value="Shipped">Shipped</option>
                     <option value="Delivered">Delivered</option>
                     <option value="Canceled">Canceled</option>
+                    <option value="awaiting_pickup">awaiting_pickup</option>
+                    <option value="picked_up">picked_up</option>
                   </select>
                 </td>
                 <td className="p-3">
@@ -221,20 +347,48 @@ export default function ManageOrders() {
                   )}
                 </td>
                 <td className="p-3">
-                  {order.shipping_info?.phone
-                    ? order.shipping_info.phone
-                    : order.phone
-                    ? order.phone
-                    : <span className="text-gray-400">No phone</span>
-                  }
+                  {(() => {
+                    const s = order.shipping_info as any;
+                    const phone = s?.customer?.phone || s?.phone || order.phone;
+                    return phone ? String(phone) : <span className="text-gray-400">No phone</span>;
+                  })()}
                 </td>
                 <td className="p-3">
-                  <button
-                    onClick={() => handleDelete(order.id)}
-                    className="bg-red-500 px-3 py-1 rounded ml-2"
-                  >
-                    🗑 Delete
-                  </button>
+                  {(() => {
+                    const pay = (order.shipping_info as any)?.payment_status as string | undefined;
+                    if (!pay) return <span className="text-gray-400">N/A</span>;
+                    if (pay.toLowerCase() === "paid") return <span className="px-2 py-0.5 rounded bg-green-600/20 text-green-300 text-xs">paid</span>;
+                    if (pay.toLowerCase() === "unpaid") return <span className="px-2 py-0.5 rounded bg-yellow-600/20 text-yellow-300 text-xs">unpaid</span>;
+                    return <span className="text-gray-300 text-xs">{pay}</span>;
+                  })()}
+                </td>
+                <td className="p-3">
+                  <div className="flex flex-wrap items-center gap-2">
+                    {/* Show Mark Paid whenever payment_status !== paid */}
+                    {(() => {
+                      const pay = (order.shipping_info as any)?.payment_status as string | undefined;
+                      const isPaid = (pay || "").toLowerCase() === "paid";
+                      return !isPaid ? (
+                        <button onClick={() => handleMarkPaid(order.id)} className="bg-green-600 hover:bg-green-700 px-3 py-1 rounded text-sm">Mark Paid</button>
+                      ) : null;
+                    })()}
+
+                    {/* Pickup-specific actions */}
+                    {order.status === "awaiting_pickup" && (
+                      <>
+                        <button onClick={() => handleMarkPickedUp(order.id)} className="bg-blue-600 hover:bg-blue-700 px-3 py-1 rounded text-sm">Mark Picked Up</button>
+                        <button onClick={() => handleCancel(order.id)} className="bg-red-600 hover:bg-red-700 px-3 py-1 rounded text-sm">Cancel</button>
+                      </>
+                    )}
+
+                    {/* Fallback delete (admin dangerous) */}
+                    <button
+                      onClick={() => handleDelete(order.id)}
+                      className="bg-red-500 px-3 py-1 rounded text-sm"
+                    >
+                      🗑 Delete
+                    </button>
+                  </div>
                 </td>
               </tr>
             ))}

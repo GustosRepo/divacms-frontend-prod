@@ -66,7 +66,7 @@ export default function CheckoutPage() {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-screen text-white">
+      <div className="flex items-center justify-center min-h-screen">
         <p>Loading checkout...</p>
       </div>
     );
@@ -103,7 +103,7 @@ export default function CheckoutPage() {
   };
 
   return (
-    <div className="container pt-24 w-1/2 mx-auto text-white">
+    <div className="container pt-24 w-1/2 mx-auto">
       <h1 className="text-3xl font-bold text-center">Checkout</h1>
 
       {shippingInfo ? (

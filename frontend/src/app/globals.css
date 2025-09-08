@@ -16,6 +16,10 @@
   --color-fg: #000000;
   --color-fg-heading: #120d03;
   --color-fg-accent: #8b3d8f;
+  /* RGB equivalents for Tailwind alpha support */
+  --color-fg-rgb: 0 0 0;
+  --color-fg-heading-rgb: 18 13 3;
+  --color-fg-accent-rgb: 139 61 143;
   /* Surfaces */
   --surface: rgb(255, 255, 255);
   --surface-border: #ecc5d5;
@@ -40,6 +44,10 @@
   --color-fg: #e8e5da;
   --color-fg-heading: #ffffff;
   --color-fg-accent: #ff9fe8;
+  /* RGB equivalents for Tailwind alpha support */
+  --color-fg-rgb: 232 229 218;
+  --color-fg-heading-rgb: 255 255 255;
+  --color-fg-accent-rgb: 255 159 232;
   --surface: rgba(255,255,255,0.06);
   --surface-border: rgba(255,255,255,0.12);
   /* Legacy mappings */
@@ -138,6 +146,18 @@ html { font-size: 16px; }
 
 /* surface utility */
 .surface-card { background: var(--surface); border: 1px solid var(--surface-border); backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px); }
+
+/* Emoji utility: consistent inline alignment and inherited color */
+.emoji {
+  display: inline-block;
+  vertical-align: -0.1em;
+  color: inherit;
+  /* Ensure emojis inside gradient headings are not clipped or transparent */
+  background: none !important;
+  -webkit-background-clip: initial !important;
+  background-clip: initial !important;
+  -webkit-text-fill-color: currentColor !important;
+}
 
 /* Ensure blog/cards force readable text color even if parent sets global text color */
 .blog-card {
