@@ -181,7 +181,8 @@ export default function CheckoutForm({
             localStorage.setItem("latestPickupOrder", JSON.stringify({ orderId: serverOrderId, expiresAt }));
             localStorage.removeItem("cart");
           } catch {}
-          router.push(`/checkout/success?pickup=1&order_id=${encodeURIComponent(serverOrderId)}`);
+          const expParam = expIso ? `&exp=${encodeURIComponent(expIso)}` : "";
+          router.push(`/checkout/success?pickup=1&order_id=${encodeURIComponent(serverOrderId)}${expParam}`);
           return;
         } catch (err) {
           throw err;
