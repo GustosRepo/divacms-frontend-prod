@@ -24,8 +24,8 @@ export default function ShippingPage() {
         <h2>Shipping</h2>
         <p>We ship with trusted carriers. Delivery times vary by destination.</p>
 
-        <h2>Local Pickup</h2>
-        <p>Choose Local Pickup at checkout to avoid shipping fees. We'll notify you when your order is ready.</p>
+  <h2>Local Pickup</h2>
+  <p>Choose Local Pickup at checkout to avoid shipping fees. We&apos;ll notify you when your order is ready.</p>
 
         <h2>Contact</h2>
         <p>For urgent shipping questions email <a href="mailto:admin@thedivafactory.com">admin@thedivafactory.com</a>.</p>

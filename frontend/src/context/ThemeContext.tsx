@@ -28,11 +28,13 @@ export const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
     const stored = localStorage.getItem('ui_prefs');
     if (stored) {
       try {
-        const parsed = JSON.parse(stored);
-        setDark(!!parsed.dark);
-        setReducedMotion(!!parsed.reducedMotion);
-        setBrand(parsed.brand || null);
-      } catch {}
+          const parsed = JSON.parse(stored);
+          setDark(!!parsed.dark);
+          setReducedMotion(!!parsed.reducedMotion);
+          setBrand(parsed.brand || null);
+        } catch {
+          // ignore parse errors
+        }
     } else {
       setDark(window.matchMedia('(prefers-color-scheme: dark)').matches);
       setReducedMotion(window.matchMedia('(prefers-reduced-motion: reduce)').matches);
