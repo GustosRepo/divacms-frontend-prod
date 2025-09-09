@@ -77,7 +77,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     if (user) {
       const newUser = { ...user, ...updatedUser };
       setUser(newUser);
-      localStorage.setItem("user", JSON.stringify(newUser));
     }
   };
 
