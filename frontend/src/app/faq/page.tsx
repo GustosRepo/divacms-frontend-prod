@@ -59,13 +59,13 @@ export default function FAQPage() {
         '@type': 'ListItem',
         position: 1,
         name: 'Home',
-        item: 'https://divanails.com'
+        item: 'https://thedivafactory.com'
       },
       {
         '@type': 'ListItem',
         position: 2,
         name: 'FAQ',
-        item: 'https://divanails.com/faq'
+        item: 'https://thedivafactory.com/faq'
       }
     ]
   };

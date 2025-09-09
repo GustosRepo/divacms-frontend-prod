@@ -26,7 +26,7 @@ export default function KawaiiAestheticGuide() {
     '@type': 'BlogPosting',
     headline: 'The Ultimate Kawaii Aesthetic Guide',
     description: 'Complete guide to kawaii culture, fashion, and lifestyle',
-    image: 'https://divanails.com/blog/kawaii-aesthetic-guide.jpg',
+    image: 'https://thedivafactory.com/blog/kawaii-aesthetic-guide.jpg',
     author: {
       '@type': 'Organization',
       name: 'Diva Factory'
@@ -36,7 +36,7 @@ export default function KawaiiAestheticGuide() {
       name: 'Diva Factory',
       logo: {
         '@type': 'ImageObject',
-        url: 'https://divanails.com/uploads/divanailslogo.png'
+        url: 'https://thedivafactory.com/uploads/divanailslogo.png'
       }
     },
     datePublished: '2025-08-27',

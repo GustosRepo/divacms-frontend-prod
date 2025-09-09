@@ -26,7 +26,7 @@ export default function Y2KNailTrends2025() {
     '@type': 'BlogPosting',
     headline: 'Y2K Nail Art Trends Making a Major Comeback in 2025',
     description: 'Discover the hottest Y2K nail art trends making a comeback in 2025',
-    image: 'https://divanails.com/blog/y2k-nails-2025.jpg',
+    image: 'https://thedivafactory.com/blog/y2k-nails-2025.jpg',
     author: {
       '@type': 'Organization',
       name: 'Diva Factory'
@@ -36,7 +36,7 @@ export default function Y2KNailTrends2025() {
       name: 'Diva Factory',
       logo: {
         '@type': 'ImageObject',
-        url: 'https://divanails.com/uploads/divanailslogo.png'
+        url: 'https://thedivafactory.com/uploads/divanailslogo.png'
       }
     },
     datePublished: '2025-08-27',

@@ -18,12 +18,12 @@ export default function Home() {
   const jsonLd = {
     '@context': 'https://schema.org',
     '@type': 'LocalBusiness',
-    '@id': 'https://divanails.com',
+    '@id': 'https://thedivafactory.com',
     name: 'Diva Factory',
     description: 'Vegas kawaii paradise! Labubu collectibles, kawaii boutique accessories, and Y2K press-on nails for kawaii enthusiasts',
-    url: 'https://divanails.com',
-    logo: 'https://divanails.com/uploads/divanailslogo.png',
-    image: 'https://divanails.com/uploads/divanailslogo.png',
+    url: 'https://thedivafactory.com',
+    logo: 'https://thedivafactory.com/uploads/divanailslogo.png',
+    image: 'https://thedivafactory.com/uploads/divanailslogo.png',
     sameAs: [
       'https://instagram.com/divanails',
       'https://tiktok.com/@divanails',
@@ -33,20 +33,20 @@ export default function Home() {
       '@type': 'ContactPoint',
       telephone: '+1-555-DIVA-FAB',
       contactType: 'Customer Service',
-      email: 'contact@divanails.com',
+      email: 'admin@thedivafactory.com',
       areaServed: 'US',
       availableLanguage: 'English'
     },
     address: {
       '@type': 'PostalAddress',
-      addressLocality: 'Los Angeles',
-      addressRegion: 'CA',
+      addressLocality: 'Las Vegas',
+      addressRegion: 'NV',
       addressCountry: 'US'
     },
     geo: {
       '@type': 'GeoCoordinates',
-      latitude: '34.0522',
-      longitude: '-118.2437'
+      latitude: '36.1699',
+      longitude: '-115.1398'
     },
     priceRange: '$15-$50',
     paymentAccepted: 'Cash, Credit Card, PayPal, Stripe',

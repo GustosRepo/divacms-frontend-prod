@@ -2,7 +2,7 @@ import { MetadataRoute } from 'next';
 
 // Enhanced sitemap with more strategic URLs and better SEO structure
 export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://divanails.com';
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://thedivafactory.com';
   
   const staticRoutes: MetadataRoute.Sitemap = [
     // Core pages with high priority

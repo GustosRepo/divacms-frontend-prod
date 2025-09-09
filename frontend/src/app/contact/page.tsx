@@ -20,7 +20,7 @@ export default function ContactPage() {
     '@type': 'LocalBusiness',
     name: 'Diva Factory',
     description: 'Premium press-on nails and kawaii accessories',
-    url: 'https://divanails.com/contact',
+    url: 'https://thedivafactory.com/contact',
     telephone: '+1-555-DIVA-123',
   email: 'admin@thedivafactory.com',
     address: {

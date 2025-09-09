@@ -2,7 +2,7 @@ User-agent: *
 Allow: /
 
 # Sitemaps
-Sitemap: https://divanails.com/sitemap.xml
+Sitemap: https://thedivafactory.com/sitemap.xml
 
 # Block admin and checkout pages from search engines
 Disallow: /admin/

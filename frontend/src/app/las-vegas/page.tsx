@@ -79,8 +79,8 @@ export default function LasVegasPage() {
   '@type': 'LocalBusiness',
   name: 'Diva Factory - Las Vegas',
   description: 'Premium Labubu collectibles, kawaii boutique accessories, and Y2K press-on nails serving Las Vegas and Nevada',
-  url: 'https://divanails.com/las-vegas',
-  image: 'https://divanails.com/uploads/divanailslogo.png',
+  url: 'https://thedivafactory.com/las-vegas',
+  image: 'https://thedivafactory.com/uploads/divanailslogo.png',
     address: {
       '@type': 'PostalAddress',
       addressLocality: 'Las Vegas',

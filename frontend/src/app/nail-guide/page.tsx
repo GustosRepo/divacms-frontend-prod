@@ -78,19 +78,19 @@ export default function NailGuidePage() {
         '@type': 'ListItem',
         position: 1,
         name: 'Home',
-        item: 'https://divanails.com'
+        item: 'https://thedivafactory.com'
       },
       {
         '@type': 'ListItem',
         position: 2,
         name: 'Blog',
-        item: 'https://divanails.com/blog'
+        item: 'https://thedivafactory.com/blog'
       },
       {
         '@type': 'ListItem',
         position: 3,
         name: 'Nail Guide',
-        item: 'https://divanails.com/nail-guide'
+        item: 'https://thedivafactory.com/nail-guide'
       }
     ]
   };

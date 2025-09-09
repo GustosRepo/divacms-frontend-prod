@@ -27,7 +27,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Diva Factory | Luxury Press-On Nails, Collectable toys & Y2K Boutique",
     description: "Premium press-on nails, collectible toys & kawaii boutique finds. Express your Y2K aesthetic with our curated luxury collection.",
-    url: "https://divanails.com",
+    url: "https://thedivafactory.com",
     siteName: "Diva Factory",
     images: [
       {
@@ -75,7 +75,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fsitfoxofpsynhncpxjs.supabase.co" />
         {/* Canonical URL */}
-        <link rel="canonical" href="https://divanails.com" />
+        <link rel="canonical" href="https://thedivafactory.com" />
       </head>
       <body className={`${geistSans.variable} ${geistMono.variable} ${shuneva.variable} antialiased min-h-screen flex flex-col transition-colors duration-300`}>
         {/* Skip link for keyboard users */}

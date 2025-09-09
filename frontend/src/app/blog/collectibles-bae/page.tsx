@@ -26,7 +26,7 @@ export default function CollectiblesGuide() {
     '@type': 'HowTo',
     name: 'How to Collect Labubu and Pop Mart Toys',
     description: 'Complete guide to collecting Labubu figures, Pop Mart blind boxes, and kawaii designer toys',
-    image: 'https://divanails.com/blog/collectibles-guide.jpg',
+    image: 'https://thedivafactory.com/blog/collectibles-guide.jpg',
     totalTime: 'PT45M',
     supply: [
       'Budget planning',
