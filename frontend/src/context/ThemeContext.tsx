@@ -82,7 +82,7 @@ export const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
   const toggleDark = () => setDark(d => !d);
 
   const resetToSystemPref = () => {
-    try { localStorage.removeItem('ui_prefs'); } catch (e) {}
+    try { localStorage.removeItem('ui_prefs'); } catch { /* ignore */ }
     const prefersDark = typeof window !== 'undefined' && window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
     const prefersReduced = typeof window !== 'undefined' && window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     setDark(!!prefersDark);
