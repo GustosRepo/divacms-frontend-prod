@@ -34,7 +34,7 @@ export default function OrderHistoryPage() {
         if (!res.ok) throw new Error("Failed to load orders");
         const data = (await res.json()) as Order[];
         setOrders(data ?? []);
-      } catch (e) {
+      } catch {
         setError("Failed to load orders.");
       } finally {
         setLoading(false);
@@ -56,8 +56,7 @@ export default function OrderHistoryPage() {
       setOrders((prev) =>
         prev.map((o) => (o.id === orderId ? { ...o, status: "Cancelled" } : o))
       );
-    } catch (err) {
-      console.error(err);
+  } catch {
       setError("Could not cancel order.");
     }
   };

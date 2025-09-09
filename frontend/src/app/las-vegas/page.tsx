@@ -1,8 +1,8 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useAuth } from "@/context/AuthContext";
 import Link from "next/link";
-import Image from "next/image";
+// import Image from "next/image";
 
 interface PopupEvent {
   id: string;
@@ -75,12 +75,12 @@ export default function LasVegasPage() {
     }
   };
   const jsonLd = {
-    '@context': 'https://schema.org',
-    '@type': 'LocalBusiness',
-    name: 'Diva Factory - Las Vegas',
-    description: 'Premium Labubu collectibles, kawaii boutique accessories, and Y2K press-on nails serving Las Vegas and Nevada',
-    url: 'https://divanails.com/las-vegas',
-    image: 'https://divanails.com/uploads/divanailslogo.png',
+  '@context': 'https://schema.org',
+  '@type': 'LocalBusiness',
+  name: 'Diva Factory - Las Vegas',
+  description: 'Premium Labubu collectibles, kawaii boutique accessories, and Y2K press-on nails serving Las Vegas and Nevada',
+  url: 'https://divanails.com/las-vegas',
+  image: 'https://divanails.com/uploads/divanailslogo.png',
     address: {
       '@type': 'PostalAddress',
       addressLocality: 'Las Vegas',
@@ -143,8 +143,8 @@ export default function LasVegasPage() {
               🎁💅✨
             </span>
           </h1>
-          <p className="text-xl leading-relaxed max-w-3xl mx-auto">
-            Vegas's ultimate kawaii destination! From Labubu collectibles & Pop Mart blind boxes to Y2K boutique accessories & custom press-on nails. Everything cute in one place!
+            <p className="text-xl leading-relaxed max-w-3xl mx-auto">
+            Vegas&apos;s ultimate kawaii destination! From Labubu collectibles &amp; Pop Mart blind boxes to Y2K boutique accessories &amp; custom press-on nails. Everything cute in one place!
           </p>
         </header>
 
@@ -153,7 +153,7 @@ export default function LasVegasPage() {
           <div className="bg-gradient-to-br from-pink-900/30 to-purple-900/30 rounded-lg p-6 text-center">
             <div className="text-4xl mb-4">🎁</div>
             <h3 className="text-xl font-bold text-pink-400 mb-3">Collectibles Paradise</h3>
-            <p className="text-gray-100">Authentic Labubu, Pop Mart blind boxes, and rare kawaii finds. Vegas's best collectibles selection!</p>
+            <p className="text-gray-100">Authentic Labubu, Pop Mart blind boxes, and rare kawaii finds. Vegas&apos;s best collectibles selection!</p>
           </div>
           <div className="bg-gradient-to-br from-purple-900/30 to-blue-900/30 rounded-lg p-6 text-center">
             <div className="text-4xl mb-4">🛍️</div>
@@ -187,9 +187,9 @@ export default function LasVegasPage() {
         {/* Our Vegas Collections */}
         <section className="mb-16">
           <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-pink-400 mb-4">What Makes Us Vegas's Kawaii HQ</h2>
+            <h2 className="text-3xl font-bold text-pink-400 mb-4">What Makes Us Vegas&apos;s Kawaii HQ</h2>
             <p className="max-w-2xl mx-auto">
-              We're not just another store - we're Vegas's complete kawaii lifestyle destination
+              We&apos;re not just another store - we&apos;re Vegas&apos;s complete kawaii lifestyle destination
             </p>
           </div>
 
@@ -264,7 +264,7 @@ export default function LasVegasPage() {
           <div className="grid md:grid-cols-2 gap-8 items-center">
             <div>
               <p className="text-gray-100 leading-relaxed mb-4">
-                From collectors and influencers to kawaii enthusiasts and nail lovers, Diva Factory has become Vegas's go-to kawaii destination.
+                From collectors and influencers to kawaii enthusiasts and nail lovers, Diva Factory has become Vegas&apos;s go-to kawaii destination.
               </p>
               <ul className="text-gray-100 space-y-2">
                 <li>🎁 #1 for authentic collectibles in Nevada</li>
@@ -437,15 +437,15 @@ export default function LasVegasPage() {
           <h2 className="text-3xl font-bold text-pink-400 text-center mb-8">What Vegas Customers Say 💕</h2>
           <div className="grid md:grid-cols-3 gap-6">
             <div className="bg-white/10 rounded-lg p-6">
-              <p className="text-gray-100 italic mb-4">"Amazing Labubu collection! Perfect for my Vegas lifestyle and kawaii aesthetic."</p>
+              <p className="text-gray-100 italic mb-4">&quot;Amazing Labubu collection! Perfect for my Vegas lifestyle and kawaii aesthetic.&quot;</p>
               <cite className="text-pink-400 font-semibold">- Sarah M., Summerlin</cite>
             </div>
             <div className="bg-white/10 rounded-lg p-6">
-              <p className="text-gray-100 italic mb-4">"Local pickup is so convenient! Love supporting a Vegas-based collectibles business."</p>
+              <p className="text-gray-100 italic mb-4">&quot;Local pickup is so convenient! Love supporting a Vegas-based collectibles business.&quot;</p>
               <cite className="text-pink-400 font-semibold">- Jessica L., Henderson</cite>
             </div>
             <div className="bg-white/10 rounded-lg p-6">
-              <p className="text-gray-100 italic mb-4">"Best Pop Mart selection in Vegas! Quality is casino-level amazing for my collection."</p>
+              <p className="text-gray-100 italic mb-4">&quot;Best Pop Mart selection in Vegas! Quality is casino-level amazing for my collection.&quot;</p>
               <cite className="text-pink-400 font-semibold">- Maya K., Paradise</cite>
             </div>
           </div>
@@ -458,7 +458,7 @@ export default function LasVegasPage() {
               Why Choose <span className="text-transparent bg-clip-text bg-gradient-to-r from-pink-400 to-purple-600"></span> for Vegas Collectibles?
             </h2>
             <p className="text-gray-100 max-w-2xl mx-auto">
-              Las Vegas deserves collectibles as exciting as the Strip! Our authentic Labubu and Pop Mart collection is perfect for Nevada's entertainment capital.
+              Las Vegas deserves collectibles as exciting as the Strip! Our authentic Labubu and Pop Mart collection is perfect for Nevada&apos;s entertainment capital.
             </p>
           </div>
 

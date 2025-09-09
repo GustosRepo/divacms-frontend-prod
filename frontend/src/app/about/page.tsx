@@ -1,5 +1,6 @@
 import { Metadata } from "next";
 import Link from "next/link";
+import Image from "next/image";
 
 export const metadata: Metadata = {
   title: "About Diva Factory | Kawaii Collectibles, Luxury Press‑On Nails & Boutique",
@@ -126,11 +127,7 @@ export default function About() {
         </div>
   <div className="rounded-2xl border-2 border-white/60 bg-gradient-to-br from-pink-900/10 to-blue-900/10 p-6 shadow-xl text-center">
           <div className="h-48 md:h-64 rounded-xl bg-gradient-to-br from-pink-100 via-fuchsia-100 to-blue-100 flex items-center justify-center">
-            <img
-              src="/uploads/divanailslogo.png"
-              alt="Diva Factory brand logo"
-              className="max-h mx-auto"
-            />
+            <Image src="/uploads/divanailslogo.png" alt="Diva Factory brand logo" width={240} height={240} className="mx-auto" />
           </div>
           <p className="font-sans text-xs text-on-pastel-soft/80 mt-3">Tip: feature a mix of nails + collectibles in one hero shot for instant brand clarity.</p>
         </div>

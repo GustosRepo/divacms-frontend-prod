@@ -115,17 +115,18 @@ export default function MyOrders() {
           return (b.id || "").localeCompare(a.id || "");
         });
         setOrders(extracted);
-      } catch (err) {
-  const e = err as unknown;
-  if (typeof (e as any)?.name === 'string' && (e as any).name === "AbortError") return; // ignore aborts
-  setError(err instanceof Error ? err.message : String(err ?? 'An error'));
+      } catch (errUnknown) {
+        const e = errUnknown as unknown;
+        // ignore aborts
+        if (typeof (e as { name?: unknown })?.name === 'string' && (e as { name?: string }).name === 'AbortError') return;
+        setError(errUnknown instanceof Error ? errUnknown.message : String(errUnknown ?? 'An error'));
       } finally {
         setLoading(false);
       }
     };
     load();
     return () => controller.abort();
-  }, [user, refreshIndex]);
+  }, [user]);
 
   const handleCancelOrder = async (orderId: string) => {
     if (!user) return;
@@ -149,7 +150,7 @@ export default function MyOrders() {
   useEffect(() => {
     const abort = fetchOrders();
     return () => { if (typeof abort === 'function') abort(); };
-  }, [fetchOrders]);
+  }, [fetchOrders, refreshIndex]);
 
   if (!user) {
     return <p className="text-center">Please log in to view your orders.</p>;

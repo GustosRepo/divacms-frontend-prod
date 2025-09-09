@@ -6,32 +6,7 @@ import { useThemePrefs } from "@/context/ThemeContext";
 
 export default function Hero() {
   const { reducedMotion } = useThemePrefs();
-  const brands = [
-    {
-      key: "nails",
-      label: "Nails",
-      href: "/nails",
-      desc: "Cute press-ons",
-      pastel: "bg-pink-200/70 border-pink-300",
-      accent: "text-pink-700",
-    },
-    {
-      key: "toys",
-      label: "Toys",
-      href: "/toys",
-      desc: "Collectible fun",
-      pastel: "bg-violet-200/70 border-violet-300",
-      accent: "text-violet-700",
-    },
-    {
-      key: "boutique",
-      label: "Boutique",
-      href: "/boutique",
-      desc: "Kawaii finds",
-      pastel: "bg-emerald-200/70 border-emerald-300",
-      accent: "text-emerald-700",
-    },
-  ];
+  // Hero brand tiles removed — kept sample data previously, but unused
 
   return (
     <section className="relative h-screen bg-transparent overflow-hidden">
@@ -70,7 +45,7 @@ export default function Hero() {
           💅 Where press-ons, toys & boutique vibes pop like a Y2K music video 🌸🦋
         </p>
         {/* <div className="mt-6 grid grid-cols-1 sm:grid-cols-3 gap-6 w-full max-w-4xl">
-          {brands.map((b) => (
+          {_brands.map((b) => (
             <Link
               key={b.key}
               href={b.href}

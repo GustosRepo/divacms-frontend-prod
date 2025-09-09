@@ -1,6 +1,6 @@
+// content page
 import { Metadata } from "next";
 import Link from "next/link";
-import Image from "next/image";
 
 export const metadata: Metadata = {
   title: "Ultimate Collectibles Guide | Labubu, Pop Mart & Blind Box Collecting | Diva Toys",
@@ -106,7 +106,7 @@ export default function CollectiblesGuide() {
           </p>
 
                     <div className="bg-gradient-to-r from-blue-900/30 to-purple-900/30 rounded-lg p-6 my-6">
-            <p className="text-blue-200 italic mb-2">"Start with series you genuinely love, not just what's trending. Your passion will guide better collecting decisions."</p>
+            <p className="text-blue-200 italic mb-2">&quot;Start with series you genuinely love, not just what&apos;s trending. Your passion will guide better collecting decisions.&quot;</p>
             <cite className="text-pink-200 font-semibold">- Expert Collector Tip</cite>
           </div>
 
@@ -147,7 +147,7 @@ export default function CollectiblesGuide() {
 
           <h2 className="text-3xl font-bold text-pink-200 mt-12 mb-6">Step 3: Storage & Display 📦</h2>
           <p className="text-gray-300 leading-relaxed mb-4">
-            Proper care preserves your collection's value and beauty:
+            Proper care preserves your collection&apos;s value and beauty:
           </p>
           <ul className="list-disc list-inside space-y-2 mb-6">
             <li>Store figures in dust-free display cases or original boxes</li>
@@ -173,7 +173,7 @@ export default function CollectiblesGuide() {
 
           <div className="border-l-4 border-pink-400 pl-6 my-8">
             <p className="text-lg italic">
-              "The key to long-lasting press-ons is starting with completely clean, oil-free nails. Skip the hand cream before application!" 
+              &quot;The key to long-lasting press-ons is starting with completely clean, oil-free nails. Skip the hand cream before application!&quot;
             </p>
             <cite className="text-pink-200 font-semibold">- Pro Nail Tech Tip</cite>
           </div>
@@ -263,7 +263,7 @@ export default function CollectiblesGuide() {
 
           <h2 className="text-3xl font-bold text-pink-200 mt-12 mb-6">Common Collecting Challenges 🔧</h2>
           
-          <h3 className="text-xl font-semibold text-pruple-200 mt-6 mb-3">Can't find specific figures?</h3>
+          <h3 className="text-xl font-semibold text-pruple-200 mt-6 mb-3">Can&apos;t find specific figures?</h3>
           <p className="mb-4">Join trading groups and set up alerts on resale platforms. Sometimes patience pays off better than overpaying for immediate gratification.</p>
 
           <h3 className="text-xl font-semibold text-pruple-200 mt-6 mb-3">Worried about authenticity?</h3>

@@ -27,7 +27,6 @@ export default function AccountSettings() {
         if (!res.ok) throw new Error("Failed to fetch profile.");
   
         const data = await res.json();
-        console.log("📩 User data from API:", data); // ✅ Debug log
   
         setFormData({
           id: data.id || "", 
@@ -68,8 +67,8 @@ export default function AccountSettings() {
   
       if (!res.ok) throw new Error(`Failed to update profile: ${res.statusText}`);
   
-      const data = await res.json();
-      updateUser(formData); // ✅ Update user in context
+  await res.json();
+  updateUser(formData); // Update user in context
       setMessage("Profile updated successfully!");
     } catch (error) {
       console.error("❌ Fetch error:", error);

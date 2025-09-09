@@ -52,3 +52,45 @@ export interface CartItem {
   quantity: number;
   image: string;
 }
+
+// Shipping info used across admin and checkout views
+export interface ShippingInfo {
+  name?: string | null;
+  phone?: string | null;
+  address_line1?: string | null;
+  address_line2?: string | null;
+  city?: string | null;
+  state?: string | null;
+  country?: string | null;
+  postal_code?: string | null;
+  zip?: string | null;
+  address?: string | null; // fallback single-line address
+  pickup?: {
+    reservation_expires_at?: string | null;
+  } | null;
+  customer?: {
+    name?: string | null;
+    email?: string | null;
+    phone?: string | null;
+    user_id?: string | null;
+  } | null;
+  // admin/payment fields
+  payment_status?: string | null;
+  payment_proof_url?: string | null;
+  [key: string]: unknown;
+}
+
+// A light-weight admin order shape used in admin pages
+export interface AdminOrder {
+  id: string;
+  customerEmail?: string | null;
+  totalAmount?: number;
+  status?: string;
+  trackingCode?: string | null;
+  address?: string | null;
+  city?: string | null;
+  country?: string | null;
+  zip?: string | null;
+  shipping_info?: ShippingInfo | null;
+  phone?: string | null;
+}

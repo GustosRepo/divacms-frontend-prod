@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { useAuth } from "@/context/AuthContext";
 import Link from "next/link";
@@ -32,11 +32,6 @@ export default function BlogPostPage() {
   const postId = params.id as string;
 
   // Fetch individual blog post
-  useEffect(() => {
-    if (postId) {
-      fetchPost();
-    }
-  }, [postId]);
 
   // Update document title for SEO
   useEffect(() => {
@@ -45,7 +40,7 @@ export default function BlogPostPage() {
     }
   }, [post]);
 
-  const fetchPost = async () => {
+  const fetchPost = useCallback(async () => {
     try {
       const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/blog/${postId}`);
       if (response.ok) {
@@ -66,7 +61,7 @@ export default function BlogPostPage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [postId, router]);
 
   const handleUpdatePost = async () => {
     if (!formData.title || !formData.content || !user?.token) return;
@@ -95,6 +90,9 @@ export default function BlogPostPage() {
       alert('Error updating post. Please try again.');
     }
   };
+  useEffect(() => {
+    if (postId) fetchPost();
+  }, [postId, fetchPost]);
 
   const handleDeletePost = async () => {
     if (!user?.token) return;

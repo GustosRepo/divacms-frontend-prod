@@ -1,6 +1,6 @@
+// content page
 import { Metadata } from "next";
 import Link from "next/link";
-import Image from "next/image";
 
 export const metadata: Metadata = {
   title: "Ultimate Kawaii Aesthetic Guide | Y2K Culture & Style | Diva Factory",
@@ -82,7 +82,7 @@ export default function KawaiiAestheticGuide() {
         <div className="prose prose-lg max-w-none">
           <h2 className="text-3xl font-bold text-pink-200 mt-12 mb-6">What is Kawaii? 🎀</h2>
           <p className="leading-relaxed mb-6">
-            Kawaii (かわいい) literally means "cute" in Japanese, but it's so much more than just an adjective. It's a cultural phenomenon that emerged in Japan in the 1970s and has since become a global aesthetic movement. Kawaii celebrates innocence, childlike wonder, and the beauty found in all things small and sweet.
+            Kawaii (かわいい) literally means &quot;cute&quot; in Japanese, but it&apos;s so much more than just an adjective. It&apos;s a cultural phenomenon that emerged in Japan in the 1970s and has since become a global aesthetic movement. Kawaii celebrates innocence, childlike wonder, and the beauty found in all things small and sweet.
           </p>
 
           <div className="bg-gradient-to-r from-purple-900/50 to-pink-900/50 rounded-lg p-6 my-8">
@@ -130,7 +130,7 @@ export default function KawaiiAestheticGuide() {
 
           <h3 className="text-2xl font-semibold text-purple-200 mt-8 mb-4">Yume Kawaii 💫</h3>
           <p className="leading-relaxed mb-4">
-            "Dream kawaii" that adds darker elements to traditional cute aesthetics:
+            &quot;Dream kawaii&quot; that adds darker elements to traditional cute aesthetics:
           </p>
           <ul className="list-disc list-inside space-y-2 mb-6">
             <li>Pastel gothic elements</li>
@@ -141,7 +141,7 @@ export default function KawaiiAestheticGuide() {
 
           <div className="border-l-4 border-pink-200 pl-6 my-8">
             <p className="text-lg italic">
-              "Kawaii isn't just about looking cute – it's about finding joy in the small things and embracing your inner child. It's a form of self-care through aesthetics!" 
+              &quot;Kawaii isn&apos;t just about looking cute – it&apos;s about finding joy in the small things and embracing your inner child. It&apos;s a form of self-care through aesthetics!&quot;
             </p>
             <cite className="text-pink-200 font-semibold">- Kawaii Fashion Expert</cite>
           </div>
@@ -150,7 +150,7 @@ export default function KawaiiAestheticGuide() {
           
           <h3 className="text-2xl font-semibold text-purple-200 mt-8 mb-4">Start Small: Kawaii Accessories 🎀</h3>
           <p className="leading-relaxed mb-4">
-            You don't need a complete wardrobe overhaul to embrace kawaii! Start with these beginner-friendly accessories:
+            You don&apos;t need a complete wardrobe overhaul to embrace kawaii! Start with these beginner-friendly accessories:
           </p>
           <ul className="list-disc list-inside space-y-2 mb-6">
             <li><strong>Kawaii Nails:</strong> Press-on nails with cute characters, pastels, or 3D decorations</li>
@@ -189,7 +189,7 @@ export default function KawaiiAestheticGuide() {
 
           <h3 className="text-2xl font-semibold text-purple-200 mt-8 mb-4">Kawaii Beauty & Self-Care 💅</h3>
           <ul className="list-disc list-inside space-y-2 mb-6">
-            <li>Gradient "doll-like" makeup with pink blush</li>
+            <li>Gradient &quot;doll-like&quot; makeup with pink blush</li>
             <li>Kawaii nail art with 3D decorations</li>
             <li>Cute skincare products and face masks</li>
             <li>Pastel hair colors or colored wigs</li>
@@ -250,7 +250,7 @@ export default function KawaiiAestheticGuide() {
 
           <h2 className="text-3xl font-bold text-pink-200 mt-12 mb-6">Building Your Kawaii Community 👯‍♀️</h2>
           <p className="leading-relaxed mb-6">
-            Kawaii culture is all about spreading joy and positivity! Here's how to connect with fellow kawaii enthusiasts:
+            Kawaii culture is all about spreading joy and positivity! Here&apos;s how to connect with fellow kawaii enthusiasts:
           </p>
           <ul className="list-disc list-inside space-y-2 mb-6">
             <li>Follow kawaii fashion influencers and creators</li>
@@ -262,7 +262,7 @@ export default function KawaiiAestheticGuide() {
 
           <div className="border-l-4 border-pink-400 pl-6 my-8">
             <p className="text-lg italic">
-              "Remember, kawaii is about expressing joy and embracing what makes you happy. There's no wrong way to be kawaii – it's all about finding your own cute!" 
+              &ldquo;Remember, kawaii is about expressing joy and embracing what makes you happy. There&apos;s no wrong way to be kawaii – it&apos;s all about finding your own cute!&rdquo;
             </p>
             <cite className="text-pink-400 font-semibold">- Diva Factory Team</cite>
           </div>

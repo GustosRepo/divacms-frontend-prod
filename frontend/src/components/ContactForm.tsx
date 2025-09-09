@@ -52,9 +52,10 @@ export default function ContactForm() {
 
       setStatus("success");
       setForm(initialState);
-    } catch (err: any) {
+    } catch (err) {
       console.error("Contact form error", err);
-      setError(err.message || "Failed to send message");
+      const msg = err instanceof Error ? err.message : String(err);
+      setError(msg || "Failed to send message");
       setStatus("error");
     }
   };
@@ -123,7 +124,7 @@ export default function ContactForm() {
         <p className="mt-4 text-sm text-red-600 font-medium">{error}</p>
       )}
       {status === "success" && (
-        <p className="mt-4 text-sm text-green-600 font-medium">Message sent! We'll reply soon.</p>
+        <p className="mt-4 text-sm text-green-600 font-medium">Message sent! We&apos;ll reply soon.</p>
       )}
       <div className="mt-8 flex items-center justify-between gap-4 flex-wrap">
         <button

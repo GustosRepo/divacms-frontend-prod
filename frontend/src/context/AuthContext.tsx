@@ -57,7 +57,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     }
 
     setLoading(false);
-  }, []);
+  }, [router]);
 
   // ✅ Login function
   const login = async (email: string, password: string) => {

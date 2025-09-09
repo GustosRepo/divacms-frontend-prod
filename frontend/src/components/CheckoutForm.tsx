@@ -1,5 +1,6 @@
 "use client";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useMemo } from "react";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { CheckoutFormData } from "@/types/checkout";
 import { loadStripe } from "@stripe/stripe-js";
@@ -49,13 +50,8 @@ function getCountryCode(input?: string | null): string | null {
   return COUNTRY_NAME_TO_ISO[key] || null;
 }
 
-export default function CheckoutForm({
-  onSubmit,
-  defaultValues,
-  totalAmount,
-  userPoints,
-  cartItems,
-}: CheckoutFormProps) {
+export default function CheckoutForm(props: CheckoutFormProps) {
+  const { cartItems, defaultValues } = props;
   const { user } = useAuth();
   const router = useRouter();
     const [formData, setFormData] = useState<CheckoutFormData>({
@@ -75,8 +71,12 @@ export default function CheckoutForm({
     });
     const [isLocalPickup, setIsLocalPickup] = useState(false);
 
-  const [selectedPoints, setSelectedPoints] = useState<number>(formData.pointsUsed || 0);
-  const [discount, setDiscount] = useState<number>(0);
+    // Stable memo keys for deps to satisfy react-hooks/exhaustive-deps
+    const cartKey = useMemo(() => JSON.stringify(cartItems || []), [cartItems]);
+    const shippingKey = useMemo(() => JSON.stringify(formData.shippingInfo || {}), [formData.shippingInfo]);
+
+  const [selectedPoints /*, setSelectedPoints*/] = useState<number>(formData.pointsUsed || 0);
+  const [discount /*, setDiscount*/] = useState<number>(0);
   const [loading, setLoading] = useState(false);
   const [proofFile, setProofFile] = useState<File | null>(null);
   const [fileError, setFileError] = useState<string | null>(null);
@@ -99,8 +99,10 @@ export default function CheckoutForm({
       setShippingLoading(false);
       return;
     }
-    const s = formData.shippingInfo;
+    // Use memoized JSON keys so effect deps can be stable
+    const s = shippingKey ? JSON.parse(shippingKey) : null;
     const isoCountry = getCountryCode(s?.country);
+    const items = cartKey ? JSON.parse(cartKey) : [];
     if (!s || !s.postal_code || !isoCountry) return;
     if (rateDebounceRef.current) window.clearTimeout(rateDebounceRef.current);
     rateDebounceRef.current = window.setTimeout(async () => {
@@ -109,8 +111,8 @@ export default function CheckoutForm({
         const shippingForRate = { ...s, country: isoCountry };
         const resp = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/checkout/shippo-rate`, {
           method: "POST",
-          headers: { "Content-Type": "application/json", Authorization: `Bearer ${user?.token}` },
-          body: JSON.stringify({ shippingInfo: shippingForRate, items: cartItems }),
+          headers: { "Content-Type": "application/json", Authorization: `Bearer ${user?.token ?? ''}` },
+          body: JSON.stringify({ shippingInfo: shippingForRate, items }),
         });
         if (!resp.ok) {
           setShippingFee(5);
@@ -119,7 +121,7 @@ export default function CheckoutForm({
         const json = await resp.json();
         const fee = Number(json?.shipping_fee ?? (json?.shipping_fee_cents ? json.shipping_fee_cents / 100 : 5));
         setShippingFee(Number.isFinite(fee) ? fee : 5);
-      } catch (err) {
+      } catch {
         setShippingFee(5);
       } finally {
         setShippingLoading(false);
@@ -128,22 +130,14 @@ export default function CheckoutForm({
     return () => {
       if (rateDebounceRef.current) window.clearTimeout(rateDebounceRef.current);
     };
-  }, [formData.shippingInfo.postal_code, formData.shippingInfo.country, formData.shippingInfo.state, JSON.stringify(cartItems), user?.token, isLocalPickup]);
+  }, [shippingKey, cartKey, user?.token, isLocalPickup]);
 
   // Derive shipping shown in totals: 0 for local pickup or until a rate is fetched
   const shippingDisplayed = isLocalPickup ? 0 : (shippingFee ?? 0);
   const taxDisplayed = isLocalPickup ? Number((totalAfterDiscount * TAX_RATE).toFixed(2)) : 0;
   const totalDisplayed = Number((totalAfterDiscount + taxDisplayed + shippingDisplayed).toFixed(2));
 
-  const handlePointsChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const points = parseInt(e.target.value);
-    let discountPercentage = 0;
-    if (points === 50) discountPercentage = 5;
-    if (points === 100) discountPercentage = 10;
-    setSelectedPoints(points);
-    setDiscount(discountPercentage);
-    setFormData({ ...formData, pointsUsed: points });
-  };
+  // Points selection UI removed for now; state variables remain for future use
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -171,10 +165,10 @@ export default function CheckoutForm({
         const payload = {
           items: cartItems.map((it) => ({ id: it.id, quantity: it.quantity })),
           customer: {
-            user_id: (user as any)?.id,
+            user_id: (user as { id?: string } | null | undefined)?.id || undefined,
             name: s.name,
             phone: s.phone,
-            email: (user as any)?.email || "",
+            email: (user as { email?: string } | null | undefined)?.email || "",
           },
           taxes: Number((totalAfterDiscount * TAX_RATE).toFixed(2)),
           tax_rate: TAX_RATE,
@@ -200,7 +194,7 @@ export default function CheckoutForm({
           fd.append('file', proofFile);
           const up = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/orders/${serverOrderId}/payment-proof`, {
             method: 'POST',
-            headers: user?.token ? { Authorization: `Bearer ${user.token}` } as any : undefined,
+            headers: user?.token ? { Authorization: `Bearer ${user.token}` } : undefined,
             body: fd
           });
           if (!up.ok) {
@@ -271,8 +265,8 @@ export default function CheckoutForm({
               shipping_fee_cents = Number(rateJson.shipping_fee_cents);
             }
           }
-        } catch (err) {
-        } finally {
+  } catch {
+  } finally {
           setShippingLoading(false);
           setShippingFee(shipping_fee);
         }
@@ -365,15 +359,21 @@ export default function CheckoutForm({
           <div className="mt-3 grid grid-cols-3 gap-3 text-center text-xs">
             <div className="bg-white/10 rounded p-2">
               <div className="mb-1">Venmo QR</div>
-              <img src="/qr/venmo.png" alt="Venmo QR" className="mx-auto max-h-20" onError={(e)=>{(e.target as HTMLImageElement).style.display='none';}}/>
+              <div className="mx-auto max-h-20">
+                <Image src="/qr/venmo.png" alt="Venmo QR" width={80} height={80} priority={false} />
+              </div>
             </div>
             <div className="bg-white/10 rounded p-2">
               <div className="mb-1">Zelle QR</div>
-              <img src="/qr/zelle.png" alt="Zelle QR" className="mx-auto max-h-20" onError={(e)=>{(e.target as HTMLImageElement).style.display='none';}}/>
+              <div className="mx-auto max-h-20">
+                <Image src="/qr/zelle.png" alt="Zelle QR" width={80} height={80} priority={false} />
+              </div>
             </div>
             <div className="bg-white/10 rounded p-2">
               <div className="mb-1">Cash App QR</div>
-              <img src="/qr/cashapp.png" alt="Cash App QR" className="mx-auto max-h-20" onError={(e)=>{(e.target as HTMLImageElement).style.display='none';}}/>
+              <div className="mx-auto max-h-20">
+                <Image src="/qr/cashapp.png" alt="Cash App QR" width={80} height={80} priority={false} />
+              </div>
             </div>
           </div>
         </div>

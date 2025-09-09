@@ -1,6 +1,6 @@
+// content page
 import { Metadata } from "next";
 import Link from "next/link";
-import Image from "next/image";
 
 export const metadata: Metadata = {
   title: "Y2K Nail Art Trends 2025 | Diva Factory Blog",
@@ -95,12 +95,12 @@ export default function Y2KNailTrends2025() {
 
           <h2 className="font-shuneva text-3xl font-bold text-accent mt-12 mb-6">4. Butterfly and Flower Motifs 🦋</h2>
           <p className="leading-relaxed mb-6">
-            Delicate butterfly and flower nail art dominated the early 2000s, and they're making a sweet comeback. These feminine designs work beautifully on press-on nails and add that perfect kawaii touch.
+            Delicate butterfly and flower nail art dominated the early 2000s, and they&apos;re making a sweet comeback. These feminine designs work beautifully on press-on nails and add that perfect kawaii touch.
           </p>
 
           <h2 className="font-shuneva text-3xl font-bold text-accent mt-12 mb-6">5. Chrome and Metallic Finishes 🔮</h2>
           <p className="leading-relaxed mb-6">
-            Mirror-like chrome nails were the ultimate status symbol in Y2K culture. Today's versions are more wearable but just as stunning, with rose gold, silver, and oil-slick finishes leading the pack.
+            Mirror-like chrome nails were the ultimate status symbol in Y2K culture. Today&apos;s versions are more wearable but just as stunning, with rose gold, silver, and oil-slick finishes leading the pack.
           </p>
 
           <div className="bg-gradient-to-r from-pink-900/50 to-purple-900/50 rounded-lg p-8 my-12 text-center">
@@ -120,14 +120,14 @@ export default function Y2KNailTrends2025() {
           </p>
           <ul className="list-disc list-inside space-y-2 mb-6">
             <li>Instant gratification – no waiting for polish to dry</li>
-            <li>Professional-quality designs you can't get at home</li>
+            <li>Professional-quality designs you can&apos;t get at home</li>
             <li>Reusable options for sustainable beauty</li>
             <li>Perfect for special events or switching up your style</li>
           </ul>
 
           <div className="border-l-4 border-pink-400 pl-6 my-8">
             <p className="font-shuneva text-lg italic">
-              "Y2K nails aren't just a trend – they're a celebration of optimism, creativity, and fearless self-expression. Embrace the chaos and let your nails tell your story!" 
+              &ldquo;Y2K nails aren&apos;t just a trend – they&apos;re a celebration of optimism, creativity, and fearless self-expression. Embrace the chaos and let your nails tell your story!&rdquo;
             </p>
             <cite className="text-accent font-semibold">- Diva Factory Design Team</cite>
           </div>

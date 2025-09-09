@@ -9,13 +9,12 @@ export default function SuccessPage() {
   const searchParams = useSearchParams();
   const [orderId, setOrderId] = useState<string | null>(null);
   const pickup = useMemo(() => searchParams.get("pickup") === "1", [searchParams]);
-  const expQuery = useMemo(() => searchParams.get("exp"), [searchParams]);
   const localOrder = useMemo(() => {
     try {
       const raw = localStorage.getItem("latestPickupOrder");
       return raw ? JSON.parse(raw) as { orderId:string; expiresAt?: number } : null;
     } catch { return null; }
-  }, [pickup]);
+  }, []);
 
   useEffect(() => {
     const sessionOrderId = searchParams.get("session_id");

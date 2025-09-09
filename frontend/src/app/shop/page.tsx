@@ -228,7 +228,7 @@ export default function Shop() {
                   {((product as ExtendedProduct)._brand) && <p className="mt-2 text-[11px] uppercase tracking-wide text-gray-400 text-center">{(product as ExtendedProduct)._brand}</p>}
                 </Link>
               ) : (
-                <article key={product.id} aria-disabled="true" className="bg-white rounded-lg p-4 shadow-lg opacity-60 pointer-events-none">
+                <article key={product.id} aria-hidden="true" className="bg-white rounded-lg p-4 shadow-lg opacity-60 pointer-events-none">
                   <Image src={product.image ? (product.image.startsWith('http') ? product.image : `${process.env.NEXT_PUBLIC_API_URL}${product.image}`) : '/placeholder.jpg'} alt={product.title} width={500} height={500} className="rounded-lg object-cover" />
                   <h3 className="font-bold mt-2 text-black text-center">{product.title}</h3>
                   <p className="text-gray-500 text-center text-sm line-clamp-2">{product.description}</p>

@@ -12,19 +12,14 @@ export default function Navbar() {
   const { user, logout } = useAuth();
   const cartItemCount = cart.reduce((total, item) => total + item.quantity, 0);
   const [menuOpen, setMenuOpen] = useState(false);
-  const { dark, toggleDark, reducedMotion, setReducedMotion, brand, setBrand } = useThemePrefs();
+  const { dark, toggleDark, reducedMotion, setReducedMotion } = useThemePrefs();
 
   // apply reduced motion preference to document
   useEffect(() => {
     document.documentElement.classList.toggle('reduce-motion', reducedMotion);
   }, [reducedMotion]);
 
-  const brandOptions = [
-    { key: null, label: 'All' },
-    { key: 'nails', label: 'Nails' },
-    { key: 'toys', label: 'Toys' },
-    { key: 'boutique', label: 'Boutique' },
-  ];
+  // brandOptions removed — feature currently disabled
 
   return (
     <nav className="fixed top-0 left-0 w-full backdrop-blur-md bg-white/70 dark:bg-[#141720]/70 text-gray-900 dark:text-gray-100 py-3 px-4 md:px-6 flex justify-between items-center shadow-lg z-50 border-b border-white/40 dark:border-white/10 transition-colors">

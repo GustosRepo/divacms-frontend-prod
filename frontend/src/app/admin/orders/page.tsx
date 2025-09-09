@@ -1,42 +1,11 @@
 "use client";
 import { useEffect, useState } from "react";
+import Image from "next/image";
 import { useAuth } from "@/context/AuthContext";
 import { useRouter } from "next/navigation";
+import type { ShippingInfo, AdminOrder } from '@/types/checkout';
 
-interface Order {
-  id: string;
-  customerEmail: string;
-  totalAmount: number;
-  status: string;
-  trackingCode: string;
-  // Shipping fields
-  address?: string | null;
-  city?: string | null;
-  country?: string | null;
-  zip?: string | null;
-  shipping_info?: {
-    name?: string | null;
-    phone?: string | null;
-    address_line1?: string | null;
-    address_line2?: string | null;
-    city?: string | null;
-    state?: string | null;
-    country?: string | null;
-    postal_code?: string | null;
-    address?: string | null; // some records may store a single-line address
-    pickup?: {
-      reservation_expires_at?: string | null;
-    } | null;
-    customer?: {
-      name?: string | null;
-      email?: string | null;
-      phone?: string | null;
-      user_id?: string | null;
-    } | null;
-  [key: string]: unknown;
-  } | null;
-  phone?: string | null;
-}
+type Order = AdminOrder;
 
 export default function ManageOrders() {
   const { user } = useAuth();
@@ -79,7 +48,7 @@ export default function ManageOrders() {
           throw new Error(errMsg);
         }
         const data = await res.json();
-        setOrders(data.orders);
+    setOrders(data.orders || []);
       } catch (err) {
         setError(err instanceof Error ? err.message : String(err));
         console.error("Error fetching orders:", err);
@@ -164,12 +133,12 @@ export default function ManageOrders() {
       if (!res.ok) throw new Error("Failed to mark as paid");
       setOrders(prev => prev.map(o => (
         o.id === orderId
-          ? { ...o, shipping_info: { ...(o.shipping_info || {}), payment_status: "paid" } as any }
+          ? { ...o, shipping_info: { ...(o.shipping_info || {}), payment_status: "paid" } }
           : o
       )));
       setMessage("✅ Marked as paid");
       setTimeout(() => setMessage(null), 2000);
-    } catch (e) {
+    } catch {
       setMessage("❌ Failed to mark paid");
       setTimeout(() => setMessage(null), 3000);
     }
@@ -188,7 +157,7 @@ export default function ManageOrders() {
       )));
       setMessage("✅ Marked as picked up");
       setTimeout(() => setMessage(null), 2000);
-    } catch (e) {
+    } catch {
       setMessage("❌ Failed to mark picked up");
       setTimeout(() => setMessage(null), 3000);
     }
@@ -208,7 +177,7 @@ export default function ManageOrders() {
       )));
       setMessage("✅ Order canceled");
       setTimeout(() => setMessage(null), 2000);
-    } catch (e) {
+    } catch {
       setMessage("❌ Failed to cancel order");
       setTimeout(() => setMessage(null), 3000);
     }
@@ -237,8 +206,8 @@ export default function ManageOrders() {
       // ✅ Show success message
       setMessage("🗑 Order deleted successfully!");
       setTimeout(() => setMessage(null), 3000);
-    } catch (err) {
-      console.error("❌ Error deleting order:", err);
+    } catch (_err) {
+      console.error("❌ Error deleting order:", _err);
       setMessage("❌ Failed to delete order");
     }
   }
@@ -292,16 +261,16 @@ export default function ManageOrders() {
                 <td className="p-3">{order.customerEmail || "Guest"}</td>
                 <td className="p-3">
                   {(() => {
-                    const s = order.shipping_info || {};
-                    const line1 = (s as any).address_line1 || (s as any).address || order.address || "";
-                    const line2 = (s as any).address_line2 || "";
-                    const city = (s as any).city || order.city || "";
-                    const state = (s as any).state || "";
-                    const zip = (s as any).postal_code || (s as any).zip || order.zip || "";
-                    const country = (s as any).country || order.country || "";
-                    const isPickup = Boolean((s as any).pickup);
-                    const expIso = (s as any)?.pickup?.reservation_expires_at as string | undefined;
-                    const pay = (s as any)?.payment_status as string | undefined;
+                    const s = (order.shipping_info || {}) as ShippingInfo;
+                    const line1 = s.address_line1 || s.address || order.address || "";
+                    const line2 = s.address_line2 || "";
+                    const city = s.city || order.city || "";
+                    const state = s.state || "";
+                    const zip = s.postal_code || s.zip || order.zip || "";
+                    const country = s.country || order.country || "";
+                    const isPickup = Boolean(s.pickup);
+                    const expIso = s?.pickup?.reservation_expires_at as string | undefined;
+                    const pay = s?.payment_status as string | undefined;
                     const unpaid = (pay || "").toLowerCase() !== "paid";
                     const now = Date.now();
                     const expMs = expIso ? Date.parse(expIso) : undefined;
@@ -320,9 +289,9 @@ export default function ManageOrders() {
                           {!expired && soon && (
                             <span className="mt-1 inline-block text-xs px-2 py-0.5 rounded bg-yellow-600/20 text-yellow-300">Expiring soon</span>
                           )}
-                          {((s as any)?.customer?.phone || s?.phone) && (
-                            <div className="text-xs mt-1">☎ {String(((s as any)?.customer?.phone) || s?.phone)}</div>
-                          )}
+                                {((s?.customer?.phone) || s?.phone) && (
+                                  <div className="text-xs mt-1">☎ {String((s?.customer?.phone) || s?.phone)}</div>
+                                )}
                         </div>
                       );
                     }
@@ -369,14 +338,14 @@ export default function ManageOrders() {
                 </td>
                 <td className="p-3">
                   {(() => {
-                    const s = order.shipping_info as any;
+                    const s = order.shipping_info as ShippingInfo | null;
                     const phone = s?.customer?.phone || s?.phone || order.phone;
                     return phone ? String(phone) : <span className="text-gray-400">No phone</span>;
                   })()}
                 </td>
                 <td className="p-3">
                   {(() => {
-                    const pay = (order.shipping_info as any)?.payment_status as string | undefined;
+                    const pay = (order.shipping_info as ShippingInfo | null)?.payment_status as string | undefined;
                     if (!pay) return <span className="text-gray-400">N/A</span>;
                     if (pay.toLowerCase() === "paid") return <span className="px-2 py-0.5 rounded bg-green-600/20 text-green-300 text-xs">paid</span>;
                     if (pay.toLowerCase() === "unpaid") return <span className="px-2 py-0.5 rounded bg-yellow-600/20 text-yellow-300 text-xs">unpaid</span>;
@@ -387,7 +356,7 @@ export default function ManageOrders() {
                   <div className="flex flex-wrap items-center gap-2">
                     {/* View payment proof if uploaded */}
                     {(() => {
-                      const proofUrl = (order.shipping_info as any)?.payment_proof_url as string | undefined;
+                      const proofUrl = (order.shipping_info as ShippingInfo | null)?.payment_proof_url as string | undefined;
                       return proofUrl ? (
                         <button
                           onClick={() => setProofModalUrl(proofUrl)}
@@ -399,7 +368,7 @@ export default function ManageOrders() {
                     })()}
                     {/* Show Mark Paid whenever payment_status !== paid */}
                     {(() => {
-                      const pay = (order.shipping_info as any)?.payment_status as string | undefined;
+                      const pay = (order.shipping_info as ShippingInfo | null)?.payment_status as string | undefined;
                       const isPaid = (pay || "").toLowerCase() === "paid";
                       return !isPaid ? (
                         <button onClick={() => handleMarkPaid(order.id)} className="bg-green-600 hover:bg-green-700 px-3 py-1 rounded text-sm">Mark Paid</button>
@@ -440,7 +409,9 @@ export default function ManageOrders() {
               ✖
             </button>
             <div className="bg-gray-900 rounded-lg p-4">
-              <img src={proofModalUrl} alt="Payment proof" className="w-full h-auto rounded" />
+              <div className="w-full h-auto rounded overflow-hidden">
+                <Image src={proofModalUrl || ''} alt="Payment proof" width={1200} height={800} style={{ width: '100%', height: 'auto' }} />
+              </div>
             </div>
           </div>
         </div>

@@ -1,6 +1,6 @@
+/* eslint-disable react/no-unescaped-entities */
 import { Metadata } from "next";
 import Link from "next/link";
-import Image from "next/image";
 
 export const metadata: Metadata = {
   title: "Press-On Nails Guide | Complete Beginner Tutorial | Diva Factory",
@@ -125,7 +125,7 @@ export default function NailGuidePage() {
               💅
             </span>
           </h1>
-          <p className="text-xl leading-relaxed max-w-3xl mx-auto">
+            <p className="text-xl leading-relaxed max-w-3xl mx-auto">
             Everything you need to know about press-on nails! From your first application to pro-level tips, this comprehensive guide will help you achieve salon-quality results at home.
           </p>
         </header>

@@ -184,7 +184,7 @@ export default function BlogPage() {
               id="blog-desc"
               className="font-shuneva max-w-2xl mx-auto text-2xl leading-relaxed font-bold mt-4 "
             >
-              Collectible guides, kawaii culture, and Y2K style tips — curated for Vegas's kawaii community and beyond.
+              Collectible guides, kawaii culture, and Y2K style tips — curated for Vegas&apos;s kawaii community and beyond.
             </p>
           </div>
           
@@ -274,7 +274,14 @@ export default function BlogPage() {
               {editingPost ? "Edit Post" : "Add New Post"}
             </h2>
 
-            <form className="space-y-4" onSubmit={(e) => { e.preventDefault(); editingPost ? handleUpdatePost() : handleAddPost(); }}>
+            <form
+              className="space-y-4"
+              onSubmit={(e) => {
+                e.preventDefault();
+                if (editingPost) handleUpdatePost();
+                else handleAddPost();
+              }}
+            >
               <label htmlFor="post-title" className="sr-only">Post title</label>
               <input
                 id="post-title"
@@ -333,7 +340,7 @@ export default function BlogPage() {
               <div className="col-span-full text-center py-12">
                 <p className="font-shuneva text-xl text-gray-500">No blog posts yet!</p>
                 {isAdmin && (
-                  <p className="font-shuneva text-gray-400 mt-2">Click "Edit Blog" to add your first post.</p>
+                  <p className="font-shuneva text-gray-400 mt-2">Click &quot;Edit Blog&quot; to add your first post.</p>
                 )}
               </div>
             ) : (

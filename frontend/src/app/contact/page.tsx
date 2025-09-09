@@ -70,8 +70,8 @@ export default function ContactPage() {
             </span>
           </h1>
           <p className="text-xl leading-relaxed max-w-3xl mx-auto">
-            We'd love to hear from you! Whether you need help with your order, want to schedule a pickup,
-            or have a custom design idea — we're here to help make your nail dreams come true!
+            We&apos;d love to hear from you! Whether you need help with your order, want to schedule a pickup,
+            or have a custom design idea — we&apos;re here to help make your nail dreams come true!
           </p>
         </header>
 
@@ -153,9 +153,9 @@ export default function ContactPage() {
               <div>
                 <h3 className="text-lg font-bold text-white mb-2">How It Works:</h3>
                 <ol className="space-y-2 ml-4 list-decimal">
-                  <li>Select "Local Pickup" at checkout</li>
+                  <li>Select &quot;Local Pickup&quot; at checkout</li>
                   <li>Complete your order (no shipping fee!)</li>
-                  <li>We'll text you when ready (usually 2 hours)</li>
+                  <li>We&apos;ll text you when ready (usually 2 hours)</li>
                   <li>Pick up from our Las Vegas location</li>
                 </ol>
               </div>
@@ -209,7 +209,7 @@ export default function ContactPage() {
           <div className="bg-white/10 rounded-lg p-6 max-w-md mx-auto">
             <h3 className="text-lg font-bold text-heading mb-3">Leave a Review!</h3>
             <p className="mb-4 text-sm">
-              Love your nails? We'd love to hear about it! Reviews help other nail lovers discover us.
+              Love your nails? We&apos;d love to hear about it! Reviews help other nail lovers discover us.
             </p>
             <button className="bg-gradient-to-r from-pink-500 to-purple-500 text-white font-bold py-2 px-6 rounded-full hover:shadow-lg transition-all">
               Write Review

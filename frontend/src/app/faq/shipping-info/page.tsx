@@ -178,9 +178,9 @@ export default function ShippingInfoPage() {
 
       {/* Help card */}
       <section className="bg-gradient-to-r from-pink-600/20 to-purple-600/20 rounded-xl p-8 text-center mt-16">
-        <h2 className="text-3xl font-bold text-heading mb-4">Still Have Questions? 💭</h2>
+          <h2 className="text-3xl font-bold text-heading mb-4">Still Have Questions? 💭</h2>
         <p className="mb-6 max-w-2xl mx-auto">
-          Can't find what you're looking for? We typically respond within 24 hours.
+          Can&apos;t find what you&apos;re looking for? We typically respond within 24 hours.
         </p>
         <div className="flex flex-wrap justify-center gap-4">
           <a 
