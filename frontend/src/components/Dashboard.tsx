@@ -17,16 +17,8 @@ export default function Dashboard() {
 
     const fetchUserPoints = async () => {
       try {
-        // Use user.userId if available, otherwise fallback to user.id
         const userId = user.userId || user.id;
-        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/users/${userId}`, {
-          headers: { 'Content-Type': 'application/json' },
-          credentials: 'include',
-        });
-
-        if (!res.ok) throw new Error("Failed to fetch user data.");
-        const data = await res.json();
-        // Support both { points } and { user: { points } }
+        const data = await (await fetch(`/api/proxy/users/${userId}`, { credentials: 'include' })).json();
         setPoints(data.points ?? data.user?.points ?? null);
       } catch (err) {
         console.error("❌ Error fetching user points:", err);

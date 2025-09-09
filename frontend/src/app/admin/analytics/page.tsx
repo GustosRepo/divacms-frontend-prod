@@ -22,10 +22,10 @@ export default function AdminAnalytics() {
   useEffect(() => {
     const fetchAnalytics = async () => {
       try {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/analytics`); // ✅ Ensure correct endpoint
-        if (!res.ok) throw new Error("Failed to fetch analytics");
-        const data = await res.json();
-        setAnalytics(data);
+  const res = await fetch(`/api/proxy/analytics`, { credentials: 'include' }); // ✅ Ensure correct endpoint
+  if (!res.ok) throw new Error("Failed to fetch analytics");
+  const data = await res.json();
+  setAnalytics(data);
       } catch (err) {
         setError((err as Error).message);
       } finally {

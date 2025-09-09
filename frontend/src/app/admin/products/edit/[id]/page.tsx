@@ -2,6 +2,7 @@
 import { useState, useEffect } from "react";
 import { useAuth } from "@/context/AuthContext";
 import { useRouter, useParams } from "next/navigation";
+import { safeFetch } from "@/utils/api";
 
 export default function EditProduct() {
   const { user } = useAuth();
@@ -29,9 +30,7 @@ export default function EditProduct() {
     }
     const fetchProduct = async () => {
       try {
-  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/products/${id}`, { credentials: 'include' });
-        if (!res.ok) throw new Error("Failed to fetch product.");
-        const data = await res.json();
+        const data = await safeFetch(`/products/${id}`);
         setProductData({
           title: data.title,
           description: data.description || "",
@@ -55,9 +54,7 @@ export default function EditProduct() {
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/categories`);
-        if (!res.ok) throw new Error("Failed to fetch categories.");
-        const data = await res.json();
+        const data = await safeFetch('/categories');
         setCategories(data);
       } catch (error) {
         console.error("Error fetching categories:", error);
@@ -115,16 +112,10 @@ export default function EditProduct() {
     if (productData.image) formData.append("image", productData.image);
     formData.append("bestSeller", String(productData.bestSeller));
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/products/${id}`, {
+      await safeFetch(`/products/${id}`, {
         method: "PUT",
-        credentials: 'include',
         body: formData,
       });
-      if (!res.ok) {
-        const errorData = await res.json();
-        console.error("❌ Server Error:", errorData);
-        throw new Error("Failed to update product");
-      }
       alert("✅ Product updated successfully!");
       router.push("/admin/products");
     } catch (error) {

@@ -1,5 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
+import { safeFetch } from "@/utils/api";
 import { useParams } from "next/navigation";
 import { useCart } from "../../context/CartContext";
 import Image from "next/image";
@@ -24,7 +25,7 @@ export default function ProductPage() {
   useEffect(() => {
     if (!id) return;
 
-    fetch(`${process.env.NEXT_PUBLIC_API_URL}/products/${id}`)
+    safeFetch(`/products/${id}`)
       .then(async (res) => {
         if (!res.ok) throw new Error(`HTTP error! Status: ${res.status}`);
         return res.json();

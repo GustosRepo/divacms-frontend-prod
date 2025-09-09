@@ -7,12 +7,15 @@ export default function TrackOrder() {
   const [order, setOrder] = useState<{ orderId: string; status: string; trackingCode: string } | null>(null);
 
   const trackOrder = async () => {
-    const res = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/orders/track?orderId=${orderId}&email=${email}`
-    );
-    if (!res.ok) return alert("Order not found.");
-    
-    setOrder(await res.json());
+    try {
+      const q = new URLSearchParams({ orderId, email }).toString();
+      const res = await fetch(`/api/proxy/orders/track?${q}`, { credentials: 'include' });
+      if (!res.ok) return alert("Order not found.");
+      setOrder(await res.json());
+    } catch (err) {
+      console.error("Track order failed:", err);
+      alert("Order not found.");
+    }
   };
 
   return (

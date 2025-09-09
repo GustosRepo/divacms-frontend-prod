@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import { useAuth } from "@/context/AuthContext";
+import { safeFetch } from "@/utils/api";
 import { useRouter } from "next/navigation";
 
 interface User {
@@ -22,10 +23,7 @@ export default function AdminUsersPage() {
 
     const fetchUsers = async () => {
       try {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/admin/users`, {
-          headers: { 'Content-Type': 'application/json' },
-          credentials: 'include',
-        });
+  const res = await safeFetch(`/admin/users`);
 
         if (!res.ok) throw new Error("Failed to fetch users");
 
@@ -45,12 +43,7 @@ export default function AdminUsersPage() {
   if (!user) return;
   
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/admin/users/${userId}`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        credentials: 'include',
-        body: JSON.stringify({ role: newRole }),
-      });
+  const res = await safeFetch(`/admin/users/${userId}`, { method: "PUT", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ role: newRole }) });
   
       const responseData = await res.json(); // ✅ Read response
   
@@ -82,11 +75,7 @@ export default function AdminUsersPage() {
     if (!confirm("Are you sure you want to delete this user?")) return;
 
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/admin/users/${userId}`, {
-        method: "DELETE",
-  headers: { 'Content-Type': 'application/json' },
-  credentials: 'include',
-      });
+  const res = await safeFetch(`/admin/users/${userId}`, { method: "DELETE", headers: { 'Content-Type': 'application/json' } });
 
       if (!res.ok) throw new Error("Failed to delete user");
 

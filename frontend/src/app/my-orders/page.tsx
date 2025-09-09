@@ -2,6 +2,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "../../context/AuthContext";
+import { safeFetch } from "@/utils/api";
 import Link from "next/link";
 
 type Order = {
@@ -27,10 +28,7 @@ export default function OrderHistoryPage() {
 
     (async () => {
       try {
-        const res = await fetch(
-          `${process.env.NEXT_PUBLIC_API_URL}/api/orders/my-orders`,
-          { headers: { Authorization: `Bearer ${user?.token || ""}` } }
-        );
+        const res = await safeFetch(`/api/orders/my-orders`);
         if (!res.ok) throw new Error("Failed to load orders");
         const data = (await res.json()) as Order[];
         setOrders(data ?? []);
@@ -44,13 +42,7 @@ export default function OrderHistoryPage() {
 
   const cancelOrder = async (orderId: string) => {
     try {
-      const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/api/orders/${orderId}/cancel`,
-        {
-          method: "PUT",
-          headers: { Authorization: `Bearer ${user?.token || ""}` },
-        }
-      );
+  const res = await safeFetch(`/api/orders/${orderId}/cancel`, { method: "PUT" });
       if (!res.ok) throw new Error("Failed to cancel order");
 
       setOrders((prev) =>

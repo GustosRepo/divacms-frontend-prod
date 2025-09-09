@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useState } from 'react';
 import { useAuth } from '@/context/AuthContext';
+import { safeFetch } from '@/utils/api';
 
 interface Category {
   id: string;
@@ -22,7 +23,7 @@ export default function AdminCategoriesPage() {
   const load = async () => {
     setLoading(true);
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/categories`);
+  const res = await safeFetch(`/categories`);
       if (!res.ok) throw new Error('Failed to load categories');
       const data = await res.json();
       setCategories(data);
@@ -43,8 +44,8 @@ export default function AdminCategoriesPage() {
     try {
       const payload = { name: form.name, slug: form.slug, brandSegment: form.brandSegment, description: form.description };
       const method = form.id ? 'PUT' : 'POST';
-      const url = form.id ? `${process.env.NEXT_PUBLIC_API_URL}/categories/${form.id}` : `${process.env.NEXT_PUBLIC_API_URL}/categories`;
-  const res = await fetch(url, { method, headers: { 'Content-Type': 'application/json' }, credentials: 'include', body: JSON.stringify(payload) });
+    const url = form.id ? `/categories/${form.id}` : `/categories`;
+  const res = await safeFetch(url, { method, headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
       if (!res.ok) throw new Error('Save failed');
       await load();
       resetForm();
@@ -59,7 +60,7 @@ export default function AdminCategoriesPage() {
     if (!confirm('Delete category?')) return;
     if (!user) { alert('Auth required'); return; }
     try {
-  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/categories/${id}`, { method: 'DELETE', credentials: 'include' });
+  const res = await safeFetch(`/categories/${id}`, { method: 'DELETE' });
       if (!res.ok) throw new Error('Delete failed');
       await load();
   } catch (err) { const e = err as Error | undefined; alert(e?.message ?? String(err)); }

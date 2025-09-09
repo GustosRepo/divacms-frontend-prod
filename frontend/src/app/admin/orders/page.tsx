@@ -4,6 +4,8 @@ import Image from "next/image";
 import { useAuth } from "@/context/AuthContext";
 import { useRouter } from "next/navigation";
 import type { ShippingInfo, AdminOrder } from '@/types/checkout';
+import { safeFetch } from "@/utils/api";
+
 
 type Order = AdminOrder;
 
@@ -18,6 +20,7 @@ export default function ManageOrders() {
   const [proofModalUrl, setProofModalUrl] = useState<string | null>(null);
 
   // Close modal on Escape
+
   useEffect(() => {
     if (!proofModalUrl) return;
     const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') setProofModalUrl(null); };
@@ -33,14 +36,9 @@ export default function ManageOrders() {
 
     const fetchOrders = async () => {
       try {
-        const url = new URL(`${process.env.NEXT_PUBLIC_API_URL}/orders/admin/orders`);
+        const url = new URL(`/orders/admin/orders`, window.location.origin);
         if (filterStatus) url.searchParams.set("status", filterStatus);
-          const res = await fetch(url.toString(), { 
-            credentials: 'include',
-            headers: {
-              "Content-Type": "application/json",
-            },
-        });
+          const res = await safeFetch(url.pathname + url.search);
 
         if (!res.ok) {
           let errMsg = `Failed to fetch orders. Status: ${res.status}`;
@@ -87,16 +85,14 @@ export default function ManageOrders() {
 
     try {
       const isCancel = newStatus === "Canceled";
-      const endpoint = isCancel
-        ? `${process.env.NEXT_PUBLIC_API_URL}/orders/${orderId}/cancel`
-        : `${process.env.NEXT_PUBLIC_API_URL}/orders/admin/orders/${orderId}`;
+      const endpoint = isCancel ? `/orders/${orderId}/cancel` : `/orders/admin/orders/${orderId}`;
 
-      const res = await fetch(endpoint, {
+      const res = await fetch(`/api/proxy${endpoint}`, {
         method: isCancel ? "PATCH" : "PUT",
         headers: {
-          Authorization: `Bearer ${user?.token}`,
           "Content-Type": "application/json",
         },
+        credentials: 'include',
         body: JSON.stringify({ status: newStatus, trackingCode }),
       });
 
@@ -129,10 +125,7 @@ export default function ManageOrders() {
   // 🔹 Admin action: Mark Paid (for local pickup)
   async function handleMarkPaid(orderId: string) {
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/orders/${orderId}/mark-paid`, {
-        method: "PATCH",
-        headers: { Authorization: `Bearer ${user?.token}` },
-      });
+  const res = await safeFetch(`/orders/${orderId}/mark-paid`, { method: "PATCH" });
       if (!res.ok) throw new Error("Failed to mark as paid");
       setOrders(prev => prev.map(o => (
         o.id === orderId
@@ -150,10 +143,7 @@ export default function ManageOrders() {
   // 🔹 Admin action: Mark Picked Up
   async function handleMarkPickedUp(orderId: string) {
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/orders/${orderId}/mark-picked-up`, {
-        method: "PATCH",
-        headers: { Authorization: `Bearer ${user?.token}` },
-      });
+  const res = await safeFetch(`/orders/${orderId}/mark-picked-up`, { method: "PATCH" });
       if (!res.ok) throw new Error("Failed to mark picked up");
       setOrders(prev => prev.map(o => (
         o.id === orderId ? { ...o, status: "picked_up" } : o
@@ -170,10 +160,7 @@ export default function ManageOrders() {
   async function handleCancel(orderId: string) {
     if (!confirm("Cancel this order? This will restock items.")) return;
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/orders/${orderId}/cancel`, {
-        method: "PATCH",
-        headers: { Authorization: `Bearer ${user?.token}` },
-      });
+  const res = await safeFetch(`/orders/${orderId}/cancel`, { method: "PATCH" });
       if (!res.ok) throw new Error("Failed to cancel order");
       setOrders(prev => prev.map(o => (
         o.id === orderId ? { ...o, status: "canceled" } : o
@@ -191,13 +178,7 @@ export default function ManageOrders() {
     if (!confirm("Are you sure you want to delete this order?")) return;
 
     try {
-      const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/orders/admin/orders/${orderId}`,
-        {
-          method: "DELETE",
-          headers: { Authorization: `Bearer ${user?.token}` },
-        }
-      );
+    const res = await safeFetch(`/orders/admin/orders/${orderId}`, { method: "DELETE" });
 
       if (!res.ok) throw new Error("Failed to delete order.");
 

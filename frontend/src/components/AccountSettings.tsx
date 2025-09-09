@@ -1,6 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import { useAuth } from "@/context/AuthContext";
+import { safeFetch } from "@/utils/api";
 
 export default function AccountSettings() {
   const { user, logout, updateUser } = useAuth(); // ✅ Now updateUser is available
@@ -20,10 +21,7 @@ export default function AccountSettings() {
   
     const fetchProfile = async () => {
       try {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/users/${user.id}`, {
-          headers: { "Content-Type": "application/json" },
-          credentials: 'include',
-        });
+  const res = await safeFetch(`/users/${user.id}`);
   
         if (!res.ok) throw new Error("Failed to fetch profile.");
   
@@ -57,13 +55,10 @@ export default function AccountSettings() {
     console.log("📤 Sending profile update:", formData); // ✅ Log request data
   
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/users/update`, {
+      const res = await safeFetch(`/users/update`, {
         method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: "",
-        },
-        body: JSON.stringify(formData), // ✅ Ensure city, zip, and country are sent
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
       });
   
       if (!res.ok) throw new Error(`Failed to update profile: ${res.statusText}`);

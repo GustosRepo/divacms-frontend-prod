@@ -42,20 +42,14 @@ export default function SuccessPage() {
 
       const finalizePoints = async () => {
         try {
-          const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/checkout/finalize-points`, {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
+          // use same-origin proxy to attach token if needed
+          const result = await (await fetch(`/api/proxy/checkout/finalize-points`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            credentials: 'include',
             body: JSON.stringify({ sessionId: sessionOrderId }),
-          });
-
-          const result = await response.json();
-          if (response.ok) {
-            console.log("🟢 Points finalized:", result);
-          } else {
-            console.error("⚠️ Failed to finalize points:", result.message);
-          }
+          })).json();
+          console.log("🟢 Points finalized:", result);
         } catch (err) {
           console.error("❌ Error finalizing points:", err);
         }

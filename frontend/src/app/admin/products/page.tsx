@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import { useAuth } from "@/context/AuthContext";
+import { safeFetch } from "@/utils/api";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 
@@ -35,13 +36,8 @@ export default function ManageProducts() {
       try {
         const qs = new URLSearchParams();
         if (brandFilter) qs.append("brandSegment", brandFilter);
-        const url = `${process.env.NEXT_PUBLIC_API_URL}/admin/products${
-          qs.toString() ? `?${qs.toString()}` : ""
-        }`;
-        const res = await fetch(url, {
-          headers: { 'Content-Type': 'application/json' },
-          credentials: 'include',
-        });
+  const url = `/admin/products${qs.toString() ? `?${qs.toString()}` : ""}`;
+  const res = await safeFetch(url, { method: 'GET' });
         if (!res.ok) throw new Error("Failed to fetch products.");
         const data = await res.json();
         let list: Product[] = data.products || [];
@@ -70,13 +66,7 @@ export default function ManageProducts() {
   async function handleDelete(id: string): Promise<void> {
     if (!confirm("Are you sure you want to delete this product?")) return;
     try {
-      const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/admin/products/${id}`,
-        {
-          method: "DELETE",
-          headers: { Authorization: `Bearer ${user?.token}` },
-        }
-      );
+  const res = await safeFetch(`/admin/products/${id}`, { method: "DELETE" });
       if (!res.ok) throw new Error("Failed to delete product.");
       setProducts((prev) => prev.filter((p) => p.id !== id));
     } catch (err) {

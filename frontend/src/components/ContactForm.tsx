@@ -15,7 +15,6 @@ export default function ContactForm() {
   const [status, setStatus] = useState<"idle" | "submitting" | "success" | "error">("idle");
   const [error, setError] = useState<string>("");
 
-  const backendUrl = process.env.NEXT_PUBLIC_API_URL || ""; // should point to backend base
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
@@ -42,7 +41,7 @@ export default function ContactForm() {
         replyTo: form.email,
       };
 
-      const res = await fetch(`${backendUrl.replace(/\/$/, '')}/email/send`, {
+      const res = await fetch(`/api/proxy/email/send`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),

@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import { safeFetch } from "@/utils/api";
 import { toast } from "react-hot-toast";
 import { useAuth } from "@/context/AuthContext";
 import CheckoutForm from "@/components/CheckoutForm";
@@ -22,10 +23,7 @@ export default function CheckoutPage() {
 
     const fetchUserData = async () => {
       try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/users/${user.id}`, {
-          headers: { 'Content-Type': 'application/json' },
-          credentials: 'include',
-        });
+  const response = await safeFetch(`/users/${user.id}`);
 
         if (!response.ok) throw new Error("Failed to fetch user profile.");
 
@@ -81,10 +79,9 @@ export default function CheckoutPage() {
   const handleOrderSubmit = async (data: CheckoutFormData, pointsUsed: number) => {
 
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/checkout/create-checkout-session`, {
+      const res = await safeFetch(`/checkout/create-checkout-session`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        credentials: 'include',
         body: JSON.stringify({ items: cartItems, pointsUsed, shippingInfo: data, metadata: { userId: user.id, email: user.email } }),
       });
 

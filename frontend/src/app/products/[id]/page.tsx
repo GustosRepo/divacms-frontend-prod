@@ -29,14 +29,16 @@ export default function ProductPage() {
   useEffect(() => {
     if (!id) return;
 
-    fetch(`${process.env.NEXT_PUBLIC_API_URL}/products/${id}`)
-      .then(async (res) => {
-        if (!res.ok) throw new Error(`HTTP error! Status: ${res.status}`);
-        return res.json();
-      })
-      .then((data) => setProduct(data))
-      .catch((error) => setError(error.message))
-      .finally(() => setLoading(false));
+    (async () => {
+      try {
+        const data = await (await fetch(`/api/proxy/products/${id}`, { credentials: 'include' })).json();
+        setProduct(data);
+      } catch (err) {
+        setError(err instanceof Error ? err.message : String(err));
+      } finally {
+        setLoading(false);
+      }
+    })();
   }, [id]);
 
   if (loading) return <p className="text-center mt-6">Loading product...</p>;

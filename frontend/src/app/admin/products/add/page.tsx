@@ -2,6 +2,7 @@
 import { useState, useEffect } from "react";
 import { useAuth } from "@/context/AuthContext";
 import { useRouter } from "next/navigation";
+import { safeFetch } from "@/utils/api";
 
 export default function AddProduct() {
   const { user } = useAuth();
@@ -42,9 +43,7 @@ export default function AddProduct() {
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/categories`);
-        if (!res.ok) throw new Error("Failed to fetch categories.");
-        const data = await res.json();
+        const data = await safeFetch('/categories');
         setCategories(data);
       } catch (error) {
         console.error("Error fetching categories:", error);
@@ -108,16 +107,10 @@ export default function AddProduct() {
     formData.append("heightIn", productData.heightIn ?? "");
 
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/products`, {
-        method: "POST",
-        credentials: 'include',
+      await safeFetch('/products', {
+        method: 'POST',
         body: formData,
       });
-      if (!res.ok) {
-        const errorData = await res.json();
-        console.error("❌ Server Error:", errorData);
-        throw new Error("Failed to add product");
-      }
       alert("🎉 Product added successfully!");
       router.push("/admin/products");
     } catch (error) {

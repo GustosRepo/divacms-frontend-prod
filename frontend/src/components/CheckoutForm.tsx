@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { CheckoutFormData } from "@/types/checkout";
 import { loadStripe } from "@stripe/stripe-js";
 import { useAuth } from "@/context/AuthContext";
+import { safeFetch } from "@/utils/api";
 
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!);
 
@@ -109,9 +110,9 @@ export default function CheckoutForm(props: CheckoutFormProps) {
       setShippingLoading(true);
       try {
         const shippingForRate = { ...s, country: isoCountry };
-        const resp = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/checkout/shippo-rate`, {
+        const resp = await safeFetch(`/checkout/shippo-rate`, {
           method: "POST",
-          headers: { "Content-Type": "application/json", Authorization: `Bearer ${user?.token ?? ''}` },
+          headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ shippingInfo: shippingForRate, items }),
         });
         if (!resp.ok) {
@@ -175,9 +176,9 @@ export default function CheckoutForm(props: CheckoutFormProps) {
           notes: undefined as unknown as string | undefined,
         };
         try {
-          const resp = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/orders/pickup`, {
+          const resp = await safeFetch(`/orders/pickup`, {
             method: "POST",
-            headers: { "Content-Type": "application/json", Authorization: `Bearer ${user?.token}` },
+            headers: { "Content-Type": "application/json" },
             body: JSON.stringify(payload),
           });
           if (!resp.ok) {
@@ -192,13 +193,10 @@ export default function CheckoutForm(props: CheckoutFormProps) {
           // Upload payment proof
           const fd = new FormData();
           fd.append('file', proofFile);
-          const up = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/orders/${serverOrderId}/payment-proof`, {
+          const up = await safeFetch(`/orders/${serverOrderId}/payment-proof`, {
             method: 'POST',
-            headers: {
-              "Content-Type": "application/json",
-            },
-            credentials: 'include',
-            body: fd
+            // when sending FormData, do NOT set Content-Type (browser sets multipart/form-data)
+            body: fd,
           });
           if (!up.ok) {
             let m = 'Failed to upload payment proof';
@@ -253,9 +251,9 @@ export default function CheckoutForm(props: CheckoutFormProps) {
       } else {
         setShippingLoading(true);
         try {
-          const rateResp = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/checkout/shippo-rate`, {
+          const rateResp = await safeFetch(`/checkout/shippo-rate`, {
             method: "POST",
-            headers: { "Content-Type": "application/json", Authorization: `Bearer ${user?.token}` },
+            headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ shippingInfo, items: cartItems }),
           });
           if (rateResp.ok) {
@@ -302,17 +300,11 @@ export default function CheckoutForm(props: CheckoutFormProps) {
       console.log("💰 Total (discounted):", totalDisplayed);
       console.log("📦 shippingInfo:", shippingInfo);
 
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/checkout/create-checkout-session`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${user?.token}`,
-          },
-          body: JSON.stringify(requestBody),
-        }
-      );
+      const response = await safeFetch(`/checkout/create-checkout-session`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(requestBody),
+      });
 
       if (!response.ok) {
         let msg = "Failed to create Stripe session.";

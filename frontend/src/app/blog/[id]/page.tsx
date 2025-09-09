@@ -1,6 +1,7 @@
 "use client";
 import { useState, useEffect, useCallback } from "react";
 import { useParams, useRouter } from "next/navigation";
+import { safeFetch } from "@/utils/api";
 import { useAuth } from "@/context/AuthContext";
 import Link from "next/link";
 
@@ -42,7 +43,7 @@ export default function BlogPostPage() {
 
   const fetchPost = useCallback(async () => {
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/blog/${postId}`);
+  const response = await safeFetch(`/api/blog/${postId}`);
       if (response.ok) {
         const data = await response.json();
         setPost(data);
@@ -67,13 +68,11 @@ export default function BlogPostPage() {
   if (!formData.title || !formData.content || !user) return;
     
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/blog/${postId}`, {
+      const response = await safeFetch(`/api/blog/${postId}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
-        credentials: 'include',
         body: JSON.stringify(formData)
       });
-
       if (response.ok) {
         const updatedPost = await response.json();
         setPost(updatedPost);
@@ -98,10 +97,7 @@ export default function BlogPostPage() {
     if (!confirm('Are you sure you want to delete this post? This action cannot be undone.')) return;
     
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/blog/${postId}`, {
-        method: 'DELETE',
-        credentials: 'include',
-      });
+  const response = await safeFetch(`/api/blog/${postId}`, { method: 'DELETE' });
 
       if (response.ok) {
         router.push('/blog');

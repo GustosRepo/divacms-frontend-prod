@@ -1,6 +1,7 @@
 "use client";
 import { useState, useEffect, useMemo, useRef } from "react";
 import Link from "next/link";
+import { safeFetch } from "@/utils/api";
 import Image from "next/image";
 import { useSearchParams } from "next/navigation";
 
@@ -75,7 +76,7 @@ export default function Shop() {
     const params = new URLSearchParams();
     if (activeBrand) params.set('brand_segment', activeBrand);
     if (activeCategory) params.set('category_slug', activeCategory);
-    fetch(`${process.env.NEXT_PUBLIC_API_URL}/products${params.toString() ? `?${params.toString()}` : ''}`)
+    safeFetch(`/products${params.toString() ? `?${params.toString()}` : ''}`)
       .then(async (res) => { if (!res.ok) throw new Error(`HTTP error ${res.status}`); return res.json(); })
       .then(data => { if (cancelled) return; if (data && Array.isArray(data.products)) setProducts(data.products); else throw new Error("Invalid response shape"); })
       .catch(err => { if (!cancelled) setError(err.message); })
@@ -86,7 +87,7 @@ export default function Shop() {
   useEffect(() => {
     if (!activeBrand) { setBrandCategories([]); return; }
     let cancelled = false;
-    fetch(`${process.env.NEXT_PUBLIC_API_URL}/categories?brand_segment=${activeBrand}`)
+    safeFetch(`/categories?brand_segment=${activeBrand}`)
       .then(r=>r.json())
       .then(data=>{ if(!cancelled && Array.isArray(data)) setBrandCategories(data); })
       .catch(()=>{});

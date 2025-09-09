@@ -21,12 +21,9 @@ export default function BestSellers({ embedded = false, limit = 1 }: BestSellers
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    fetch(`${process.env.NEXT_PUBLIC_API_URL}/products/best-sellers`)
-      .then(async (res) => {
-        if (!res.ok) throw new Error(`HTTP error! Status: ${res.status}`);
-        return res.json();
-      })
-      .then((data) => {
+    (async () => {
+      try {
+        const data = await (await fetch(`/api/proxy/products/best-sellers`, { credentials: 'include' })).json();
         // Accept both { bestSellers: [...] } and direct array response
         if (Array.isArray(data)) {
           setBestSellers(data.slice(0, limit));
@@ -35,9 +32,12 @@ export default function BestSellers({ embedded = false, limit = 1 }: BestSellers
         } else {
           setError("No best-seller data found");
         }
-      })
-      .catch((error) => setError(error.message))
-      .finally(() => setLoading(false));
+      } catch (err: unknown) {
+        setError(err instanceof Error ? err.message : String(err));
+      } finally {
+        setLoading(false);
+      }
+    })();
   }, [limit]);
 
   const content = (

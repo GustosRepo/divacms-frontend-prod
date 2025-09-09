@@ -1,6 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import ProductCard from "./ProductCard";
+import { safeFetch } from "@/utils/api";
 import Link from "next/link";
 
 interface Product {
@@ -22,11 +23,10 @@ export default function ProductList({ embedded = false, limit = 3 }: ProductList
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    fetch(`${process.env.NEXT_PUBLIC_API_URL}/products`)
-      .then(async (res) => {
-        if (!res.ok) throw new Error(`HTTP error! Status: ${res.status}`);
-        return res.json();
-      })
+    safeFetch(`/products`).then(async (res) => {
+      if (!res.ok) throw new Error(`HTTP error! Status: ${res.status}`);
+      return res.json();
+    })
       .then((data) => {
         if (Array.isArray(data.products)) {
           setProducts(data.products.slice(0, limit));

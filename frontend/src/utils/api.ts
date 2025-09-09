@@ -23,6 +23,8 @@ async function safeFetch(path: string, init: RequestInit = {}) {
   return res.json();
 }
 
+export { safeFetch };
+
 export const fetchProducts = () => safeFetch("/products");
 
 export const fetchCategories = () => safeFetch("/categories");

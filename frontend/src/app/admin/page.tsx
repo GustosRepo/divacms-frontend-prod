@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import { useAuth } from "@/context/AuthContext";
+import { safeFetch } from "@/utils/api";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 
@@ -22,9 +23,7 @@ export default function AdminDashboard() {
   useEffect(() => {
     const fetchStats = async () => {
       try {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/admin/dashboard-stats`, {
-          headers: { Authorization: `Bearer ${user?.token}` },
-        });
+        const res = await safeFetch(`/admin/dashboard-stats`);
 
         if (!res.ok) throw new Error("Failed to fetch stats");
 

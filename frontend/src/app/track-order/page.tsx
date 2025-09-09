@@ -28,12 +28,11 @@ export default function TrackOrderPage() {
 
     try {
       setLoading(true);
-      const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/orders/track?orderId=${encodeURIComponent(orderId)}&email=${encodeURIComponent(email)}`
-      );
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.message || "Order not found.");
-      setOrder(data);
+  const q = new URLSearchParams({ orderId, email }).toString();
+  const res = await fetch(`/api/proxy/orders/track?${q}`, { credentials: 'include' });
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.message || "Order not found.");
+  setOrder(data);
     } catch (err) {
       setError(err instanceof Error ? err.message : "An unexpected error occurred.");
     } finally {

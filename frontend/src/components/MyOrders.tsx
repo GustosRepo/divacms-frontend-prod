@@ -2,6 +2,7 @@
 import { useEffect, useState, useCallback } from "react";
 import Link from "next/link";
 import { useAuth } from "@/context/AuthContext";
+import { safeFetch } from "@/utils/api";
 
 interface Order {
   id: string;
@@ -52,14 +53,7 @@ export default function MyOrders() {
     const controller = new AbortController();
     const load = async () => {
       try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/orders/my-orders`, {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          credentials: 'include',
-          signal: controller.signal,
-        });
+  const response = await safeFetch(`/orders/my-orders`, { method: "GET", signal: controller.signal });
 
         if (response.status === 204 || response.status === 404) {
           setOrders([]);
@@ -132,13 +126,7 @@ export default function MyOrders() {
     if (!user) return;
     if (!window.confirm("Are you sure you want to cancel this order?")) return;
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/orders/${orderId}/cancel`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        credentials: 'include',
-      });
+  const res = await safeFetch(`/orders/${orderId}/cancel`, { method: "PUT" });
       if (!res.ok) throw new Error("Failed to cancel order");
       setOrders(prev => prev.map(o => (o.id === orderId ? { ...o, status: "Canceled" } : o)));
     } catch (e) {
