@@ -12,7 +12,7 @@ export default function Navbar() {
   const { user, logout } = useAuth();
   const cartItemCount = cart.reduce((total, item) => total + item.quantity, 0);
   const [menuOpen, setMenuOpen] = useState(false);
-  const { dark, toggleDark, reducedMotion, setReducedMotion } = useThemePrefs();
+  const { dark, toggleDark, reducedMotion, setReducedMotion, resetToSystemPref } = useThemePrefs();
 
   // apply reduced motion preference to document
   useEffect(() => {
@@ -75,7 +75,7 @@ export default function Navbar() {
           {brandOptions.map(o => <option key={o.key ?? 'all'} value={o.key ?? ''}>{o.label}</option>)}
         </select>
         */}
-        {/* Dark Mode */}
+  {/* Dark Mode */}
         <button
           onClick={toggleDark}
           className="w-9 h-9 rounded-full bg-gradient-to-br from-pink-400 to-fuchsia-500 text-white flex items-center justify-center text-xs shadow hover:shadow-md transition"
@@ -83,6 +83,7 @@ export default function Navbar() {
         >
           {dark ? '☀️' : '🌙'}
         </button>
+  <button onClick={resetToSystemPref} className="ml-2 text-xs bg-white/60 dark:bg-white/10 px-2 py-1 rounded-md">Reset</button>
         {/* Reduced Motion */}
         {/* 
         <button
@@ -125,6 +126,7 @@ export default function Navbar() {
           ))}
           <div className="flex gap-3 mt-3">
             <button onClick={toggleDark} className="font-shuneva px-3 py-1 rounded-md bg-pink-500 text-white text-xs">{dark ? 'Light' : 'Dark'}</button>
+            <button onClick={resetToSystemPref} className="font-shuneva px-3 py-1 rounded-md bg-white/60 dark:bg-white/10 text-xs border border-white/30 dark:border-white/10">Reset</button>
             <button onClick={() => setReducedMotion(!reducedMotion)} className="font-shuneva px-3 py-1 rounded-md bg-white/60 dark:bg-white/10 text-xs border border-white/30 dark:border-white/10">{reducedMotion ? 'Motion' : 'Reduce'}</button>
           </div>
             {/* 

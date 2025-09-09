@@ -6,6 +6,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
+  "generate:favicon": "node ./tools/generate-favicon.js",
     "lint": "next lint"
   },
   "dependencies": {
@@ -26,6 +27,8 @@
     "stripe": "^17.6.0"
   },
   "devDependencies": {
+  "sharp": "^0.32.1",
+  "to-ico": "^1.0.0",
     "@eslint/eslintrc": "^3",
     "@types/jest": "^29.5.14",
     "@types/node": "^20.17.30",

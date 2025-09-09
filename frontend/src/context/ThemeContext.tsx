@@ -1,5 +1,6 @@
 "use client";
-import { createContext, useContext, useEffect, useState } from 'react';
+import { createContext, useContext, useEffect, useState, useRef } from 'react';
+import toast from 'react-hot-toast';
 
 export type BrandTheme = 'nails' | 'toys' | 'boutique' | 'system';
 
@@ -8,8 +9,10 @@ interface ThemeState {
   reducedMotion: boolean;
   brand: BrandTheme | null;
   toggleDark: () => void;
+  setDark: (v: boolean) => void;
   setReducedMotion: (v: boolean) => void;
   setBrand: (b: BrandTheme | null) => void;
+  resetToSystemPref: () => void;
 }
 
 const ThemeContext = createContext<ThemeState | undefined>(undefined);
@@ -18,6 +21,7 @@ export const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
   const [dark, setDark] = useState(false);
   const [reducedMotion, setReducedMotion] = useState(false);
   const [brand, setBrand] = useState<BrandTheme | null>(null);
+  const mountedRef = useRef(false);
 
   // init from media + localStorage
   useEffect(() => {
@@ -64,10 +68,29 @@ export const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
     localStorage.setItem('ui_prefs', JSON.stringify(prefs));
   }, [dark, reducedMotion, brand]);
 
+  // show a small toast when the user actively toggles theme (skip first mount)
+  useEffect(() => {
+    if (!mountedRef.current) {
+      mountedRef.current = true;
+      return;
+    }
+    toast(`Switched to ${dark ? 'dark' : 'light'} mode`);
+  }, [dark]);
+
   const toggleDark = () => setDark(d => !d);
 
+  const resetToSystemPref = () => {
+    try { localStorage.removeItem('ui_prefs'); } catch (e) {}
+    const prefersDark = typeof window !== 'undefined' && window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+    const prefersReduced = typeof window !== 'undefined' && window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    setDark(!!prefersDark);
+    setReducedMotion(!!prefersReduced);
+    setBrand(null);
+    toast('Reset theme to system preference');
+  };
+
   return (
-    <ThemeContext.Provider value={{ dark, reducedMotion, brand, toggleDark, setReducedMotion, setBrand }}>
+    <ThemeContext.Provider value={{ dark, reducedMotion, brand, toggleDark, setDark, setReducedMotion, setBrand, resetToSystemPref }}>
       {children}
     </ThemeContext.Provider>
   );

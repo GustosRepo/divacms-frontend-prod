@@ -6,6 +6,7 @@ import "./globals.css";
 import Footer from "@/components/Footer";
 import Providers from "./providers";
 import Script from "next/script";
+import ThemeToggle from '@/components/ThemeToggle';
 
 const geistSans = Geist({ variable: "--font-geist-sans", subsets: ["latin"] });
 const geistMono = Geist_Mono({ variable: "--font-geist-mono", subsets: ["latin"] });
@@ -71,9 +72,20 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <Script id="gtag-init" strategy="afterInteractive">
           {`window.dataLayer = window.dataLayer || []; function gtag(){dataLayer.push(arguments);} gtag('js', new Date()); gtag('config', 'GA_MEASUREMENT_ID');`}
         </Script>
+        {/* Theme init: set html.dark early to avoid flash/backwards default */}
+        <Script id="theme-init" strategy="beforeInteractive">
+          {`(function(){try{var s=localStorage.getItem('ui_prefs');if(s){var p=JSON.parse(s);if(p && p.dark)document.documentElement.classList.add('dark');else document.documentElement.classList.remove('dark');}else if(window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches){document.documentElement.classList.add('dark');}else{document.documentElement.classList.remove('dark');}}catch(e){} })();`}
+        </Script>
         {/* Preconnect to external domains */}
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fsitfoxofpsynhncpxjs.supabase.co" />
+  {/* Favicons */}
+            {/* Favicons: prefer /favicon.ico for maximum browser compatibility */}
+            <link rel="icon" href="/favicon.ico" />
+            <link rel="shortcut icon" href="/favicon.ico" />
+            <link rel="icon" type="image/png" sizes="32x32" href="/uploads/divanailslogo.png" />
+            <link rel="apple-touch-icon" href="/uploads/divanailslogo.png" />
+            <meta name="apple-mobile-web-app-title" content="The Diva Factory" />
         {/* Canonical URL */}
         <link rel="canonical" href="https://thedivafactory.com" />
       </head>
@@ -84,6 +96,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <Navbar />
           <main id="content" role="main" tabIndex={-1} className="flex-1 w-full">{children}</main>
           <Footer />
+          <ThemeToggle />
         </Providers>
       </body>
     </html>
