@@ -54,11 +54,11 @@ export default function MyOrders() {
       try {
         const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/orders/my-orders`, {
           method: "GET",
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${user.token}`,
-            },
-            signal: controller.signal,
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: 'include',
+          signal: controller.signal,
         });
 
         if (response.status === 204 || response.status === 404) {
@@ -136,8 +136,8 @@ export default function MyOrders() {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${user.token}`,
         },
+        credentials: 'include',
       });
       if (!res.ok) throw new Error("Failed to cancel order");
       setOrders(prev => prev.map(o => (o.id === orderId ? { ...o, status: "Canceled" } : o)));

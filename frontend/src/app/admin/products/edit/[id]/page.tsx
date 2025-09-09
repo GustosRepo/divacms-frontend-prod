@@ -29,9 +29,7 @@ export default function EditProduct() {
     }
     const fetchProduct = async () => {
       try {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/products/${id}`, {
-          headers: { Authorization: `Bearer ${user?.token}` },
-        });
+  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/products/${id}`, { credentials: 'include' });
         if (!res.ok) throw new Error("Failed to fetch product.");
         const data = await res.json();
         setProductData({
@@ -119,7 +117,7 @@ export default function EditProduct() {
     try {
       const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/products/${id}`, {
         method: "PUT",
-        headers: { Authorization: `Bearer ${user.token}` },
+        credentials: 'include',
         body: formData,
       });
       if (!res.ok) {

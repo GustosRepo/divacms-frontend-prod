@@ -20,7 +20,8 @@ export default function Dashboard() {
         // Use user.userId if available, otherwise fallback to user.id
         const userId = user.userId || user.id;
         const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/users/${userId}`, {
-          headers: { Authorization: `Bearer ${user.token}` },
+          headers: { 'Content-Type': 'application/json' },
+          credentials: 'include',
         });
 
         if (!res.ok) throw new Error("Failed to fetch user data.");

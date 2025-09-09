@@ -194,7 +194,10 @@ export default function CheckoutForm(props: CheckoutFormProps) {
           fd.append('file', proofFile);
           const up = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/orders/${serverOrderId}/payment-proof`, {
             method: 'POST',
-            headers: user?.token ? { Authorization: `Bearer ${user.token}` } : undefined,
+            headers: {
+              "Content-Type": "application/json",
+            },
+            credentials: 'include',
             body: fd
           });
           if (!up.ok) {

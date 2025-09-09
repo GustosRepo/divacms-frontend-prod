@@ -44,7 +44,7 @@ export default function AdminCategoriesPage() {
       const payload = { name: form.name, slug: form.slug, brandSegment: form.brandSegment, description: form.description };
       const method = form.id ? 'PUT' : 'POST';
       const url = form.id ? `${process.env.NEXT_PUBLIC_API_URL}/categories/${form.id}` : `${process.env.NEXT_PUBLIC_API_URL}/categories`;
-      const res = await fetch(url, { method, headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${user.token}` }, body: JSON.stringify(payload) });
+  const res = await fetch(url, { method, headers: { 'Content-Type': 'application/json' }, credentials: 'include', body: JSON.stringify(payload) });
       if (!res.ok) throw new Error('Save failed');
       await load();
       resetForm();
@@ -59,7 +59,7 @@ export default function AdminCategoriesPage() {
     if (!confirm('Delete category?')) return;
     if (!user) { alert('Auth required'); return; }
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/categories/${id}`, { method: 'DELETE', headers: { Authorization: `Bearer ${user.token}` } });
+  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/categories/${id}`, { method: 'DELETE', credentials: 'include' });
       if (!res.ok) throw new Error('Delete failed');
       await load();
   } catch (err) { const e = err as Error | undefined; alert(e?.message ?? String(err)); }

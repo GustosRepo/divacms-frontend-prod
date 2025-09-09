@@ -36,7 +36,7 @@ export default function BlogPage() {
 
   const fetchPosts = async () => {
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/blog`);
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/blog`, { credentials: 'include' });
       if (response.ok) {
         const data = await response.json();
         setPosts(data);
@@ -53,15 +53,13 @@ export default function BlogPage() {
   };
 
   const handleAddPost = async () => {
-    if (!formData.title || !formData.content || !user?.token) return;
+  if (!formData.title || !formData.content || !user) return;
     
     try {
       const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/blog`, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${user.token}`
-        },
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
         body: JSON.stringify(formData)
       });
 
@@ -89,15 +87,13 @@ export default function BlogPage() {
   };
 
   const handleUpdatePost = async () => {
-    if (!editingPost || !formData.title || !formData.content || !user?.token) return;
+  if (!editingPost || !formData.title || !formData.content || !user) return;
     
     try {
       const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/blog/${editingPost.id}`, {
         method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${user.token}`
-        },
+  headers: { 'Content-Type': 'application/json' },
+  credentials: 'include',
         body: JSON.stringify(formData)
       });
 
@@ -120,16 +116,14 @@ export default function BlogPage() {
   };
 
   const handleDeletePost = async (postId: string) => {
-    if (!user?.token) return;
+    if (!user) return;
     
     if (!confirm('Are you sure you want to delete this post?')) return;
     
     try {
       const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/blog/${postId}`, {
         method: 'DELETE',
-        headers: {
-          'Authorization': `Bearer ${user.token}`
-        }
+        credentials: 'include',
       });
 
       if (response.ok) {

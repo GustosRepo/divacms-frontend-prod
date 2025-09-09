@@ -18,12 +18,13 @@ export default function AdminUsersPage() {
 
 
   useEffect(() => {
-    if (!user || !user.token) return;
+  if (!user) return;
 
     const fetchUsers = async () => {
       try {
         const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/admin/users`, {
-          headers: { Authorization: `Bearer ${user.token}` },
+          headers: { 'Content-Type': 'application/json' },
+          credentials: 'include',
         });
 
         if (!res.ok) throw new Error("Failed to fetch users");
@@ -41,15 +42,13 @@ export default function AdminUsersPage() {
   }, [user]);
 
   const handlePromote = async (userId: string, newRole: "admin" | "customer") => {
-    if (!user || !user.token) return;
+  if (!user) return;
   
     try {
       const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/admin/users/${userId}`, {
         method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${user.token}`,
-        },
+        headers: { "Content-Type": "application/json" },
+        credentials: 'include',
         body: JSON.stringify({ role: newRole }),
       });
   
@@ -78,14 +77,15 @@ export default function AdminUsersPage() {
   };
 
   const handleDelete = async (userId: string) => {
-    if (!user || !user.token) return;
+  if (!user) return;
 
     if (!confirm("Are you sure you want to delete this user?")) return;
 
     try {
       const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/admin/users/${userId}`, {
         method: "DELETE",
-        headers: { Authorization: `Bearer ${user.token}` },
+  headers: { 'Content-Type': 'application/json' },
+  credentials: 'include',
       });
 
       if (!res.ok) throw new Error("Failed to delete user");

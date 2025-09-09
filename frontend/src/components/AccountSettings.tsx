@@ -21,7 +21,8 @@ export default function AccountSettings() {
     const fetchProfile = async () => {
       try {
         const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/users/${user.id}`, {
-          headers: { Authorization: `Bearer ${user.token}` },
+          headers: { "Content-Type": "application/json" },
+          credentials: 'include',
         });
   
         if (!res.ok) throw new Error("Failed to fetch profile.");
@@ -60,7 +61,7 @@ export default function AccountSettings() {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
-          Authorization: user?.token ? `Bearer ${user.token}` : "",
+          Authorization: "",
         },
         body: JSON.stringify(formData), // ✅ Ensure city, zip, and country are sent
       });

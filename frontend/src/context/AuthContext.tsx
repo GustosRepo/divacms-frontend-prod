@@ -1,6 +1,7 @@
 "use client";
 import { createContext, useContext, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import { login as apiLogin, fetchMe } from "@/utils/api";
 
 
 interface User {
@@ -20,7 +21,7 @@ interface User {
 interface AuthContextType {
   user: User | null;
   login: (email: string, password: string) => Promise<void>;
-  logout: () => void;
+  logout: () => Promise<void>;
   updateUser: (updatedUser: Partial<User>) => void;
 }
 
@@ -31,67 +32,40 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [loading, setLoading] = useState(true);
   const router = useRouter();
 
-  // ✅ Load user from localStorage on mount
+  // ✅ Bootstrap user from server-side cookie via /api/auth/me
   useEffect(() => {
-    const storedUser = localStorage.getItem("user");
-
-    if (storedUser) {
+    let mounted = true;
+    (async () => {
       try {
-        const parsedUser = JSON.parse(storedUser);
-        const tokenPayload = JSON.parse(atob(parsedUser.token.split(".")[1]));
-
-        const isExpired = tokenPayload.exp * 1000 < Date.now();
-        if (isExpired) {
-          console.warn("⏰ Token expired. Logging out.");
-          localStorage.removeItem("user");
-          setUser(null);
-          router.push("/login");
+        const u = await fetchMe();
+        if (!mounted) return;
+        if (u) {
+          setUser(u);
         } else {
-          setUser(parsedUser);
+          setUser(null);
         }
       } catch (err) {
-        console.error("❌ Failed to parse token:", err);
-        localStorage.removeItem("user");
+        console.error("Failed to bootstrap user:", err);
         setUser(null);
+      } finally {
+        if (mounted) setLoading(false);
       }
-    }
+    })();
 
-    setLoading(false);
-  }, [router]);
+    return () => {
+      mounted = false;
+    };
+  }, []);
 
   // ✅ Login function
   const login = async (email: string, password: string) => {
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/login`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password }),
-      });
-
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.message || "Login failed");
-
-      if (!data.user || !data.user.id) {
-        throw new Error("❌ User ID is missing from API response!");
-      }
-
-      const userData = {
-        id: data.user.id,
-        name: data.user.name,
-        email: data.user.email,
-        token: data.token,
-        address: data.user.address || "",
-        city: data.user.city || "",
-        zip: data.user.zip || "",
-        country: data.user.country || "",
-        points: data.user.points || 0,
-        isAdmin: Boolean(data.user.isAdmin),
-      };
-
-      localStorage.setItem("user", JSON.stringify(userData));
-      setUser(userData);
-
-      router.push(userData.isAdmin ? "/admin" : "/dashboard");
+      const data = await apiLogin(email, password);
+      // data.user should be present
+      if (!data?.user) throw new Error("Invalid login response");
+      setUser(data.user);
+      // do not store token in localStorage; cookie is HttpOnly
+      router.push(data.user.isAdmin ? "/admin" : "/dashboard");
     } catch (error) {
       console.error("❌ Login Error:", error);
       alert(error instanceof Error ? error.message : "An unknown error occurred");
@@ -107,8 +81,15 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     }
   };
 
-  // ✅ Logout
-  const logout = () => {
+  // ✅ Logout - call frontend proxy to clear HttpOnly cookie, then clear client state
+  const logout = async () => {
+    try {
+      await fetch("/api/auth/logout", { method: "POST", credentials: "include" });
+    } catch (err) {
+      // ignore network errors, still clear client state
+      console.error("Logout proxy failed:", err);
+    }
+
     localStorage.removeItem("user");
     setUser(null);
     router.push("/login");

@@ -64,15 +64,13 @@ export default function BlogPostPage() {
   }, [postId, router]);
 
   const handleUpdatePost = async () => {
-    if (!formData.title || !formData.content || !user?.token) return;
+  if (!formData.title || !formData.content || !user) return;
     
     try {
       const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/blog/${postId}`, {
         method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${user.token}`
-        },
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
         body: JSON.stringify(formData)
       });
 
@@ -95,16 +93,14 @@ export default function BlogPostPage() {
   }, [postId, fetchPost]);
 
   const handleDeletePost = async () => {
-    if (!user?.token) return;
+  if (!user) return;
     
     if (!confirm('Are you sure you want to delete this post? This action cannot be undone.')) return;
     
     try {
       const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/blog/${postId}`, {
         method: 'DELETE',
-        headers: {
-          'Authorization': `Bearer ${user.token}`
-        }
+        credentials: 'include',
       });
 
       if (response.ok) {

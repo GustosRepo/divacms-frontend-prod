@@ -39,7 +39,8 @@ export default function ManageProducts() {
           qs.toString() ? `?${qs.toString()}` : ""
         }`;
         const res = await fetch(url, {
-          headers: { Authorization: `Bearer ${user.token}` },
+          headers: { 'Content-Type': 'application/json' },
+          credentials: 'include',
         });
         if (!res.ok) throw new Error("Failed to fetch products.");
         const data = await res.json();

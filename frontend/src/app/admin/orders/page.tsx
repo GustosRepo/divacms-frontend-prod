@@ -35,8 +35,11 @@ export default function ManageOrders() {
       try {
         const url = new URL(`${process.env.NEXT_PUBLIC_API_URL}/orders/admin/orders`);
         if (filterStatus) url.searchParams.set("status", filterStatus);
-        const res = await fetch(url.toString(), {
-          headers: { Authorization: `Bearer ${user.token}` },
+          const res = await fetch(url.toString(), { 
+            credentials: 'include',
+            headers: {
+              "Content-Type": "application/json",
+            },
         });
 
         if (!res.ok) {

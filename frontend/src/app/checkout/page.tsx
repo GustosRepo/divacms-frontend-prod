@@ -23,7 +23,8 @@ export default function CheckoutPage() {
     const fetchUserData = async () => {
       try {
         const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/users/${user.id}`, {
-          headers: { Authorization: `Bearer ${user.token}` },
+          headers: { 'Content-Type': 'application/json' },
+          credentials: 'include',
         });
 
         if (!response.ok) throw new Error("Failed to fetch user profile.");
@@ -82,10 +83,8 @@ export default function CheckoutPage() {
     try {
       const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/checkout/create-checkout-session`, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${user.token}`,
-        },
+        headers: { "Content-Type": "application/json" },
+        credentials: 'include',
         body: JSON.stringify({ items: cartItems, pointsUsed, shippingInfo: data, metadata: { userId: user.id, email: user.email } }),
       });
 

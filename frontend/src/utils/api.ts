@@ -1,14 +1,13 @@
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000";
-
-function joinUrl(base: string, path: string) {
-  const b = base.replace(/\/+$/, "");
+// Use same-origin proxy so server can attach Authorization from HttpOnly cookie
+function proxyUrlFor(path: string) {
   const p = path.replace(/^\/+/, "");
-  return `${b}/${p}`;
+  return `/api/proxy/${p}`;
 }
 
 async function safeFetch(path: string, init: RequestInit = {}) {
-  const url = joinUrl(API_BASE_URL, path);
-  const res = await fetch(url, init);
+  const url = proxyUrlFor(path);
+  const mergedInit: RequestInit = { credentials: "include", ...init };
+  const res = await fetch(url, mergedInit);
 
   const ct = res.headers.get("content-type") || "";
   if (!res.ok) {
@@ -28,9 +27,22 @@ export const fetchProducts = () => safeFetch("/products");
 
 export const fetchCategories = () => safeFetch("/categories");
 
-export const login = (email: string, password: string) =>
-  safeFetch("/auth/login", {
+export const login = async (email: string, password: string) => {
+  // Use same-origin proxy so cookie is set on frontend domain
+  const res = await fetch("/api/auth/login", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
+    credentials: "include",
     body: JSON.stringify({ email, password }),
   });
+  const data = await res.json();
+  if (!res.ok) throw new Error(data?.error || "Login failed");
+  return data;
+};
+
+export const fetchMe = async () => {
+  const res = await fetch("/api/auth/me", { credentials: "include" });
+  if (!res.ok) return null;
+  const data = await res.json();
+  return data?.user ?? null;
+};
