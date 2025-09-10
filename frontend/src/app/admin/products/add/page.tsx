@@ -54,8 +54,8 @@ export default function AddProduct() {
 
   const availableCategorySlugs = categories
     .filter(c => !productData.brandSegment || (c.brand_segment || '').toLowerCase() === productData.brandSegment.toLowerCase())
-    .map(c => c.slug || '')
-    .filter(Boolean);
+    .map(c => ({ slug: c.slug || '', name: c.name || c.slug || '' }))
+    .filter(item => item.slug);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
@@ -120,66 +120,70 @@ export default function AddProduct() {
   };
 
   return (
-    <div className="container mx-auto p-6 text-white">
-      <h1 className="text-3xl font-bold text-center">Add New Product</h1>
-      <form onSubmit={handleSubmit} className="bg-gray-800 p-6 rounded-lg shadow-md max-w-lg mx-auto mt-6">
-        <label className="block text-white">Title:</label>
-        <input type="text" name="title" value={productData.title} onChange={handleChange} className="w-full p-2 text-black rounded-md mt-2" required />
+    <div className="w-full max-w-full px-2 lg:px-6 py-4 lg:py-6 text-white">
+      <h1 className="text-2xl lg:text-3xl font-bold text-center mb-4 lg:mb-6">Add New Product</h1>
+      <form onSubmit={handleSubmit} className="bg-gray-800 p-4 lg:p-6 rounded-lg shadow-md max-w-lg mx-auto">
+        <label className="block text-white text-sm lg:text-base">Title:</label>
+        <input type="text" name="title" value={productData.title} onChange={handleChange} className="w-full p-2 lg:p-3 text-black rounded-md mt-2" required />
 
-        <label className="block text-white mt-4">Description:</label>
-        <input type="text" name="description" value={productData.description} onChange={handleChange} className="w-full p-2 text-black rounded-md mt-2" />
+        <label className="block text-white text-sm lg:text-base mt-4">Description:</label>
+        <input type="text" name="description" value={productData.description} onChange={handleChange} className="w-full p-2 lg:p-3 text-black rounded-md mt-2" />
 
-        <label className="block text-white mt-4">Price ($):</label>
-        <input type="number" name="price" value={productData.price} onChange={handleChange} className="w-full p-2 text-black rounded-md mt-2" required />
+        <label className="block text-white text-sm lg:text-base mt-4">Price ($):</label>
+        <input type="number" name="price" value={productData.price} onChange={handleChange} className="w-full p-2 lg:p-3 text-black rounded-md mt-2" required />
 
-        <label className="block text-white mt-4">Quantity:</label>
-        <input type="number" name="quantity" value={productData.quantity} onChange={handleChange} className="w-full p-2 text-black rounded-md mt-2" required />
+        <label className="block text-white text-sm lg:text-base mt-4">Quantity:</label>
+        <input type="number" name="quantity" value={productData.quantity} onChange={handleChange} className="w-full p-2 lg:p-3 text-black rounded-md mt-2" required />
 
-        <div className="grid grid-cols-2 gap-4 mt-4">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mt-4">
           <div>
-            <label className="block text-white">Brand Segment</label>
-            <select name="brandSegment" value={productData.brandSegment} onChange={handleChange} className="w-full p-2 text-black rounded-md mt-2" required>
+            <label className="block text-white text-sm lg:text-base">Brand Segment</label>
+            <select name="brandSegment" value={productData.brandSegment} onChange={handleChange} className="w-full p-2 lg:p-3 text-black rounded-md mt-2" required>
               <option value="">Select brand</option>
-              {brandOptions.map(b => <option key={b} value={b}>{b}</option>)}
+              {brandOptions.map(b => <option key={b} value={b} className="capitalize">{b}</option>)}
             </select>
           </div>
           <div>
-            <label className="block text-white">Category Slug</label>
-            <select name="categorySlug" value={productData.categorySlug} onChange={handleChange} className="w-full p-2 text-black rounded-md mt-2" required>
+            <label className="block text-white text-sm lg:text-base">Category</label>
+            <select name="categorySlug" value={productData.categorySlug} onChange={handleChange} className="w-full p-2 lg:p-3 text-black rounded-md mt-2" required>
               <option value="">Select category</option>
-              {availableCategorySlugs.map(slug => <option key={slug} value={slug}>{slug}</option>)}
+              {availableCategorySlugs.map(item => (
+                <option key={item.slug} value={item.slug}>{item.name}</option>
+              ))}
             </select>
           </div>
         </div>
 
-        <div className="grid grid-cols-4 gap-3 mt-4">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-2 lg:gap-3 mt-4">
           <div>
-            <label className="block text-white">Weight (oz)</label>
-            <input type="number" name="weightOz" min={0} step={1} value={productData.weightOz} onChange={handleChange} className="w-full p-2 text-black rounded-md mt-2" placeholder="e.g. 24" />
+            <label className="block text-white text-xs lg:text-sm">Weight (oz)</label>
+            <input type="number" name="weightOz" min={0} step={1} value={productData.weightOz} onChange={handleChange} className="w-full p-2 text-black rounded-md mt-1" placeholder="24" />
           </div>
           <div>
-            <label className="block text-white">Length (in)</label>
-            <input type="number" name="lengthIn" min={0} step={0.1} value={productData.lengthIn} onChange={handleChange} className="w-full p-2 text-black rounded-md mt-2" placeholder="e.g. 10" />
+            <label className="block text-white text-xs lg:text-sm">Length (in)</label>
+            <input type="number" name="lengthIn" min={0} step={0.1} value={productData.lengthIn} onChange={handleChange} className="w-full p-2 text-black rounded-md mt-1" placeholder="10" />
           </div>
           <div>
-            <label className="block text-white">Width (in)</label>
-            <input type="number" name="widthIn" min={0} step={0.1} value={productData.widthIn} onChange={handleChange} className="w-full p-2 text-black rounded-md mt-2" placeholder="e.g. 6" />
+            <label className="block text-white text-xs lg:text-sm">Width (in)</label>
+            <input type="number" name="widthIn" min={0} step={0.1} value={productData.widthIn} onChange={handleChange} className="w-full p-2 text-black rounded-md mt-1" placeholder="6" />
           </div>
           <div>
-            <label className="block text-white">Height (in)</label>
-            <input type="number" name="heightIn" min={0} step={0.1} value={productData.heightIn} onChange={handleChange} className="w-full p-2 text-black rounded-md mt-2" placeholder="e.g. 2" />
+            <label className="block text-white text-xs lg:text-sm">Height (in)</label>
+            <input type="number" name="heightIn" min={0} step={0.1} value={productData.heightIn} onChange={handleChange} className="w-full p-2 text-black rounded-md mt-1" placeholder="2" />
           </div>
         </div>
 
-        <label className="block text-white mt-4">Image:</label>
-        <input type="file" onChange={handleFileChange} className="w-full p-2 text-black rounded-md mt-2" required />
+        <label className="block text-white text-sm lg:text-base mt-4">Image:</label>
+        <input type="file" onChange={handleFileChange} className="w-full p-2 text-white bg-gray-700 rounded-md mt-2 text-sm" required />
 
-        <label className="text-white mt-4 flex items-center">
+        <label className="text-white text-sm lg:text-base mt-4 flex items-center">
           <input type="checkbox" checked={productData.bestSeller} onChange={handleCheckboxChange} className="mr-2" />
           Mark as Best Seller
         </label>
 
-        <button type="submit" className="mt-4 bg-pink-500 text-white px-4 py-2 rounded-md w-full">➕ Add Product</button>
+        <button type="submit" className="mt-6 bg-pink-500 hover:bg-pink-600 text-white px-4 py-3 rounded-md w-full font-medium transition-colors">
+          ➕ Add Product
+        </button>
       </form>
     </div>
   );
