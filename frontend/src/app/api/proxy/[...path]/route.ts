@@ -52,9 +52,15 @@ async function extractParams(ctx: unknown): Promise<{ path?: string[] }> {
   const asObj = ctx as { params?: unknown } | undefined;
   const maybeParams = asObj?.params;
   if (!maybeParams) return {};
-  // params may be a Promise in newer Next versions; await if needed
-  const resolved = (typeof (maybeParams as any)?.then === 'function') ? await (maybeParams as any) : maybeParams;
-  return resolved as { path?: string[] };
+
+  // params may be a Promise/thenable in newer Next versions; detect thenable without using `any`
+  const isThenable = typeof maybeParams === 'object' && maybeParams !== null && typeof (maybeParams as { then?: unknown }).then === 'function';
+  if (isThenable) {
+    const resolved = await (maybeParams as Promise<unknown>);
+    return resolved as { path?: string[] };
+  }
+
+  return maybeParams as { path?: string[] };
 }
 
 export async function GET(request: Request, context: unknown) {
