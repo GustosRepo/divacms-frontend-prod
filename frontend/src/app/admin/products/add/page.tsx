@@ -107,7 +107,7 @@ export default function AddProduct() {
     formData.append("heightIn", productData.heightIn ?? "");
 
     try {
-      await safeFetch('/products', {
+      await safeFetch('/admin/products', {
         method: 'POST',
         body: formData,
       });
