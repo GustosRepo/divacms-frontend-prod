@@ -106,7 +106,7 @@ function FAQItem({ q, a }: { q: string; a: React.ReactNode }) {
           <span className="text-pink-400 text-2xl group-open:rotate-45 transition-transform">+</span>
         </div>
       </summary>
-      <div className="mt-4 pt-4 border-t border-gray-700 text-gray-300 leading-relaxed">
+      <div className="mt-4 pt-4 border-t border-gray-700  leading-relaxed">
         {a}
       </div>
     </details>
@@ -139,15 +139,9 @@ export default function ShippingInfoPage() {
       {/* Header */}
       <header className="text-center mb-16">
         <h1 className="font-shuneva text-4xl md:text-6xl font-bold bg-gradient-to-r from-pink-400 via-purple-400 to-blue-400 bg-clip-text text-transparent mb-6">
-          Shipping &amp; Delivery{' '}
-          <span
-            className="emoji inline-block align-[-0.1em]"
-            aria-hidden="true"
-          >
-            📦
-          </span>
+          Shipping &amp; Delivery
         </h1>
-        <p className="text-xl text-gray-300 leading-relaxed max-w-3xl mx-auto">
+        <p className="text-xl  leading-relaxed max-w-3xl mx-auto">
           Quick guide to processing times, shipping options, tracking, international duties, and support.
         </p>
       </header>
@@ -163,7 +157,7 @@ export default function ShippingInfoPage() {
           ].map((c) => (
             <div key={c.title} className="bg-white/10 hover:bg-white/20 px-4 py-5 rounded-lg transition-colors">
               <h3 className="font-semibold mb-1">{c.title}</h3>
-              <p className="text-sm text-gray-200">{c.desc}</p>
+              <p className="text-sm ">{c.desc}</p>
             </div>
           ))}
         </div>

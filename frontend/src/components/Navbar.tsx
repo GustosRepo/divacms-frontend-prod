@@ -56,6 +56,7 @@ export default function Navbar() {
         <Link href="/about" className="hover:text-pink-500">About</Link>
         <Link href="/blog" className="hover:text-pink-500">Blog</Link>
         <Link href="/contact" className="hover:text-pink-500">Contact</Link>
+        <Link href="/las-vegas" className="hover:text-pink-500">Las Vegas</Link>
         <Link href="/cart" className="relative">🛒{cartItemCount > 0 && (
           <span className="absolute -top-2 -right-2 bg-pink-500 text-white text-[10px] px-1 py-[2px] rounded-full">
             {cartItemCount}
@@ -119,7 +120,7 @@ export default function Navbar() {
       {/* Mobile Menu */}
       {menuOpen && (
         <div className="absolute top-full left-0 w-full backdrop-blur-md bg-white/80 dark:bg-[#141720]/80 flex flex-col items-center py-4 md:hidden text-sm font-medium font-shuneva border-b border-white/30 dark:border-white/10">
-          {[['/', 'Home'], ['/shop', 'Shop'], ['/toys', 'Toys'], ['/nails', 'Nails'], ['/boutique', 'Boutique'], ['/about', 'About'], ['/blog', 'Blog'], ['/contact', 'Contact']].map(([href, label]) => (
+          {[['/', 'Home'], ['/shop', 'Shop'], ['/toys', 'Toys'], ['/nails', 'Nails'], ['/boutique', 'Boutique'], ['/about', 'About'], ['/blog', 'Blog'], ['/contact', 'Contact'], ['/las-vegas', 'Las Vegas']].map(([href, label]) => (
             <Link key={href} href={href} className="py-2 w-full text-center hover:text-pink-500" onClick={() => setMenuOpen(false)}>
               {label}
             </Link>

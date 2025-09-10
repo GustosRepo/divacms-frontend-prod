@@ -14,7 +14,7 @@ export default function AboutSection({ embedded = true }: AboutSectionProps) {
           About Us
         </h2>
         <p className="font-shuneva text-sm mt-3 max-w-2xl font-medium leading-relaxed">
-          Diva Factory is your pastel Y2K destination for luxury press-on nails,
+          Diva Factory is your one stop Diva destination for luxury press-on nails,
           collectible toys, and kawaii boutique finds! We handcraft every nail
           set, curate the cutest toys, and source unique accessories so you can
           express your style and joy every day. 💅🧸🛍️

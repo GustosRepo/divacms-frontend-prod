@@ -61,7 +61,7 @@ export default function Y2KNailTrends2025() {
 
         <header className="mb-12">
           <h1 className="font-shuneva text-4xl md:text-6xl font-bold bg-gradient-to-r from-pink-400 via-purple-400 to-blue-400 bg-clip-text text-transparent mb-6">
-            Y2K Nail Art Trends Making a Major Comeback in 2025 <span className="emoji text-accent">✨</span>
+            Y2K Nail Art Trends Making a Major Comeback in 2025
           </h1>
           <p className="text-xl leading-relaxed mb-4">
             Get ready to time travel! The early 2000s are back with a vengeance, and your nails are the perfect canvas for this nostalgic revival. From chunky glitter to holographic finishes, here are the Y2K nail trends taking over 2025.
@@ -80,7 +80,7 @@ export default function Y2KNailTrends2025() {
           </p>
           <div className="bg-gradient-to-r from-purple-900/50 to-pink-900/50 rounded-lg p-6 my-8">
             <h3 className="font-shuneva text-xl font-semibold text-white mb-3"><span className="emoji">💡</span> Pro Tip:</h3>
-            <p className="text-gray-200">Pair holographic nails with simple outfits to let your manicure be the star of the show!</p>
+            <p className="">Pair holographic nails with simple outfits to let your manicure be the star of the show!</p>
           </div>
 
           <h2 className="font-shuneva text-3xl font-bold text-accent mt-12 mb-6">2. Chunky Glitter Galore ✨</h2>
@@ -105,7 +105,7 @@ export default function Y2KNailTrends2025() {
 
           <div className="bg-gradient-to-r from-pink-900/50 to-purple-900/50 rounded-lg p-8 my-12 text-center">
             <h3 className="font-shuneva text-2xl font-bold text-white mb-4">Ready to Rock Y2K Nails? <span className="emoji">💖</span></h3>
-            <p className="text-gray-200 mb-6">Shop our curated collection of Y2K-inspired press-on nails and join the nostalgic nail revolution!</p>
+            <p className=" mb-6">Shop our curated collection of Y2K-inspired press-on nails and join the nostalgic nail revolution!</p>
             <Link 
               href="/shop?brand_segment=nails" 
               className="inline-block bg-gradient-to-r from-pink-500 to-purple-500 text-white font-bold py-3 px-8 rounded-full hover:shadow-lg transition-all transform hover:scale-105"
@@ -142,7 +142,7 @@ export default function Y2KNailTrends2025() {
                 <h3 className="font-shuneva text-xl font-semibold text-white group-hover:text-pink-200 transition-colors">
                   Ultimate Press-On Nail Care Guide
                 </h3>
-                <p className="text-gray-200 mt-2">Make your press-ons last longer with these pro tips</p>
+                <p className=" mt-2">Make your press-ons last longer with these pro tips</p>
               </div>
             </Link>
             <Link href="/blog/kawaii-aesthetic-guide" className="group">
@@ -150,7 +150,7 @@ export default function Y2KNailTrends2025() {
                 <h3 className="font-shuneva text-xl font-semibold text-white group-hover:text-pink-200 transition-colors">
                   The Ultimate Kawaii Aesthetic Guide
                 </h3>
-                <p className="text-gray-200 mt-2">Everything you need to know about kawaii culture and style</p>
+                <p className=" mt-2">Everything you need to know about kawaii culture and style</p>
               </div>
             </Link>
           </div>

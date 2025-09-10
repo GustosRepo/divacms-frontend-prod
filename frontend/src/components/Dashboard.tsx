@@ -38,12 +38,12 @@ export default function Dashboard() {
   }
 
   return (
-    <div className="flex min-h-screen pt-16 bg-gray-900 text-white">
-      {/* Sidebar */}
+    <div className="min-h-screen pt-16 lg:pt-16 bg-gray-900 text-white">
+      {/* Sidebar - Desktop: Left sidebar, Mobile: Top navigation */}
       <DashboardSidebar activeTab={activeTab} setActiveTab={setActiveTab} />
 
       {/* Main Content */}
-      <main className="flex-1 flex flex-col items-center justify-center">
+      <main className="pt-24 lg:pt-8 lg:ml-80 flex flex-col items-center justify-center p-4 lg:p-8 min-h-screen">
         {activeTab === "home" && <DashboardHome userName={user.name} points={points} />}
         {activeTab === "orders" && <MyOrders />}
         {activeTab === "account" && <AccountSettings />}

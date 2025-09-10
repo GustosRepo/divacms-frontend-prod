@@ -3,30 +3,30 @@ import { Metadata } from "next";
 import Link from "next/link";
 
 export const metadata: Metadata = {
-  title: "Ultimate Kawaii Aesthetic Guide | Y2K Culture & Style | Diva Factory",
-  description: "Dive deep into kawaii culture! Learn about kawaii fashion, aesthetics, and how to incorporate this adorable Japanese style into your everyday look.",
-  keywords: "kawaii aesthetic, kawaii fashion, kawaii culture, cute culture, Japanese kawaii, Y2K kawaii, kawaii accessories, kawaii nails",
+  title: "Ultimate Nail Care Guide 2025 | Diva Factory Blog",
+  description: "Master the art of nail care with our comprehensive guide. Learn professional tips for healthy nails, cuticle care, press-on application, and maintenance routines.",
+  keywords: "nail care, nail health, cuticle care, press-on nails, nail maintenance, nail care routine, healthy nails, nail tips",
   openGraph: {
-    title: "The Ultimate Kawaii Aesthetic Guide | Cute Culture Explained",
-    description: "Discover the world of kawaii! From fashion to lifestyle, learn how to embrace this adorable Japanese aesthetic.",
+    title: "The Ultimate Nail Care Guide: Professional Tips for Healthy, Beautiful Nails",
+    description: "Transform your nail care routine with expert tips on nail health, cuticle care, and press-on maintenance from Diva Factory.",
     images: [
       {
-        url: "/blog/kawaii-aesthetic-guide.jpg",
+        url: "/blog/nail-care-guide.jpg",
         width: 1200,
         height: 630,
-        alt: "Kawaii aesthetic guide with cute accessories and fashion"
+        alt: "Nail care essentials and beautiful manicured hands"
       }
     ],
   },
 };
 
-export default function KawaiiAestheticGuide() {
+export default function NailCareGuide() {
   const jsonLd = {
     '@context': 'https://schema.org',
     '@type': 'BlogPosting',
-    headline: 'The Ultimate Kawaii Aesthetic Guide',
-    description: 'Complete guide to kawaii culture, fashion, and lifestyle',
-    image: 'https://thedivafactory.com/blog/kawaii-aesthetic-guide.jpg',
+    headline: 'The Ultimate Nail Care Guide: Professional Tips for Healthy, Beautiful Nails',
+    description: 'Master the art of nail care with our comprehensive guide covering nail health, cuticle care, and maintenance routines',
+    image: 'https://thedivafactory.com/blog/nail-care-guide.jpg',
     author: {
       '@type': 'Organization',
       name: 'Diva Factory'
@@ -39,8 +39,8 @@ export default function KawaiiAestheticGuide() {
         url: 'https://thedivafactory.com/uploads/divanailslogo.png'
       }
     },
-    datePublished: '2025-08-27',
-    dateModified: '2025-08-27'
+    datePublished: '2025-09-10',
+    dateModified: '2025-09-10'
   };
 
   return (
@@ -56,236 +56,245 @@ export default function KawaiiAestheticGuide() {
           <span className="mx-2">→</span>
           <Link href="/blog" className="text-accent hover:text-accent/80">Blog</Link>
           <span className="mx-2">→</span>
-          <span className="text-fg/70">Kawaii Aesthetic Guide</span>
+          <span className="text-fg/70">Nail Care Guide</span>
         </nav>
 
         <header className="mb-12">
           <h1 className="font-shuneva text-4xl md:text-6xl font-bold bg-gradient-to-r from-pink-400 via-purple-400 to-blue-400 bg-clip-text text-transparent mb-6">
-            The Ultimate Kawaii Aesthetic Guide{' '}
-            <span
-              className="emoji text-accent inline-block align-[-0.1em]"
-              aria-hidden="true"
-            >
-              🌸
-            </span>
+            The Ultimate Nail Care Guide: Professional Tips for Healthy, Beautiful Nails
           </h1>
           <p className="text-xl leading-relaxed mb-4">
-            Dive into the adorable world of kawaii! This comprehensive guide covers everything from the cultural origins of kawaii to how you can incorporate this irresistibly cute aesthetic into your everyday style.
+            Discover the secrets to maintaining gorgeous, healthy nails with our comprehensive care guide. From daily routines to press-on maintenance, we&apos;ve got everything you need to elevate your nail game.
           </p>
           <div className="flex items-center gap-4 text-sm text-fg/80">
-            <time dateTime="2025-08-27">August 27, 2025</time>
+            <time dateTime="2025-09-10">September 10, 2025</time>
             <span>•</span>
-            <span>12 min read</span>
+            <span>8 min read</span>
           </div>
         </header>
 
-        <div className="prose prose-lg prose-invert max-w-none">
-          <h2 className="text-3xl font-bold text-pink-200 mt-12 mb-6">What is Kawaii? 🎀</h2>
-          <p className="text-gray-200 leading-relaxed mb-6">
-            Kawaii (かわいい) literally means &quot;cute&quot; in Japanese, but it&apos;s so much more than just an adjective. It&apos;s a cultural phenomenon that emerged in Japan in the 1970s and has since become a global aesthetic movement. Kawaii celebrates innocence, childlike wonder, and the beauty found in all things small and sweet.
+        <div className="prose prose-lg max-w-none">
+          <h2 className="font-shuneva text-3xl font-bold text-accent mt-12 mb-6">Understanding Your Natural Nails 💅</h2>
+          <p className="leading-relaxed mb-6">
+            Before diving into care routines, it&apos;s essential to understand your nail structure. Nails are made of keratin, the same protein found in hair. They grow from the nail matrix (the area under your cuticle) and can be affected by diet, health, and external factors.
           </p>
-
+          
           <div className="bg-gradient-to-r from-purple-900/50 to-pink-900/50 rounded-lg p-6 my-8">
-            <h3 className="text-xl font-semibold text-white mb-3">🌟 Core Kawaii Elements:</h3>
-            <ul className="text-gray-200 space-y-2">
-              <li>• Pastel colors (especially pink, lavender, mint, and baby blue)</li>
-              <li>• Soft, rounded shapes and characters</li>
-              <li>• Childlike innocence and playfulness</li>
-              <li>• Small, delicate accessories</li>
-              <li>• Sweet motifs (hearts, stars, flowers, animals)</li>
+            <h3 className="font-shuneva text-xl font-semibold text-white mb-3"><span className="emoji">🔍</span> Nail Anatomy 101:</h3>
+            <ul className="list-disc list-inside space-y-2">
+              <li><strong>Nail Plate:</strong> The visible part of your nail</li>
+              <li><strong>Cuticle:</strong> The protective skin at the nail base</li>
+              <li><strong>Nail Bed:</strong> The skin beneath the nail plate</li>
+              <li><strong>Matrix:</strong> Where nail growth begins</li>
             </ul>
           </div>
 
-          <h2 className="text-3xl font-bold text-pink-200 mt-12 mb-6">The History of Kawaii Culture 📚</h2>
-          <p className="text-gray-200 leading-relaxed mb-6">
-            Kawaii culture began in Japan during the 1970s as a form of rebellion against traditional adult responsibilities. Young people embraced childlike handwriting, cute characters, and playful fashion as a way to express individuality and reject societal pressure.
-          </p>
-          <p className="text-gray-200 leading-relaxed mb-6">
-            The movement exploded in the 1980s with the introduction of Hello Kitty (1974) and other Sanrio characters. By the 1990s and 2000s, kawaii had merged with street fashion movements like Decora and Fairy Kei, creating the colorful, accessory-heavy styles we associate with kawaii today.
+          <h2 className="font-shuneva text-3xl font-bold text-accent mt-12 mb-6">Daily Nail Care Routine ✨</h2>
+          <p className="leading-relaxed mb-6">
+            Consistency is key to healthy nails. Follow this simple daily routine to keep your nails in top condition:
           </p>
 
-          <h2 className="text-3xl font-bold text-pink-200 mt-12 mb-6">Kawaii Fashion Styles 👗</h2>
-          
-          <h3 className="text-2xl font-semibold text-purple-200 mt-8 mb-4">Decora Kei 🌈</h3>
-          <p className="text-gray-200 leading-relaxed mb-4">
-            The most extreme kawaii fashion, featuring layers upon layers of colorful accessories:
-          </p>
-          <ul className="list-disc list-inside text-gray-200 space-y-2 mb-6">
-            <li>Dozens of hair clips and bows</li>
-            <li>Multiple necklaces and bracelets</li>
-            <li>Colorful leg warmers and socks</li>
-            <li>Character bags and plushies as accessories</li>
+          <h3 className="font-shuneva text-2xl font-semibold text-pink-200 mt-8 mb-4">Morning Routine</h3>
+          <ul className="list-disc list-inside space-y-2 mb-6">
+            <li>Apply cuticle oil to nourish the nail bed</li>
+            <li>Gently massage hands and nails to improve circulation</li>
+            <li>Apply a protective base coat if wearing polish</li>
+            <li>Use hand cream with SPF protection</li>
           </ul>
 
-          <h3 className="text-2xl font-semibold text-purple-200 mt-8 mb-4">Fairy Kei 🧚‍♀️</h3>
-          <p className="text-gray-200 leading-relaxed mb-4">
-            A softer approach to kawaii featuring:
-          </p>
-          <ul className="list-disc list-inside text-gray-200 space-y-2 mb-6">
-            <li>Pastel colors and dreamy aesthetics</li>
-            <li>Vintage 80s and 90s toy motifs</li>
-            <li>Layered skirts and oversized sweaters</li>
-            <li>My Little Pony and Care Bears references</li>
+          <h3 className="font-shuneva text-2xl font-semibold text-pink-200 mt-8 mb-4">Evening Routine</h3>
+          <ul className="list-disc list-inside space-y-2 mb-6">
+            <li>Remove any polish gently with acetone-free remover</li>
+            <li>Soak nails in warm water for 5 minutes</li>
+            <li>Push back cuticles gently with a cuticle pusher</li>
+            <li>Apply a nourishing hand and cuticle cream</li>
           </ul>
 
-          <h3 className="text-2xl font-semibold text-purple-200 mt-8 mb-4">Yume Kawaii 💫</h3>
-          <p className="text-gray-200 leading-relaxed mb-4">
-            &quot;Dream kawaii&quot; that adds darker elements to traditional cute aesthetics:
+          <h2 className="font-shuneva text-3xl font-bold text-accent mt-12 mb-6">Cuticle Care: The Foundation of Beautiful Nails 🌸</h2>
+          <p className="leading-relaxed mb-6">
+            Healthy cuticles are essential for nail growth and overall nail health. Never cut your cuticles – instead, focus on keeping them moisturized and gently pushed back.
           </p>
-          <ul className="list-disc list-inside text-gray-200 space-y-2 mb-6">
-            <li>Pastel gothic elements</li>
-            <li>Medical and hospital imagery</li>
-            <li>Creepy-cute character designs</li>
-            <li>Pill and bandage motifs</li>
-          </ul>
 
-          <div className="border-l-4 border-pink-200 pl-6 my-8">
-            <p className="text-lg italic text-gray-200">
-              &quot;Kawaii isn&apos;t just about looking cute – it&apos;s about finding joy in the small things and embracing your inner child. It&apos;s a form of self-care through aesthetics!&quot;
-            </p>
-            <cite className="text-pink-200 font-semibold">- Kawaii Fashion Expert</cite>
-          </div>
-
-          <h2 className="text-3xl font-bold text-pink-200 mt-12 mb-6">How to Incorporate Kawaii into Your Style 💖</h2>
-          
-          <h3 className="text-2xl font-semibold text-purple-200 mt-8 mb-4">Start Small: Kawaii Accessories 🎀</h3>
-          <p className="text-gray-200 leading-relaxed mb-4">
-            You don&apos;t need a complete wardrobe overhaul to embrace kawaii! Start with these beginner-friendly accessories:
-          </p>
-          <ul className="list-disc list-inside text-gray-200 space-y-2 mb-6">
-            <li><strong>Kawaii Nails:</strong> Press-on nails with cute characters, pastels, or 3D decorations</li>
-            <li><strong>Hair Accessories:</strong> Colorful clips, bows, and headbands</li>
-            <li><strong>Bags:</strong> Character-themed purses or bags with cute keychains</li>
-            <li><strong>Phone Cases:</strong> Soft, squishy cases with kawaii designs</li>
-            <li><strong>Jewelry:</strong> Delicate pieces with hearts, stars, or character charms</li>
-          </ul>
-
-          <h3 className="text-2xl font-semibold text-purple-200 mt-8 mb-4">Color Palette Mastery 🎨</h3>
-          <div className="grid md:grid-cols-3 gap-4 mb-8">
-            <div className="bg-pink-900/30 rounded-lg p-4 text-center">
-              <h4 className="text-lg font-bold text-pink-200 mb-2">Sweet Pastels</h4>
-              <p className="text-sm text-gray-200">Baby pink, lavender, mint green, powder blue</p>
-            </div>
-            <div className="bg-purple-900/30 rounded-lg p-4 text-center">
-              <h4 className="text-lg font-bold text-purple-200 mb-2">Candy Brights</h4>
-              <p className="text-sm text-gray-200">Hot pink, electric blue, lime green, sunshine yellow</p>
-            </div>
-            <div className="bg-blue-900/30 rounded-lg p-4 text-center">
-              <h4 className="text-lg font-bold text-blue-300 mb-2">Dreamy Neutrals</h4>
-              <p className="text-sm text-gray-200">Cream, soft gray, pearl white, champagne</p>
+          <div className="bg-gradient-to-r from-pink-900/50 to-purple-900/50 rounded-lg p-6 my-8">
+            <h3 className="font-shuneva text-xl font-semibold text-white mb-3"><span className="emoji">⚠️</span> Cuticle Care Do&apos;s and Don&apos;ts:</h3>
+            <div className="grid md:grid-cols-2 gap-6">
+              <div>
+                <h4 className="font-semibold text-green-300 mb-2">✅ DO:</h4>
+                <ul className="list-disc list-inside space-y-1 text-sm">
+                  <li>Use cuticle oil daily</li>
+                  <li>Gently push back with a cuticle pusher</li>
+                  <li>Moisturize regularly</li>
+                  <li>Soak in warm water before care</li>
+                </ul>
+              </div>
+              <div>
+                <h4 className="font-semibold text-red-300 mb-2">❌ DON&apos;T:</h4>
+                <ul className="list-disc list-inside space-y-1 text-sm">
+                  <li>Cut or trim cuticles</li>
+                  <li>Use sharp tools aggressively</li>
+                  <li>Pick at hangnails</li>
+                  <li>Skip moisturizing</li>
+                </ul>
+              </div>
             </div>
           </div>
 
-          <h2 className="text-3xl font-bold text-pink-200 mt-12 mb-6">Kawaii Lifestyle Beyond Fashion 🏠</h2>
-          
-          <h3 className="text-2xl font-semibold text-purple-200 mt-8 mb-4">Kawaii Home Decor 🏡</h3>
-          <ul className="list-disc list-inside text-gray-200 space-y-2 mb-6">
-            <li>Plushie collections and character figurines</li>
-            <li>Pastel bedding and fluffy pillows</li>
-            <li>Fairy lights and star projectors</li>
-            <li>Cute storage solutions (character boxes, pastel organizers)</li>
-            <li>Plants in kawaii planters</li>
-          </ul>
-
-          <h3 className="text-2xl font-semibold text-purple-200 mt-8 mb-4">Kawaii Beauty & Self-Care 💅</h3>
-          <ul className="list-disc list-inside text-gray-200 space-y-2 mb-6">
-            <li>Gradient &quot;doll-like&quot; makeup with pink blush</li>
-            <li>Kawaii nail art with 3D decorations</li>
-            <li>Cute skincare products and face masks</li>
-            <li>Pastel hair colors or colored wigs</li>
-            <li>Character-themed bath products</li>
-          </ul>
-
-          <h2 className="text-3xl font-bold text-pink-200 mt-12 mb-6">Kawaii in the Digital Age 📱</h2>
-          <p className="text-gray-200 leading-relaxed mb-6">
-            Modern kawaii culture has evolved with technology, creating new spaces for cute culture to flourish:
+          <h2 className="font-shuneva text-3xl font-bold text-accent mt-12 mb-6">Press-On Nail Care & Maintenance 💖</h2>
+          <p className="leading-relaxed mb-6">
+            Press-on nails are a fantastic way to achieve salon-quality looks at home. Proper application and care will ensure they last longer and look flawless.
           </p>
-          <ul className="list-disc list-inside text-gray-200 space-y-2 mb-6">
-            <li><strong>Social Media:</strong> Instagram kawaii fashion accounts and TikTok aesthetic videos</li>
-            <li><strong>Gaming:</strong> Animal Crossing, Kawaii games, and cute mobile apps</li>
-            <li><strong>Digital Art:</strong> Kawaii illustrations and character design</li>
-            <li><strong>Virtual Spaces:</strong> Kawaii Discord servers and online communities</li>
+
+          <h3 className="font-shuneva text-2xl font-semibold text-pink-200 mt-8 mb-4">Pre-Application Prep</h3>
+          <ol className="list-decimal list-inside space-y-2 mb-6">
+            <li>Remove old polish completely</li>
+            <li>Trim and file natural nails short</li>
+            <li>Push back cuticles gently</li>
+            <li>Buff nail surface lightly for better adhesion</li>
+            <li>Clean nails with rubbing alcohol</li>
+            <li>Size each press-on to match your natural nails</li>
+          </ol>
+
+          <h3 className="font-shuneva text-2xl font-semibold text-pink-200 mt-8 mb-4">Application Tips</h3>
+          <ul className="list-disc list-inside space-y-2 mb-6">
+            <li>Start with your dominant hand&apos;s pinky finger</li>
+            <li>Apply at a 45-degree angle, then lower flat</li>
+            <li>Hold firmly for 15-30 seconds per nail</li>
+            <li>File and shape after all nails are applied</li>
+            <li>Apply a top coat for extra durability</li>
           </ul>
+
+          <div className="bg-gradient-to-r from-purple-900/50 to-pink-900/50 rounded-lg p-6 my-8">
+            <h3 className="font-shuneva text-xl font-semibold text-white mb-3"><span className="emoji">💡</span> Pro Maintenance Tips:</h3>
+            <ul className="list-disc list-inside space-y-2 text-sm">
+              <li>Avoid using nails as tools (opening cans, scratching, etc.)</li>
+              <li>Wear gloves when cleaning or doing dishes</li>
+              <li>Apply cuticle oil around the press-on edges daily</li>
+              <li>Use a nail file to smooth any lifting edges immediately</li>
+              <li>Reapply top coat every 3-4 days for shine and protection</li>
+            </ul>
+          </div>
+
+          <h2 className="font-shuneva text-3xl font-bold text-accent mt-12 mb-6">Common Nail Problems & Solutions 🔧</h2>
+          
+          <h3 className="font-shuneva text-2xl font-semibold text-pink-200 mt-8 mb-4">Weak, Brittle Nails</h3>
+          <p className="leading-relaxed mb-4">
+            <strong>Causes:</strong> Frequent polish use, harsh chemicals, dehydration, nutrient deficiencies
+          </p>
+          <p className="leading-relaxed mb-6">
+            <strong>Solutions:</strong> Use a strengthening base coat, increase biotin intake, apply cuticle oil twice daily, give nails polish-free breaks
+          </p>
+
+          <h3 className="font-shuneva text-2xl font-semibold text-pink-200 mt-8 mb-4">Yellow Staining</h3>
+          <p className="leading-relaxed mb-4">
+            <strong>Causes:</strong> Dark polish without base coat, smoking, certain medications
+          </p>
+          <p className="leading-relaxed mb-6">
+            <strong>Solutions:</strong> Always use base coat, try a whitening treatment, buff gently, use lemon juice as a natural lightener
+          </p>
+
+          <h3 className="font-shuneva text-2xl font-semibold text-pink-200 mt-8 mb-4">Hangnails & Dry Cuticles</h3>
+          <p className="leading-relaxed mb-4">
+            <strong>Causes:</strong> Dry environment, lack of moisture, aggressive cuticle cutting
+          </p>
+          <p className="leading-relaxed mb-6">
+            <strong>Solutions:</strong> Increase cuticle oil usage, use a humidifier, never pick at hangnails, apply healing balm overnight
+          </p>
+
+          <h2 className="font-shuneva text-3xl font-bold text-accent mt-12 mb-6">Essential Nail Care Tools & Products 🛠️</h2>
+          <p className="leading-relaxed mb-6">
+            Investing in quality tools makes all the difference in your nail care routine:
+          </p>
+
+          <div className="grid md:grid-cols-2 gap-6 mb-8">
+            <div className="bg-gradient-to-r from-pink-900/30 to-purple-900/30 rounded-lg p-6">
+              <h4 className="font-shuneva text-lg font-semibold text-white mb-3">🔧 Essential Tools:</h4>
+              <ul className="list-disc list-inside space-y-1 text-sm">
+                <li>Glass or crystal nail file</li>
+                <li>Cuticle pusher (metal or rubber)</li>
+                <li>Buffer block (4-way)</li>
+                <li>Cuticle nippers (for hangnails only)</li>
+                <li>Nail scissors for precise trimming</li>
+              </ul>
+            </div>
+            <div className="bg-gradient-to-r from-purple-900/30 to-pink-900/30 rounded-lg p-6">
+              <h4 className="font-shuneva text-lg font-semibold text-white mb-3">🧴 Must-Have Products:</h4>
+              <ul className="list-disc list-inside space-y-1 text-sm">
+                <li>Cuticle oil (jojoba or vitamin E)</li>
+                <li>Strengthening base coat</li>
+                <li>Acetone-free nail polish remover</li>
+                <li>Rich hand and cuticle cream</li>
+                <li>Quick-dry top coat</li>
+              </ul>
+            </div>
+          </div>
 
           <div className="bg-gradient-to-r from-pink-900/50 to-purple-900/50 rounded-lg p-8 my-12 text-center">
-            <h3 className="text-2xl font-bold text-white mb-4">Ready to Embrace Your Kawaii Side? 🌸</h3>
-            <p className="text-gray-200 mb-6">Start your kawaii journey with our curated collection of cute accessories and press-on nails!</p>
-            <Link 
-              href="/shop?brand_segment=accessories" 
-              className="inline-block bg-gradient-to-r from-pink-500 to-purple-500 text-white font-bold py-3 px-8 rounded-full hover:shadow-lg transition-all transform hover:scale-105 mr-4"
-            >
-              Shop Kawaii Boutique
-            </Link>
+            <h3 className="font-shuneva text-2xl font-bold text-white mb-4">Ready to Transform Your Nail Care Routine? <span className="emoji">💅</span></h3>
+            <p className="mb-6">Shop our premium press-on nails and nail care essentials for salon-quality results at home!</p>
             <Link 
               href="/shop?brand_segment=nails" 
-              className="inline-block bg-gradient-to-r from-purple-500 to-blue-500 text-white font-bold py-3 px-8 rounded-full hover:shadow-lg transition-all transform hover:scale-105"
+              className="inline-block bg-gradient-to-r from-pink-500 to-purple-500 text-white font-bold py-3 px-8 rounded-full hover:shadow-lg transition-all transform hover:scale-105"
             >
-              Shop Kawaii Nails
+              Shop Nail Collection
             </Link>
           </div>
 
-          <h2 className="text-3xl font-bold text-pink-200 mt-12 mb-6">Popular Kawaii Characters & Brands 🎪</h2>
-          <div className="grid md:grid-cols-2 gap-6 mb-8">
-            <div>
-              <h3 className="text-xl font-semibold text-purple-200 mb-3">Classic Characters</h3>
-              <ul className="text-gray-200 space-y-2">
-                <li>• Hello Kitty & Sanrio friends</li>
-                <li>• My Melody & Kuromi</li>
-                <li>• Rilakkuma & friends</li>
-                <li>• Pusheen the cat</li>
-                <li>• Tokidoki characters</li>
-              </ul>
-            </div>
-            <div>
-              <h3 className="text-xl font-semibold text-purple-200 mb-3">Modern Kawaii</h3>
-              <ul className="text-gray-200 space-y-2">
-                <li>• Molang & Piu Piu</li>
-                <li>• Aggretsuko</li>
-                <li>• Sumikko Gurashi</li>
-                <li>• Kirby & Nintendo characters</li>
-                <li>• Indie kawaii artists</li>
-              </ul>
-            </div>
-          </div>
+          <h2 className="font-shuneva text-3xl font-bold text-pink-200 mt-12 mb-6">Seasonal Nail Care Tips 🌸</h2>
+          
+          <h3 className="font-shuneva text-2xl font-semibold text-accent mt-8 mb-4">Spring/Summer Care</h3>
+          <ul className="list-disc list-inside space-y-2 mb-6">
+            <li>Increase SPF protection for hands and nails</li>
+            <li>Hydrate more due to increased sun exposure</li>
+            <li>Choose lighter, breathable nail treatments</li>
+            <li>Be extra gentle after swimming in chlorinated water</li>
+          </ul>
 
-          <h2 className="text-3xl font-bold text-pink-200 mt-12 mb-6">Building Your Kawaii Community 👯‍♀️</h2>
-          <p className="text-gray-200 leading-relaxed mb-6">
-            Kawaii culture is all about spreading joy and positivity! Here&apos;s how to connect with fellow kawaii enthusiasts:
-          </p>
-          <ul className="list-disc list-inside text-gray-200 space-y-2 mb-6">
-            <li>Follow kawaii fashion influencers and creators</li>
-            <li>Join online kawaii communities and forums</li>
-            <li>Attend anime conventions and kawaii meetups</li>
-            <li>Support independent kawaii artists and designers</li>
-            <li>Share your own kawaii journey on social media</li>
+          <h3 className="font-shuneva text-2xl font-semibold text-accent mt-8 mb-4">Fall/Winter Care</h3>
+          <ul className="list-disc list-inside space-y-2 mb-6">
+            <li>Combat dry indoor air with extra moisturizing</li>
+            <li>Use overnight cuticle treatments more frequently</li>
+            <li>Protect nails from cold weather with gloves</li>
+            <li>Consider richer, more nourishing nail treatments</li>
           </ul>
 
           <div className="border-l-4 border-pink-400 pl-6 my-8">
-            <p className="text-lg italic text-gray-200">
-              &quot;Remember, kawaii is about expressing joy and embracing what makes you happy. There&apos;s no wrong way to be kawaii  it&apos;s all about finding your own cute!&quot;
+            <p className="font-shuneva text-lg italic">
+              &ldquo;Beautiful nails aren&apos;t just about the perfect polish – they&apos;re about creating a healthy foundation that lets your creativity shine. Consistent care is the secret to nails that look amazing whether bare or adorned.&rdquo;
             </p>
-            <cite className="text-pink-400 font-semibold">- Diva Factory Team</cite>
+            <cite className="text-accent font-semibold">- Diva Factory Nail Care Team</cite>
           </div>
+
+          <h2 className="font-shuneva text-3xl font-bold text-accent mt-12 mb-6">When to Seek Professional Help 🏥</h2>
+          <p className="leading-relaxed mb-6">
+            While most nail care can be done at home, certain conditions require professional attention:
+          </p>
+          <ul className="list-disc list-inside space-y-2 mb-6">
+            <li>Persistent nail infections or fungus</li>
+            <li>Severe nail damage or trauma</li>
+            <li>Unexplained changes in nail color or texture</li>
+            <li>Painful ingrown nails</li>
+            <li>Allergic reactions to products</li>
+          </ul>
         </div>
 
         {/* Related Posts */}
         <section className="mt-16 pt-12 border-t border-gray-700">
-          <h2 className="text-2xl font-bold text-white mb-8">Explore More Kawaii Content</h2>
+          <h2 className="font-shuneva text-2xl font-bold text-heading mb-8">Related Posts</h2>
           <div className="grid md:grid-cols-2 gap-6">
             <Link href="/blog/y2k-nail-trends-2025" className="group">
               <div className="bg-gradient-to-r from-purple-900/30 to-pink-900/30 rounded-lg p-6 hover:shadow-lg transition-all">
-                <h3 className="text-xl font-semibold text-white group-hover:text-pink-400 transition-colors">
-                  Y2K Nail Art Trends for 2025
+                <h3 className="font-shuneva text-xl font-semibold text-white group-hover:text-pink-200 transition-colors">
+                  Y2K Nail Art Trends 2025
                 </h3>
-                <p className="text-gray-400 mt-2">Discover kawaii-inspired Y2K nail trends</p>
+                <p className="mt-2">Discover the hottest Y2K nail trends making a comeback</p>
               </div>
             </Link>
-            <Link href="/blog/press-on-nail-care-guide" className="group">
+            <Link href="/blog/kawaii-aesthetic-guide" className="group">
               <div className="bg-gradient-to-r from-pink-900/30 to-purple-900/30 rounded-lg p-6 hover:shadow-lg transition-all">
-                <h3 className="text-xl font-semibold text-white group-hover:text-pink-400 transition-colors">
-                  Press-On Nail Care Guide
+                <h3 className="font-shuneva text-xl font-semibold text-white group-hover:text-pink-200 transition-colors">
+                  The Ultimate Kawaii Aesthetic Guide
                 </h3>
-                <p className="text-gray-400 mt-2">Keep your kawaii nails looking perfect</p>
+                <p className="mt-2">Everything you need to know about kawaii culture and style</p>
               </div>
             </Link>
           </div>

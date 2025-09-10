@@ -164,13 +164,7 @@ export default function BlogPage() {
   aria-describedby="blog-desc"
   className="font-shuneva text-5xl md:text-6xl font-extrabold tracking-tight drop-shadow-md bg-clip-text text-transparent bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-600"
 >
-  Kawaii Culture & Style Tips{' '}
-<span
-    className="emoji text-accent inline-block align-[-0.1em]"
-    aria-hidden="true"
-  >
-    💖
-  </span>
+  Kawaii Culture & Style Tips
 </h1>
 
             <p

@@ -117,13 +117,7 @@ export default function NailGuidePage() {
 
         <header className="text-center mb-16">
           <h1 className="font-shuneva text-4xl md:text-6xl font-bold bg-gradient-to-r from-pink-400 via-purple-400 to-blue-400 bg-clip-text text-transparent mb-6">
-            Complete Press-On Nails Guide{' '}
-            <span
-              className="emoji inline-block align-[-0.1em]"
-              aria-hidden="true"
-            >
-              💅
-            </span>
+            Complete Press-On Nails Guide
           </h1>
             <p className="text-xl leading-relaxed max-w-3xl mx-auto">
             Everything you need to know about press-on nails! From your first application to pro-level tips, this comprehensive guide will help you achieve salon-quality results at home.
@@ -147,7 +141,7 @@ export default function NailGuidePage() {
           <div className="grid md:grid-cols-2 gap-8">
             <div className="bg-gradient-to-br from-pink-900/30 to-purple-900/30 rounded-lg p-6">
               <h3 className="text-xl font-bold text-pink-300 mb-4">What You'll Need</h3>
-              <ul className="text-gray-300 space-y-2">
+              <ul className=" space-y-2">
                 <li>✨ Press-on nail set (12 sizes included)</li>
                 <li>✨ Nail glue (included with our sets)</li>
                 <li>✨ Nail file or buffer</li>
@@ -158,7 +152,7 @@ export default function NailGuidePage() {
             </div>
             <div className="bg-gradient-to-br from-purple-900/30 to-blue-900/30 rounded-lg p-6">
               <h3 className="text-xl font-bold text-purple-300 mb-4">Time Investment</h3>
-              <div className="text-gray-300 space-y-3">
+              <div className=" space-y-3">
                 <div className="flex justify-between">
                   <span>First-time application:</span>
                   <span className="text-white">30-45 minutes</span>
@@ -225,7 +219,7 @@ export default function NailGuidePage() {
                   </div>
                   <div className="flex-1">
                     <h3 className="text-xl font-bold text-white mb-2">{step.title}</h3>
-                    <p className="text-gray-300 mb-3">{step.description}</p>
+                    <p className=" mb-3">{step.description}</p>
                     <div className="bg-blue-900/30 rounded-lg p-3">
                       <p className="text-blue-300 text-sm font-medium">{step.tip}</p>
                     </div>
@@ -242,7 +236,7 @@ export default function NailGuidePage() {
           <div className="grid md:grid-cols-2 gap-8">
             <div className="bg-gradient-to-br from-purple-900/30 to-pink-900/30 rounded-lg p-6">
               <h3 className="text-xl font-bold text-purple-300 mb-4">How to Measure</h3>
-              <ol className="text-gray-300 space-y-3">
+              <ol className=" space-y-3">
                 <li>1. Hold each press-on against your nail bed</li>
                 <li>2. It should cover side-to-side without touching skin</li>
                 <li>3. Check that it doesn't overlap your cuticle area</li>
@@ -252,13 +246,13 @@ export default function NailGuidePage() {
             </div>
             <div className="bg-gradient-to-br from-blue-900/30 to-purple-900/30 rounded-lg p-6">
               <h3 className="text-xl font-bold text-blue-300 mb-4">Size Chart Reference</h3>
-              <div className="text-gray-300 space-y-2 text-sm">
+              <div className=" space-y-2 text-sm">
                 <div className="flex justify-between"><span>Size 0-2:</span><span>Large nail beds</span></div>
                 <div className="flex justify-between"><span>Size 3-5:</span><span>Medium nail beds</span></div>
                 <div className="flex justify-between"><span>Size 6-8:</span><span>Small nail beds</span></div>
                 <div className="flex justify-between"><span>Size 9-11:</span><span>Very small nail beds</span></div>
               </div>
-              <p className="text-gray-400 text-sm mt-4">
+              <p className=" text-sm mt-4">
                 Each set includes 12 sizes to accommodate all nail shapes and sizes.
               </p>
             </div>
@@ -271,7 +265,7 @@ export default function NailGuidePage() {
           <div className="grid md:grid-cols-3 gap-6">
             <div className="bg-gradient-to-br from-pink-900/30 to-purple-900/30 rounded-lg p-6">
               <h3 className="text-lg font-bold text-pink-300 mb-4">Daily Care</h3>
-              <ul className="text-gray-300 space-y-2 text-sm">
+              <ul className=" space-y-2 text-sm">
                 <li>• Apply cuticle oil daily</li>
                 <li>• Wear gloves for cleaning</li>
                 <li>• Avoid using nails as tools</li>
@@ -280,7 +274,7 @@ export default function NailGuidePage() {
             </div>
             <div className="bg-gradient-to-br from-purple-900/30 to-blue-900/30 rounded-lg p-6">
               <h3 className="text-lg font-bold text-purple-300 mb-4">Water Activities</h3>
-              <ul className="text-gray-300 space-y-2 text-sm">
+              <ul className=" space-y-2 text-sm">
                 <li>• Wait 24h before swimming</li>
                 <li>• Pat dry after washing</li>
                 <li>• Avoid hot water soaks</li>
@@ -289,7 +283,7 @@ export default function NailGuidePage() {
             </div>
             <div className="bg-gradient-to-br from-blue-900/30 to-pink-900/30 rounded-lg p-6">
               <h3 className="text-lg font-bold text-blue-300 mb-4">Quick Fixes</h3>
-              <ul className="text-gray-300 space-y-2 text-sm">
+              <ul className=" space-y-2 text-sm">
                 <li>• File small chips smooth</li>
                 <li>• Add extra glue if lifting</li>
                 <li>• Replace damaged nails quickly</li>
@@ -306,7 +300,7 @@ export default function NailGuidePage() {
             <div className="grid md:grid-cols-2 gap-8">
               <div>
                 <h3 className="text-xl font-bold text-white mb-4">Step-by-Step Removal</h3>
-                <ol className="text-gray-300 space-y-3">
+                <ol className=" space-y-3">
                   <li>1. Soak nails in warm soapy water for 10-15 minutes</li>
                   <li>2. Gently lift from the cuticle area using a cuticle pusher</li>
                   <li>3. Never force or pull - soak longer if resistant</li>
@@ -316,7 +310,7 @@ export default function NailGuidePage() {
               </div>
               <div className="bg-red-900/30 rounded-lg p-6">
                 <h3 className="text-xl font-bold text-red-300 mb-4">❌ Never Do This</h3>
-                <ul className="text-gray-300 space-y-2">
+                <ul className=" space-y-2">
                   <li>• Force or peel off press-ons</li>
                   <li>• Use acetone or harsh chemicals</li>
                   <li>• Pull at lifted edges</li>
@@ -353,7 +347,7 @@ export default function NailGuidePage() {
             ].map((section, index) => (
               <div key={index} className="bg-gradient-to-br from-purple-900/30 to-blue-900/30 rounded-lg p-6">
                 <h3 className="text-xl font-bold text-purple-300 mb-4">{section.title}</h3>
-                <ul className="text-gray-300 space-y-2">
+                <ul className=" space-y-2">
                   {section.tips.map((tip, tipIndex) => (
                     <li key={tipIndex}>💡 {tip}</li>
                   ))}

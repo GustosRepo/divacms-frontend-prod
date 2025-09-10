@@ -197,15 +197,16 @@ export default function ManageOrders() {
   }
 
   return (
-    <div className="container mx-auto p-6 text-white">
-      <h1 className="text-3xl font-bold text-center">Manage Orders</h1>
-      {message && <p className="text-center text-green-500 mt-4">{message}</p>}
+    <div className="w-full max-w-full px-2 lg:px-6 py-4 lg:py-6 text-white">
+      <h1 className="text-2xl lg:text-3xl font-bold text-center mb-4 lg:mb-6">Manage Orders</h1>
+      {message && <p className="text-center text-green-500 mb-4">{message}</p>}
+      
       {/* Filters */}
-      <div className="mt-4 flex items-center gap-3">
-        <label htmlFor="statusFilter" className="text-sm text-gray-300">Filter status:</label>
+      <div className="mb-4 flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-3">
+        <label htmlFor="statusFilter" className="text-sm text-gray-300 whitespace-nowrap">Filter status:</label>
         <select
           id="statusFilter"
-          className="bg-gray-800 border border-white/10 rounded p-2 text-sm"
+          className="bg-gray-800 border border-white/10 rounded p-2 text-sm w-full sm:w-auto"
           value={filterStatus}
           onChange={(e) => setFilterStatus(e.target.value)}
         >
@@ -218,17 +219,26 @@ export default function ManageOrders() {
           <option value="picked_up">picked_up</option>
         </select>
       </div>
-      <table className="w-full mt-6 bg-gray-800 text-white rounded-lg">
+
+      {/* Mobile: Show scroll hint */}
+      <div className="lg:hidden text-xs text-gray-400 mb-2 text-center">
+        ← Scroll horizontally to see all columns →
+      </div>
+
+      {/* Table Container - Horizontally scrollable on mobile */}
+      <div className="overflow-x-auto -mx-2 lg:mx-0">
+        <div className="min-w-max lg:min-w-full px-2 lg:px-0">
+          <table className="w-full bg-gray-800 text-white rounded-lg text-sm lg:text-base">
         <thead>
           <tr className="bg-blue-500">
-            <th className="p-3">Customer</th>
-            <th className="p-3">Shipping Address</th>
-            <th className="p-3">Total Amount</th>
-            <th className="p-3">Status</th>
-            <th className="p-3">Tracking</th>
-            <th className="p-3">Phone</th>
-            <th className="p-3">Payment</th>
-            <th className="p-3">Actions</th>
+            <th className="p-2 lg:p-3 text-xs lg:text-sm font-medium">Customer</th>
+            <th className="p-2 lg:p-3 text-xs lg:text-sm font-medium min-w-[200px]">Shipping Address</th>
+            <th className="p-2 lg:p-3 text-xs lg:text-sm font-medium">Total</th>
+            <th className="p-2 lg:p-3 text-xs lg:text-sm font-medium">Status</th>
+            <th className="p-2 lg:p-3 text-xs lg:text-sm font-medium">Tracking</th>
+            <th className="p-2 lg:p-3 text-xs lg:text-sm font-medium">Phone</th>
+            <th className="p-2 lg:p-3 text-xs lg:text-sm font-medium">Payment</th>
+            <th className="p-2 lg:p-3 text-xs lg:text-sm font-medium min-w-[150px]">Actions</th>
           </tr>
         </thead>
         <tbody>
@@ -242,8 +252,12 @@ export default function ManageOrders() {
           {orders.length > 0 &&
             orders.map((order) => (
               <tr key={order.id} className="border-b border-gray-600">
-                <td className="p-3">{order.customerEmail || "Guest"}</td>
-                <td className="p-3">
+                <td className="p-2 lg:p-3 text-xs lg:text-sm">
+                  <div className="max-w-[120px] truncate" title={order.customerEmail || "Guest"}>
+                    {order.customerEmail || "Guest"}
+                  </div>
+                </td>
+                <td className="p-2 lg:p-3 text-xs lg:text-sm">
                   {(() => {
                     const s = (order.shipping_info || {}) as ShippingInfo;
                     const line1 = s.address_line1 || s.address || order.address || "";
@@ -296,14 +310,16 @@ export default function ManageOrders() {
                     return <span className="text-gray-400">No address</span>;
                   })()}
                 </td>
-                <td className="p-3">{typeof order.totalAmount === "number" ? `$${order.totalAmount.toFixed(2)}` : <span className="text-gray-400">N/A</span>}</td>
-                <td className="p-3">
+                <td className="p-2 lg:p-3 text-xs lg:text-sm font-medium">
+                  {typeof order.totalAmount === "number" ? `$${order.totalAmount.toFixed(2)}` : <span className="text-gray-400">N/A</span>}
+                </td>
+                <td className="p-2 lg:p-3">
                   <select
                     value={order.status}
                     onChange={(e) =>
                       handleStatusChange(order.id, e.target.value)
                     }
-                    className="bg-gray-700 text-white rounded p-1"
+                    className="bg-gray-700 text-white rounded p-1 text-xs lg:text-sm w-full max-w-[120px]"
                   >
                     <option value="Pending">Pending</option>
                     <option value="Shipped">Shipped</option>
@@ -313,38 +329,42 @@ export default function ManageOrders() {
                     <option value="picked_up">picked_up</option>
                   </select>
                 </td>
-                <td className="p-3">
-                  {order.trackingCode ? (
-                    <span className="text-green-400">{order.trackingCode}</span>
-                  ):(
-                    <span className="text-gray-400">Not Available</span>
-                  )}
+                <td className="p-2 lg:p-3 text-xs lg:text-sm">
+                  <div className="max-w-[100px] truncate" title={order.trackingCode || "Not Available"}>
+                    {order.trackingCode ? (
+                      <span className="text-green-400">{order.trackingCode}</span>
+                    ):(
+                      <span className="text-gray-400">Not Available</span>
+                    )}
+                  </div>
                 </td>
-                <td className="p-3">
-                  {(() => {
-                    const s = order.shipping_info as ShippingInfo | null;
-                    const phone = s?.customer?.phone || s?.phone || order.phone;
-                    return phone ? String(phone) : <span className="text-gray-400">No phone</span>;
-                  })()}
+                <td className="p-2 lg:p-3 text-xs lg:text-sm">
+                  <div className="max-w-[100px] truncate">
+                    {(() => {
+                      const s = order.shipping_info as ShippingInfo | null;
+                      const phone = s?.customer?.phone || s?.phone || order.phone;
+                      return phone ? String(phone) : <span className="text-gray-400">No phone</span>;
+                    })()}
+                  </div>
                 </td>
-                <td className="p-3">
+                <td className="p-2 lg:p-3 text-xs">
                   {(() => {
                     const pay = (order.shipping_info as ShippingInfo | null)?.payment_status as string | undefined;
                     if (!pay) return <span className="text-gray-400">N/A</span>;
-                    if (pay.toLowerCase() === "paid") return <span className="px-2 py-0.5 rounded bg-green-600/20 text-green-300 text-xs">paid</span>;
-                    if (pay.toLowerCase() === "unpaid") return <span className="px-2 py-0.5 rounded bg-yellow-600/20 text-yellow-300 text-xs">unpaid</span>;
+                    if (pay.toLowerCase() === "paid") return <span className="px-1 py-0.5 rounded bg-green-600/20 text-green-300 text-xs">paid</span>;
+                    if (pay.toLowerCase() === "unpaid") return <span className="px-1 py-0.5 rounded bg-yellow-600/20 text-yellow-300 text-xs">unpaid</span>;
                     return <span className="text-gray-300 text-xs">{pay}</span>;
                   })()}
                 </td>
-                <td className="p-3">
-                  <div className="flex flex-wrap items-center gap-2">
+                <td className="p-2 lg:p-3">
+                  <div className="flex flex-col lg:flex-row lg:flex-wrap items-start lg:items-center gap-1 lg:gap-2">
                     {/* View payment proof if uploaded */}
                     {(() => {
                       const proofUrl = (order.shipping_info as ShippingInfo | null)?.payment_proof_url as string | undefined;
                       return proofUrl ? (
                         <button
                           onClick={() => setProofModalUrl(proofUrl)}
-                          className="bg-white/10 hover:bg-white/20 px-3 py-1 rounded text-sm"
+                          className="bg-white/10 hover:bg-white/20 px-2 py-1 rounded text-xs lg:text-sm w-full lg:w-auto"
                         >
                           View Proof
                         </button>
@@ -355,22 +375,22 @@ export default function ManageOrders() {
                       const pay = (order.shipping_info as ShippingInfo | null)?.payment_status as string | undefined;
                       const isPaid = (pay || "").toLowerCase() === "paid";
                       return !isPaid ? (
-                        <button onClick={() => handleMarkPaid(order.id)} className="bg-green-600 hover:bg-green-700 px-3 py-1 rounded text-sm">Mark Paid</button>
+                        <button onClick={() => handleMarkPaid(order.id)} className="bg-green-600 hover:bg-green-700 px-2 py-1 rounded text-xs lg:text-sm w-full lg:w-auto">Mark Paid</button>
                       ) : null;
                     })()}
 
                     {/* Pickup-specific actions */}
                     {order.status === "awaiting_pickup" && (
                       <>
-                        <button onClick={() => handleMarkPickedUp(order.id)} className="bg-blue-600 hover:bg-blue-700 px-3 py-1 rounded text-sm">Mark Picked Up</button>
-                        <button onClick={() => handleCancel(order.id)} className="bg-red-600 hover:bg-red-700 px-3 py-1 rounded text-sm">Cancel</button>
+                        <button onClick={() => handleMarkPickedUp(order.id)} className="bg-blue-600 hover:bg-blue-700 px-2 py-1 rounded text-xs lg:text-sm w-full lg:w-auto">Mark Picked Up</button>
+                        <button onClick={() => handleCancel(order.id)} className="bg-red-600 hover:bg-red-700 px-2 py-1 rounded text-xs lg:text-sm w-full lg:w-auto">Cancel</button>
                       </>
                     )}
 
                     {/* Fallback delete (admin dangerous) */}
                     <button
                       onClick={() => handleDelete(order.id)}
-                      className="bg-red-500 px-3 py-1 rounded text-sm"
+                      className="bg-red-500 hover:bg-red-600 px-2 py-1 rounded text-xs lg:text-sm w-full lg:w-auto"
                     >
                       🗑 Delete
                     </button>
@@ -379,7 +399,10 @@ export default function ManageOrders() {
               </tr>
             ))}
         </tbody>
-      </table>
+          </table>
+        </div>
+      </div>
+
       {/* Proof modal */}
       {proofModalUrl && (
         <div className="fixed inset-0 z-50 flex items-center justify-center">
