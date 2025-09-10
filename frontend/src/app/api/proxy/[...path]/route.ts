@@ -48,31 +48,41 @@ async function forward(request: Request, params: { path?: string[] }) {
   }
 }
 
-function extractParams(ctx: unknown): { path?: string[] } {
-  const asObj = ctx as { params?: { path?: string[] } } | undefined;
-  return (asObj && asObj.params) ? asObj.params : {};
+async function extractParams(ctx: unknown): Promise<{ path?: string[] }> {
+  const asObj = ctx as { params?: unknown } | undefined;
+  const maybeParams = asObj?.params;
+  if (!maybeParams) return {};
+  // params may be a Promise in newer Next versions; await if needed
+  const resolved = (typeof (maybeParams as any)?.then === 'function') ? await (maybeParams as any) : maybeParams;
+  return resolved as { path?: string[] };
 }
 
 export async function GET(request: Request, context: unknown) {
-  return forward(request, extractParams(context));
+  const params = await extractParams(context);
+  return forward(request, params);
 }
 
 export async function POST(request: Request, context: unknown) {
-  return forward(request, extractParams(context));
+  const params = await extractParams(context);
+  return forward(request, params);
 }
 
 export async function PUT(request: Request, context: unknown) {
-  return forward(request, extractParams(context));
+  const params = await extractParams(context);
+  return forward(request, params);
 }
 
 export async function PATCH(request: Request, context: unknown) {
-  return forward(request, extractParams(context));
+  const params = await extractParams(context);
+  return forward(request, params);
 }
 
 export async function DELETE(request: Request, context: unknown) {
-  return forward(request, extractParams(context));
+  const params = await extractParams(context);
+  return forward(request, params);
 }
 
 export async function OPTIONS(request: Request, context: unknown) {
-  return forward(request, extractParams(context));
+  const params = await extractParams(context);
+  return forward(request, params);
 }
