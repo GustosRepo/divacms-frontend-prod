@@ -43,7 +43,7 @@ export default function AddProduct() {
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const data = await safeFetch('/categories');
+        const data = await safeFetch('/api/proxy/categories');
         setCategories(data);
       } catch (error) {
         console.error("Error fetching categories:", error);
@@ -86,6 +86,10 @@ export default function AddProduct() {
       alert("Brand segment and category slug are required.");
       return;
     }
+    if (!productData.image) {
+      alert('Image is required. Please select an image file.');
+      return;
+    }
     if (!user) { alert("User is not authenticated."); return; }
     if (isNaN(parseFloat(productData.price)) || isNaN(parseInt(productData.quantity))) {
       alert("Price and Quantity must be numbers.");
@@ -107,15 +111,34 @@ export default function AddProduct() {
     formData.append("heightIn", productData.heightIn ?? "");
 
     try {
-      await safeFetch('/admin/products', {
+      // Only append optional fields if present (avoid sending empty strings that can parse weirdly server-side)
+      if (productData.weightOz) formData.set("weightOz", productData.weightOz);
+      else formData.delete("weightOz");
+      if (productData.lengthIn) formData.set("lengthIn", productData.lengthIn);
+      else formData.delete("lengthIn");
+      if (productData.widthIn) formData.set("widthIn", productData.widthIn);
+      else formData.delete("widthIn");
+      if (productData.heightIn) formData.set("heightIn", productData.heightIn);
+      else formData.delete("heightIn");
+
+      const res = await fetch('/api/proxy/admin/products', {
         method: 'POST',
+        // IMPORTANT: do not set Content-Type when using FormData; browser sets boundary
         body: formData,
+        credentials: 'include',
       });
-      alert("🎉 Product added successfully!");
-      router.push("/admin/products");
+
+      if (!res.ok) {
+        const txt = await res.text().catch(() => '');
+        console.error('❌ Error adding product: ', res.status, txt);
+        throw new Error(`API ${res.status} adding product`);
+      }
+
+      alert('🎉 Product added successfully!');
+      router.push('/admin/products');
     } catch (error) {
-      console.error("❌ Error adding product:", error);
-      alert("Failed to add product.");
+      console.error('❌ Error adding product:', error);
+      alert('Failed to add product.');
     }
   };
 
@@ -174,7 +197,13 @@ export default function AddProduct() {
         </div>
 
         <label className="block text-white text-sm lg:text-base mt-4">Image:</label>
-        <input type="file" onChange={handleFileChange} className="w-full p-2 text-white bg-gray-700 rounded-md mt-2 text-sm" required />
+        <input
+          type="file"
+          accept="image/*"
+          onChange={handleFileChange}
+          className="w-full p-2 text-white bg-gray-700 rounded-md mt-2 text-sm"
+          required
+        />
 
         <label className="text-white text-sm lg:text-base mt-4 flex items-center">
           <input type="checkbox" checked={productData.bestSeller} onChange={handleCheckboxChange} className="mr-2" />
