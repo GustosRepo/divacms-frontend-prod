@@ -37,14 +37,16 @@ export default function Navbar() {
         transition={{ duration: 0.6, delay: 0.2, ease: "easeOut" }}
         className="flex items-center gap-3"
       >
-        <Image
-          src="/uploads/divanailslogo.png"
-          alt="Diva Factory Logo"
+        <Link href="/" className="hover:opacity-80 transition-opacity">
+          <Image
+            src="/uploads/divanailslogo.png"
+            alt="Diva Factory Logo"
             width={46}
             height={46}
             priority
-            className="drop-shadow-[0_0_10px_rgba(255,255,255,0.4)]"
-        />
+            className="drop-shadow-[0_0_10px_rgba(255,255,255,0.4)] cursor-pointer"
+          />
+        </Link>
       </motion.div>
       {/* Desktop Menu */}
       <div className="hidden md:flex items-center gap-6 text-sm font-medium font-shuneva">
