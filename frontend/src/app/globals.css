@@ -113,7 +113,7 @@ h1, h2, h3, h4, h5, h6 {
   line-height: 1.15;
   letter-spacing: -0.015em;
   color: var(--color-fg-heading);
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.696), 0 2px 4px rgba(0,0,0,0.12);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.696), 0 2px 4px rgba(231, 219, 232, 0.12);
   font-optical-sizing: auto;
   text-wrap: balance;
 }
@@ -185,7 +185,7 @@ html { font-size: 16px; }
   animation: glitch 1s infinite;
   text-shadow: 
     2px 2px 0 #ff00ff, 
-    -2px -2px 0 #00ffff;
+    -2px -2px 0 #8c10ff;
 }
 
 /* 🌌 Background Noise Texture */

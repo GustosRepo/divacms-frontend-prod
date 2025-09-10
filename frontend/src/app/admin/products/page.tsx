@@ -75,22 +75,25 @@ export default function ManageProducts() {
   }
 
   return (
-    <div className="container mx-auto p-6 text-white">
-      <h1 className="text-3xl font-bold text-center">Manage Products</h1>
-      <div className="flex flex-wrap items-center gap-3 mt-4">
+    <div className="w-full max-w-full px-2 lg:px-6 py-4 lg:py-6 text-white">
+      <h1 className="text-2xl lg:text-3xl font-bold text-center mb-4 lg:mb-6">Manage Products</h1>
+      
+      {/* Controls Section */}
+      <div className="flex flex-col sm:flex-row flex-wrap items-start sm:items-center gap-3 mb-4">
         <button
           onClick={() => router.push("/admin/products/add")}
-          className="bg-green-500 px-4 py-2 rounded-md text-white"
+          className="bg-green-500 hover:bg-green-600 px-4 py-2 rounded-md text-white font-medium w-full sm:w-auto transition-colors"
         >
           ➕ Add New Product
         </button>
+        
         {/* Brand Filter */}
-        <div className="flex items-center gap-2">
-          <label className="text-sm opacity-80">Brand:</label>
+        <div className="flex items-center gap-2 w-full sm:w-auto">
+          <label className="text-sm opacity-80 whitespace-nowrap">Brand:</label>
           <select
             value={brandFilter}
             onChange={(e) => setBrandFilter(e.target.value)}
-            className="bg-gray-700 px-3 py-2 rounded text-sm"
+            className="bg-gray-700 px-3 py-2 rounded text-sm w-full sm:w-auto"
           >
             <option value="">All</option>
             <option value="nails">Nails</option>
@@ -98,23 +101,33 @@ export default function ManageProducts() {
             <option value="accessories">Accessories</option>
           </select>
         </div>
+        
         <button
           onClick={() => setSortByBrand((s) => !s)}
-          className="bg-blue-500 px-4 py-2 rounded-md text-white text-sm"
+          className="bg-blue-500 hover:bg-blue-600 px-4 py-2 rounded-md text-white text-sm font-medium w-full sm:w-auto transition-colors"
         >
           {sortByBrand ? "🔠 Clear Brand Sort" : "🔠 Sort by Brand"}
         </button>
       </div>
-      <table className="w-full mt-6 bg-gray-800 text-white rounded-lg text-sm">
+
+      {/* Mobile: Show scroll hint */}
+      <div className="lg:hidden text-xs text-gray-400 mb-2 text-center">
+        ← Scroll horizontally to see all columns →
+      </div>
+
+      {/* Table Container - Horizontally scrollable on mobile */}
+      <div className="overflow-x-auto -mx-2 lg:mx-0">
+        <div className="min-w-max lg:min-w-full px-2 lg:px-0">
+          <table className="w-full bg-gray-800 text-white rounded-lg text-sm lg:text-base">
         <thead>
           <tr className="bg-blue-500 text-left">
-            <th className="p-3">Title</th>
-            <th className="p-3">Price</th>
-            <th className="p-3">Brand</th>
-            <th className="p-3">Category</th>
-            <th className="p-3">Best Seller</th>
-            <th className="p-3">Stock</th>
-            <th className="p-3">Actions</th>
+            <th className="p-2 lg:p-3 text-xs lg:text-sm font-medium">Title</th>
+            <th className="p-2 lg:p-3 text-xs lg:text-sm font-medium">Price</th>
+            <th className="p-2 lg:p-3 text-xs lg:text-sm font-medium">Brand</th>
+            <th className="p-2 lg:p-3 text-xs lg:text-sm font-medium">Category</th>
+            <th className="p-2 lg:p-3 text-xs lg:text-sm font-medium">Best Seller</th>
+            <th className="p-2 lg:p-3 text-xs lg:text-sm font-medium">Stock</th>
+            <th className="p-2 lg:p-3 text-xs lg:text-sm font-medium min-w-[120px]">Actions</th>
           </tr>
         </thead>
         <tbody>
@@ -124,33 +137,47 @@ export default function ManageProducts() {
             const brandDisplay = product.brandSegment || "-";
             return (
               <tr key={product.id} className="border-b border-gray-600">
-                <td className="p-3">{product.title}</td>
-                <td className="p-3">${product.price.toFixed(2)}</td>
-                <td className="p-3 capitalize">{brandDisplay}</td>
-                <td className="p-3">{categoryDisplay}</td>
-                <td className="p-3">
+                <td className="p-2 lg:p-3 text-xs lg:text-sm">
+                  <div className="max-w-[150px] lg:max-w-none truncate" title={product.title}>
+                    {product.title}
+                  </div>
+                </td>
+                <td className="p-2 lg:p-3 text-xs lg:text-sm font-medium">
+                  ${product.price.toFixed(2)}
+                </td>
+                <td className="p-2 lg:p-3 text-xs lg:text-sm capitalize">
+                  {brandDisplay}
+                </td>
+                <td className="p-2 lg:p-3 text-xs lg:text-sm">
+                  <div className="max-w-[100px] lg:max-w-none truncate" title={categoryDisplay}>
+                    {categoryDisplay}
+                  </div>
+                </td>
+                <td className="p-2 lg:p-3 text-xs lg:text-sm">
                   {product.bestSeller ? "✅ Yes" : "❌ No"}
                 </td>
                 <td
-                  className="p-3"
+                  className="p-2 lg:p-3 text-xs lg:text-sm font-medium"
                   style={{
                     color: product.quantity < 3 ? "#f87171" : "white",
                   }}
                 >
                   {product.quantity}
                 </td>
-                <td className="p-3 flex gap-2">
-                  <Link href={`/admin/products/edit/${product.id}`}>
-                    <button className="bg-yellow-500 px-3 py-1 rounded">
-                      ✏️ Edit
+                <td className="p-2 lg:p-3">
+                  <div className="flex flex-col lg:flex-row gap-1 lg:gap-2">
+                    <Link href={`/admin/products/edit/${product.id}`}>
+                      <button className="bg-yellow-500 hover:bg-yellow-600 px-2 lg:px-3 py-1 rounded text-xs lg:text-sm w-full lg:w-auto transition-colors">
+                        ✏️ Edit
+                      </button>
+                    </Link>
+                    <button
+                      onClick={() => handleDelete(product.id)}
+                      className="bg-red-500 hover:bg-red-600 px-2 lg:px-3 py-1 rounded text-xs lg:text-sm w-full lg:w-auto transition-colors"
+                    >
+                      🗑 Delete
                     </button>
-                  </Link>
-                  <button
-                    onClick={() => handleDelete(product.id)}
-                    className="bg-red-500 px-3 py-1 rounded"
-                  >
-                    🗑 Delete
-                  </button>
+                  </div>
                 </td>
               </tr>
             );
@@ -163,7 +190,9 @@ export default function ManageProducts() {
             </tr>
           )}
         </tbody>
-      </table>
+          </table>
+        </div>
+      </div>
     </div>
   );
 }

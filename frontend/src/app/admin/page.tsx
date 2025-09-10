@@ -41,40 +41,39 @@ export default function AdminDashboard() {
   if (!user || !user.isAdmin) return null; // Prevent rendering if unauthorized
 
   return (
-    <div className="min-h-screen flex">
-
+    <div className="min-h-screen pt-16">
       {/* Main Content */}
-      <main className="flex-1 px-6 py-10 text-white">
-        <h1 className="text-3xl font-bold text-center text-pink-500">📊 Admin Dashboard</h1>
+      <main className="px-4 lg:px-6 py-6 lg:py-10 text-white">
+        <h1 className="text-2xl lg:text-3xl font-bold text-center text-pink-500 mb-6 lg:mb-8">📊 Admin Dashboard</h1>
 
         {/* Stats Section */}
-        <div className="grid grid-cols-3 gap-6 mt-8 text-center">
-          <div className="bg-black/40 p-6 rounded-lg shadow-lg">
-            <h2 className="text-xl font-bold text-pink-400">👥 Total Users</h2>
-            <p className="text-3xl font-bold">{stats.totalUsers}</p>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-6 text-center">
+          <div className="bg-black/40 p-4 lg:p-6 rounded-lg shadow-lg">
+            <h2 className="text-lg lg:text-xl font-bold text-pink-400 mb-2">👥 Total Users</h2>
+            <p className="text-2xl lg:text-3xl font-bold">{stats.totalUsers}</p>
           </div>
 
-          <div className="bg-black/40 p-6 rounded-lg shadow-lg">
-            <h2 className="text-xl font-bold text-pink-400">📦 Total Orders</h2>
-            <p className="text-3xl font-bold">{stats.totalOrders}</p>
+          <div className="bg-black/40 p-4 lg:p-6 rounded-lg shadow-lg">
+            <h2 className="text-lg lg:text-xl font-bold text-pink-400 mb-2">📦 Total Orders</h2>
+            <p className="text-2xl lg:text-3xl font-bold">{stats.totalOrders}</p>
           </div>
 
-          <div className="bg-black/40 p-6 rounded-lg shadow-lg">
-            <h2 className="text-xl font-bold text-pink-400">💰 Total Revenue</h2>
-            <p className="text-3xl font-bold">${stats.totalRevenue.toFixed(2)}</p>
+          <div className="bg-black/40 p-4 lg:p-6 rounded-lg shadow-lg sm:col-span-2 lg:col-span-1">
+            <h2 className="text-lg lg:text-xl font-bold text-pink-400 mb-2">💰 Total Revenue</h2>
+            <p className="text-2xl lg:text-3xl font-bold">${stats.totalRevenue.toFixed(2)}</p>
           </div>
         </div>
 
         {/* Management Links */}
-        <div className="flex flex-col items-center mt-8 space-y-4">
-          <Link href="/admin/users">
-            <button className="bg-pink-500 hover:bg-pink-700 px-5 py-3 rounded-md text-white">
-              Manage Users
+        <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mt-6 lg:mt-8">
+          <Link href="/admin/users" className="w-full sm:w-auto">
+            <button className="bg-pink-500 hover:bg-pink-700 px-6 lg:px-8 py-3 lg:py-4 rounded-md text-white font-medium w-full sm:w-auto transition-colors">
+              👥 Manage Users
             </button>
           </Link>
-          <Link href="/admin/orders">
-            <button className="bg-blue-500 hover:bg-blue-700 px-5 py-3 rounded-md text-white">
-              Manage Orders
+          <Link href="/admin/orders" className="w-full sm:w-auto">
+            <button className="bg-blue-500 hover:bg-blue-700 px-6 lg:px-8 py-3 lg:py-4 rounded-md text-white font-medium w-full sm:w-auto transition-colors">
+              📦 Manage Orders
             </button>
           </Link>
         </div>

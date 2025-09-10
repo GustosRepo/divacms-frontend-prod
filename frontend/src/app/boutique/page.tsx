@@ -9,8 +9,8 @@ export const metadata = {
 const boutiqueConfig: BrandConfig = {
   brand: 'accessories',
   displayName: 'Diva Factory Boutique',
-  tagline: 'Kawaii lifestyle & pastel finds across accessories & decor.',
-  tags: ['Kawaii', 'Pastel', 'Curated', 'Lifestyle', 'Giftable'],
+  tagline: 'Kawaii lifestyle & Diva finds across accessories & decor.',
+  tags: ['Kawaii', 'Pastel', 'Curated', 'Lifestyle', 'Giftable', 'Trendy', 'Affordable', 'Unique'],
   categories: [
     { title: 'Everyday Essentials', desc: 'Pins, clips & charms', slug: 'everyday-essentials' },
     { title: 'Seasonal Highlights', desc: 'Limited seasonal collections', slug: 'seasonal-highlights' },

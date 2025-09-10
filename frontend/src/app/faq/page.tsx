@@ -197,20 +197,14 @@ export default function FAQPage() {
         <nav className="mb-8 text-sm">
           <Link href="/" className="text-pink-400 hover:text-pink-300">Home</Link>
           <span className="mx-2">→</span>
-          <span className="text-gray-300">FAQ</span>
+          <span className="">FAQ</span>
         </nav>
 
         <header className="text-center mb-16">
           <h1 className="font-shuneva text-4xl md:text-6xl font-bold bg-gradient-to-r from-pink-400 via-purple-400 to-blue-400 bg-clip-text text-transparent mb-6">
-            Frequently Asked Questions{' '}
-            <span
-              className="emoji inline-block align-[-0.1em]"
-              aria-hidden="true"
-            >
-              🤔
-            </span>
+            Frequently Asked Questions
           </h1>
-          <p className="text-xl text-gray-300 leading-relaxed max-w-3xl mx-auto">
+          <p className="text-xl  leading-relaxed max-w-3xl mx-auto">
             Everything you need to know about our luxury press-on nails! From application tips to shipping info, we&apos;ve got you covered.
           </p>
         </header>
@@ -252,7 +246,7 @@ export default function FAQPage() {
                     </div>
                   </summary>
                   <div className="mt-4 pt-4 border-t border-gray-700">
-                    <p className="text-gray-300 leading-relaxed">{faq.a}</p>
+                    <p className=" leading-relaxed">{faq.a}</p>
                   </div>
                 </details>
               ))}

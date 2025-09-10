@@ -11,30 +11,30 @@ interface Review {
 
 const reviews: Review[] = [
   // Boutique reviews
-  { id: 1, name: "Emily R.", text: "The boutique selection is so dreamy! Pastel heaven.", rating: 5, type: "boutique" },
+  { id: 1, name: "Emily R.", text: "The boutique selection is so dreamy! diva heaven.", rating: 5, type: "boutique" },
   { id: 2, name: "Sophia M.", text: "Love the Y2K bags and accessories. Super cute!", rating: 5, type: "boutique" },
   { id: 3, name: "Olivia J.", text: "The scrunchies and clips are adorable and high quality.", rating: 4.5, type: "boutique" },
-  { id: 4, name: "Ava L.", text: "My pastel sunglasses are a total vibe.", rating: 5, type: "boutique" },
+  { id: 4, name: "Ava L.", text: "My Y2K sunglasses are a total vibe.", rating: 5, type: "boutique" },
   { id: 5, name: "Mia K.", text: "The boutique packaging is so aesthetic!", rating: 5, type: "boutique" },
   { id: 6, name: "Zoe T.", text: "I always find something unique for my outfits.", rating: 4.5, type: "boutique" },
   { id: 7, name: "Chloe S.", text: "The jewelry is perfect for layering. Obsessed!", rating: 5, type: "boutique" },
   { id: 8, name: "Lily P.", text: "Fast shipping and everything arrived in perfect condition.", rating: 5, type: "boutique" },
-  { id: 9, name: "Ella D.", text: "The pastel purses are my new go-to.", rating: 4, type: "boutique" },
+  { id: 9, name: "Ella D.", text: "The cute purses are my new go-to.", rating: 4, type: "boutique" },
   { id: 10, name: "Grace F.", text: "Customer service is so friendly and helpful.", rating: 5, type: "boutique" },
   // Toys reviews
   { id: 11, name: "Harper W.", text: "The plushies are SO soft and cute!", rating: 5, type: "toys" },
-  { id: 12, name: "Layla B.", text: "My daughter loves the pastel stacking toys.", rating: 4.5, type: "toys" },
+  { id: 12, name: "Layla B.", text: "My daughter loves the popmart toys.", rating: 4.5, type: "toys" },
   { id: 13, name: "Aria C.", text: "The fidget toys are a hit at our house.", rating: 5, type: "toys" },
   { id: 14, name: "Scarlett N.", text: "Great quality and safe for little hands.", rating: 5, type: "toys" },
   { id: 15, name: "Penelope V.", text: "The Y2K toy colors are so fun and bright!", rating: 4.5, type: "toys" },
-  { id: 16, name: "Camila G.", text: "My son loves the pastel puzzle set.", rating: 5, type: "toys" },
+  { id: 16, name: "Camila G.", text: "My son loves the popmart puzzle set.", rating: 5, type: "toys" },
   { id: 17, name: "Madison H.", text: "Perfect gift for birthdays!", rating: 5, type: "toys" },
   { id: 18, name: "Victoria Q.", text: "The toy packaging is adorable and eco-friendly.", rating: 5, type: "toys" },
   { id: 19, name: "Evelyn Z.", text: "The plush unicorn is a bedtime favorite.", rating: 5, type: "toys" },
   { id: 20, name: "Stella M.", text: "My kids play with these toys every day!", rating: 5, type: "toys" },
 
   // Nail reviews
-  { id: 21, name: "Bella H.", text: "The pastel press-ons are so easy to apply and look amazing!", rating: 5, type: "nails" },
+  { id: 21, name: "Bella H.", text: "The y2k press-ons are so easy to apply and look amazing!", rating: 5, type: "nails" },
   { id: 22, name: "Jasmine T.", text: "Love the Y2K nail art stickers. Super cute designs!", rating: 4.5, type: "nails" },
   { id: 23, name: "Sienna W.", text: "My nails have never looked this good. Salon quality!", rating: 5, type: "nails" },
   { id: 24, name: "Ruby G.", text: "The nail polish colors are vibrant and last long.", rating: 4.5, type: "nails" },

@@ -39,20 +39,20 @@ export default function About() {
     "@context": "https://schema.org",
     "@type": "Organization",
     name: "Diva Factory",
-    url: "https://divafactorynails.com",
-    logo: "https://divafactorynails.com/CODEWRX2.png",
-    sameAs: ["https://www.instagram.com/", "https://www.tiktok.com/", "https://www.facebook.com/"],
+    url: "https://thedivafactory.com",
+    logo: "https://thedivafactory.com/CODEWRX2.png",
+    sameAs: ["https://www.instagram.com/thedivafactory", "https://www.tiktok.com/@thedivafactory", "https://www.facebook.com/thedivafactory"],
     address: { "@type": "PostalAddress", addressLocality: "Las Vegas", addressRegion: "NV", addressCountry: "US" },
     areaServed: ["United States"],
-    brand: { "@type": "Brand", name: "Diva Factory", slogan: "Pastel Y2K for everyday icons" },
+    brand: { "@type": "Brand", name: "Diva Factory", slogan: "One stop shop for everyday icons" },
   } as const;
 
   const breadcrumbJsonLd = {
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
     itemListElement: [
-      { "@type": "ListItem", position: 1, name: "Home", item: "https://divafactorynails.com" },
-      { "@type": "ListItem", position: 2, name: "About", item: "https://divafactorynails.com/about" },
+      { "@type": "ListItem", position: 1, name: "Home", item: "https://thedivafactory.com" },
+      { "@type": "ListItem", position: 2, name: "About", item: "https://thedivafactory.com/about" },
     ],
   } as const;
 
@@ -62,7 +62,7 @@ export default function About() {
     mainEntity: [
       { "@type": "Question", name: "What types of products do you carry?", acceptedAnswer: { "@type": "Answer", text: "We blend three pillars: kawaii collectibles (including blind boxes), salon‑quality press‑on nails, and curated boutique accessories." } },
       { "@type": "Question", name: "What makes your press‑on nails special?", acceptedAnswer: { "@type": "Answer", text: "Hand‑finished with salon‑grade gel on premium ABS bases, inclusive sizing, and detailed application & care guides for long wear." } },
-      { "@type": "Question", name: "How do you curate collectibles & accessories?", acceptedAnswer: { "@type": "Answer", text: "We source authentic releases from trusted partners and select pieces that match our pastel Y2K aesthetic and community requests." } },
+      { "@type": "Question", name: "How do you curate collectibles & accessories?", acceptedAnswer: { "@type": "Answer", text: "We source authentic releases from trusted partners and select pieces that match our Diva aesthetic and community requests." } },
       { "@type": "Question", name: "Where do you ship from?", acceptedAnswer: { "@type": "Answer", text: "We ship from Las Vegas, NV. Processing time is listed on each product page; shipping times depend on the carrier." } },
     ],
   } as const;
@@ -93,15 +93,15 @@ export default function About() {
             Diva Factory
           </h1>
           <p className="font-sans max-w-3xl mx-auto mt-4 text-base md:text-lg leading-relaxed">
-            Your pastel Y2K destination for <strong>kawaii collectibles</strong>, <strong>luxury press‑on nails</strong>, and <strong>curated boutique treasures</strong>—made for everyday icons in Las Vegas and beyond.
+            Your one stop Diva destination for <strong>kawaii collectibles</strong>, <strong>luxury press‑on nails</strong>, and <strong>curated boutique treasures</strong>—made for everyday icons in Las Vegas and beyond.
           </p>
 
           {/* quick value props */}
           <div className="mt-10 grid grid-cols-1 md:grid-cols-3 gap-4">
             {[
               {t:'Collectibles Curation', d:'Authentic blind boxes & kawaii finds'},
-              {t:'Nail Artistry', d:'Salon‑grade gel, reusable wear'},
-              {t:'Boutique Experience', d:'Thoughtful packaging & helpful support'},
+              {t:'Nail Artistry', d:'Salon quality gel, reusable wear'},
+              {t:'Boutique Experience', d:'Trendy OOTD, accessories & more'},
             ].map((c)=> (
               <div key={c.t} className="rounded-2xl border border-white/50 bg-gradient-to-br from-pink-900/10 to-purple-900/10 p-5 shadow-xl">
                 <h3 className="font-display text-sm font-semibold text-gradient-hotpink">{c.t}</h3>
@@ -116,7 +116,7 @@ export default function About() {
       <section className="container mx-auto px-6 py-16 grid lg:grid-cols-2 gap-10 items-center" aria-labelledby="our-story">
         <div>
           <h2 id="our-story" className="font-display text-4xl md:text-5xl font-semibold text-gradient-hotpink drop-shadow-sm mb-6">Our Story</h2>
-          <p className="font-sans mb-4 text-base md:text-lg leading-relaxed text-on-pastel-soft">Founded in <strong>2025</strong> in Las Vegas, Diva Factory started as a love letter to pastel Y2K culture. What began with custom nail sets quickly expanded into a <strong>curated boutique</strong> of <strong>collectibles</strong>, <strong>press‑on nails</strong>, and <strong>accessories</strong>—all chosen to spark joy and self‑expression.</p>
+          <p className="font-sans mb-4 text-base md:text-lg leading-relaxed text-on-pastel-soft">Founded in <strong>2025</strong> in Las Vegas, Diva Factory started as a love letter to all Divas. What began with custom nail sets quickly expanded into a <strong>curated boutique</strong> of <strong>collectibles</strong>, <strong>press‑on nails</strong>, and <strong>accessories</strong>—all chosen to spark joy and self‑expression.</p>
           <p className="font-sans text-base md:text-lg leading-relaxed text-on-pastel-soft">We keep our promise simple: cute, quality, and kind. Clear product details, inclusive sizing, authentic releases, and a community‑first vibe.</p>
           <div className="mt-6 text-sm text-on-pastel-accent">
             <Link href="/shop" className="underline hover:text-on-pastel-strong mr-4 transition-colors">Shop All</Link>
@@ -129,7 +129,6 @@ export default function About() {
           <div className="h-48 md:h-64 rounded-xl bg-gradient-to-br from-pink-100 via-fuchsia-100 to-blue-100 flex items-center justify-center">
             <Image src="/uploads/divanailslogo.png" alt="Diva Factory brand logo" width={240} height={240} className="mx-auto" />
           </div>
-          <p className="font-sans text-xs text-on-pastel-soft/80 mt-3">Tip: feature a mix of nails + collectibles in one hero shot for instant brand clarity.</p>
         </div>
       </section>
 
@@ -138,7 +137,7 @@ export default function About() {
         <div className="container mx-auto px-6">
           <h2 id="how-it-works" className="font-display text-3xl md:text-4xl font-semibold text-gradient-hotpink mb-8">How We Curate & Craft</h2>
           <div className="grid md:grid-cols-3 gap-6">
-            {[{n:'1',t:'Discover',d:'We scout the cutest drops and authentic releases that fit our pastel Y2K vibe.'},{n:'2',t:'Design & Finish',d:'Hand‑finish nail sets with salon‑grade gel; select accessories with quality in mind.'},{n:'3',t:'Pack & Ship',d:'Boutique‑style packaging, quick processing, and responsive support.'}].map(step => (
+            {[{n:'1',t:'Discover',d:'We scout the cutest drops and authentic releases that fit our Diva vibe.'},{n:'2',t:'Design & Finish',d:'Hand‑finish nail sets with salon‑grade gel; select accessories with quality in mind.'},{n:'3',t:'Pack & Ship',d:'Boutique‑style packaging, quick processing, and responsive support.'}].map(step => (
               <div key={step.n} className="rounded-xl bg-gradient-to-br from-pink-900/10 to-purple-900/10 border border-white/50 p-6 shadow">
                 <div className="font-display text-2xl font-semibold text-gradient-hotpink">{step.n}</div>
                 <h3 className="font-display text-lg font-semibold mt-2">{step.t}</h3>
@@ -176,7 +175,7 @@ export default function About() {
       {/* ====== SOCIAL PROOF ====== */}
       <section className="py-16 text-center" aria-labelledby="loved-by-divas">
   <h2 id="loved-by-divas" className="font-display text-4xl font-semibold text-gradient-hotpink drop-shadow-sm">
-          <span aria-hidden="true" className="mr-2">💖</span> Loved by Divas
+        Loved by Divas
         </h2>
   <p className="font-sans text-on-pastel-accent mt-2">Real reviews from our community.</p>
         <div className="mt-10 flex flex-wrap justify-center gap-8">

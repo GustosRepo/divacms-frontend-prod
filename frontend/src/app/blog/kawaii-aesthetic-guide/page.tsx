@@ -61,13 +61,7 @@ export default function KawaiiAestheticGuide() {
 
         <header className="mb-12">
           <h1 className="font-shuneva text-4xl md:text-6xl font-bold bg-gradient-to-r from-pink-400 via-purple-400 to-blue-400 bg-clip-text text-transparent mb-6">
-            The Ultimate Kawaii Aesthetic Guide{' '}
-            <span
-              className="emoji text-accent inline-block align-[-0.1em]"
-              aria-hidden="true"
-            >
-              🌸
-            </span>
+            The Ultimate Kawaii Aesthetic Guide
           </h1>
           <p className="text-xl leading-relaxed mb-4">
             Dive into the adorable world of kawaii! This comprehensive guide covers everything from the cultural origins of kawaii to how you can incorporate this irresistibly cute aesthetic into your everyday style.
@@ -87,7 +81,7 @@ export default function KawaiiAestheticGuide() {
 
           <div className="bg-gradient-to-r from-purple-900/50 to-pink-900/50 rounded-lg p-6 my-8">
             <h3 className="text-xl font-semibold text-white mb-3">🌟 Core Kawaii Elements:</h3>
-            <ul className="text-gray-200 space-y-2">
+            <ul className="space-y-2">
               <li>• Pastel colors (especially pink, lavender, mint, and baby blue)</li>
               <li>• Soft, rounded shapes and characters</li>
               <li>• Childlike innocence and playfulness</li>
@@ -164,15 +158,15 @@ export default function KawaiiAestheticGuide() {
           <div className="grid md:grid-cols-3 gap-4 mb-8">
             <div className="bg-pink-900/30 rounded-lg p-4 text-center">
               <h4 className="text-lg font-bold text-pink-200 mb-2">Sweet Pastels</h4>
-              <p className="text-sm text-gray-200">Baby pink, lavender, mint green, powder blue</p>
+              <p className="text-sm ">Baby pink, lavender, mint green, powder blue</p>
             </div>
             <div className="bg-purple-900/30 rounded-lg p-4 text-center">
               <h4 className="text-lg font-bold text-purple-200 mb-2">Candy Brights</h4>
-              <p className="text-sm text-gray-200">Hot pink, electric blue, lime green, sunshine yellow</p>
+              <p className="text-sm ">Hot pink, electric blue, lime green, sunshine yellow</p>
             </div>
             <div className="bg-blue-900/30 rounded-lg p-4 text-center">
               <h4 className="text-lg font-bold text-blue-300 mb-2">Dreamy Neutrals</h4>
-              <p className="text-sm text-gray-200">Cream, soft gray, pearl white, champagne</p>
+              <p className="text-sm ">Cream, soft gray, pearl white, champagne</p>
             </div>
           </div>
 
@@ -209,7 +203,7 @@ export default function KawaiiAestheticGuide() {
 
           <div className="bg-gradient-to-r from-pink-900/50 to-purple-900/50 rounded-lg p-8 my-12 text-center">
             <h3 className="text-2xl font-bold text-white mb-4">Ready to Embrace Your Kawaii Side? 🌸</h3>
-            <p className="text-gray-200 mb-6">Start your kawaii journey with our curated collection of cute accessories and press-on nails!</p>
+            <p className=" mb-6">Start your kawaii journey with our curated collection of cute accessories and press-on nails!</p>
             <Link 
               href="/shop?brand_segment=accessories" 
               className="inline-block bg-gradient-to-r from-pink-500 to-purple-500 text-white font-bold py-3 px-8 rounded-full hover:shadow-lg transition-all transform hover:scale-105 mr-4"
@@ -277,7 +271,7 @@ export default function KawaiiAestheticGuide() {
                 <h3 className="text-xl font-semibold text-white group-hover:text-pink-400 transition-colors">
                   Y2K Nail Art Trends for 2025
                 </h3>
-                <p className="text-gray-400 mt-2">Discover kawaii-inspired Y2K nail trends</p>
+                <p className=" mt-2">Discover kawaii-inspired Y2K nail trends</p>
               </div>
             </Link>
             <Link href="/blog/press-on-nail-care-guide" className="group">
@@ -285,7 +279,7 @@ export default function KawaiiAestheticGuide() {
                 <h3 className="text-xl font-semibold text-white group-hover:text-pink-400 transition-colors">
                   Press-On Nail Care Guide
                 </h3>
-                <p className="text-gray-400 mt-2">Keep your kawaii nails looking perfect</p>
+                <p className=" mt-2">Keep your kawaii nails looking perfect</p>
               </div>
             </Link>
           </div>

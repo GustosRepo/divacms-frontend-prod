@@ -81,13 +81,7 @@ export default function CollectiblesGuide() {
 
         <header className="mb-12">
           <h1 className="font-shuneva text-4xl md:text-6xl font-bold bg-gradient-to-r from-pink-400 via-purple-400 to-blue-400 bg-clip-text text-transparent mb-6">
-            Ultimate Collectibles &amp; Blind Box Guide{' '}
-            <span
-              className="emoji text-accent inline-block align-[-0.1em]"
-              aria-hidden="true"
-            >
-              🎁
-            </span>
+            Ultimate Collectibles &amp; Blind Box Guide
           </h1>
           <p className="text-xl leading-relaxed mb-4">
             Master the art of collecting with our comprehensive guide! Learn expert strategies for Labubu hunting, Pop Mart blind box collecting, authentication tips, and building your dream kawaii collection in Las Vegas and beyond.
@@ -114,7 +108,7 @@ export default function CollectiblesGuide() {
           <p className="leading-relaxed mb-4">
             Learning to identify authentic collectibles protects your investment:
           </p>
-          <ul className="list-disc list-inside text-gray-300 space-y-2 mb-6">
+          <ul className="list-disc list-inside  space-y-2 mb-6">
             <li>Study official Pop Mart packaging and holographic stickers</li>
             <li>Learn to identify genuine Labubu sculpt details and paint quality</li>
             <li>Verify seller authenticity and reviews before purchasing</li>
@@ -127,8 +121,8 @@ export default function CollectiblesGuide() {
           <div className="grid md:grid-cols-2 gap-6 mb-8">
             <div className="bg-purple-900/30 rounded-lg p-6">
               <h4 className="text-xl font-bold text-purple-300 mb-3">Official Retailers</h4>
-              <p className="text-gray-300 mb-3">Best for: Guaranteed authenticity</p>
-              <ul className="text-sm text-gray-200 space-y-1">
+              <p className=" mb-3">Best for: Guaranteed authenticity</p>
+              <ul className="text-sm space-y-1">
                 <li>• Diva Factory (Las Vegas)</li>
                 <li>• Pop Mart official stores</li>
                 <li>• Licensed distributors</li>
@@ -136,8 +130,8 @@ export default function CollectiblesGuide() {
             </div>
             <div className="bg-pink-900/30 rounded-lg p-6">
               <h4 className="text-xl font-bold text-pink-300 mb-3">Secondary Market</h4>
-              <p className="text-gray-300 mb-3">Best for: Rare and discontinued pieces</p>
-              <ul className="text-sm text-gray-200 space-y-1">
+              <p className=" mb-3">Best for: Rare and discontinued pieces</p>
+              <ul className="text-sm space-y-1">
                 <li>• Verified collector groups</li>
                 <li>• Authenticated resellers</li>
                 <li>• Trading communities</li>
@@ -146,7 +140,7 @@ export default function CollectiblesGuide() {
           </div>
 
           <h2 className="text-3xl font-bold text-pink-200 mt-12 mb-6">Step 3: Storage & Display 📦</h2>
-          <p className="text-gray-300 leading-relaxed mb-4">
+          <p className="leading-relaxed mb-4">
             Proper care preserves your collection&apos;s value and beauty:
           </p>
           <ul className="list-disc list-inside space-y-2 mb-6">
@@ -197,8 +191,8 @@ export default function CollectiblesGuide() {
           <div className="grid md:grid-cols-2 gap-6 mb-8">
             <div className="bg-purple-900/30 rounded-lg p-6">
               <h4 className="text-xl font-bold text-purple-300 mb-3">Labubu Series</h4>
-              <p className="text-gray-300 mb-3">Best for: Emotional storytelling</p>
-              <ul className="text-sm text-gray-200 space-y-1">
+              <p className=" mb-3">Best for: Emotional storytelling</p>
+              <ul className="text-sm space-y-1">
                 <li>• The Monsters series</li>
                 <li>• Macaron series</li>
                 <li>• Holiday special editions</li>
@@ -206,8 +200,8 @@ export default function CollectiblesGuide() {
             </div>
             <div className="bg-pink-900/30 rounded-lg p-6">
               <h4 className="text-xl font-bold text-pink-300 mb-3">Pop Mart Classics</h4>
-              <p className="text-gray-300 mb-3">Best for: Variety and trading</p>
-              <ul className="text-sm text-gray-200 space-y-1">
+              <p className="mb-3">Best for: Variety and trading</p>
+              <ul className="text-sm space-y-1">
                 <li>• Molly series</li>
                 <li>• Pucky series</li>
                 <li>• Skull Panda series</li>
@@ -252,7 +246,7 @@ export default function CollectiblesGuide() {
 
           <div className="bg-gradient-to-r from-pink-900/50 to-purple-900/50 rounded-lg p-8 my-12 text-center">
             <h3 className="text-2xl font-bold text-white mb-4">Ready to Start Your Kawaii Collection? 🎁</h3>
-            <p className="text-gray-200 mb-6">Shop our authentic Labubu and Pop Mart collection and start your collecting journey!</p>
+            <p className="mb-6">Shop our authentic Labubu and Pop Mart collection and start your collecting journey!</p>
             <Link 
               href="/shop?brand_segment=toys" 
               className="inline-block bg-gradient-to-r from-pink-500 to-purple-500 text-white font-bold py-3 px-8 rounded-full hover:shadow-lg transition-all transform hover:scale-105"
@@ -282,7 +276,7 @@ export default function CollectiblesGuide() {
                 <h3 className="text-xl font-semibold text-white group-hover:text-pink-200 transition-colors">
                   Complete Kawaii Aesthetic Guide
                 </h3>
-                <p className="text-gray-200 mt-2">Master the art of kawaii culture and lifestyle</p>
+                <p className=" mt-2">Master the art of kawaii culture and lifestyle</p>
               </div>
             </Link>
             <Link href="/blog/y2k-nail-trends-2025" className="group">
@@ -290,7 +284,7 @@ export default function CollectiblesGuide() {
                 <h3 className="text-xl font-semibold text-white group-hover:text-pink-200 transition-colors">
                   Y2K Nail Art Trends 2025
                 </h3>
-                <p className="text-gray-200 mt-2">Complete your kawaii look with Y2K nail designs</p>
+                <p className="mt-2">Complete your kawaii look with Y2K nail designs</p>
               </div>
             </Link>
           </div>
