@@ -37,6 +37,8 @@ async function forward(request: Request, params: { path?: string[] }) {
     res.headers.forEach((value, key) => {
       if (key.toLowerCase() === 'set-cookie') return;
       if (key.toLowerCase() === 'transfer-encoding') return;
+      if (key.toLowerCase() === 'content-encoding') return;
+      if (key.toLowerCase() === 'content-length') return;
       responseHeaders[key] = value;
     });
 
