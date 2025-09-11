@@ -141,9 +141,10 @@ export default function MyOrders() {
   };
 
   useEffect(() => {
+    if (!user) return;
     const abort = fetchOrders();
     return () => { if (typeof abort === 'function') abort(); };
-  }, [fetchOrders, refreshIndex]);
+  }, [fetchOrders, refreshIndex, user]);
 
   if (!user) {
     return <p className="text-center">Please log in to view your orders.</p>;

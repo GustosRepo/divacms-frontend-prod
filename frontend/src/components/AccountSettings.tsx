@@ -70,7 +70,7 @@ export default function AccountSettings() {
     console.log("📤 Sending profile update:", formData); // ✅ Log request data
 
     try {
-      const data = await safeFetch(`/users/update`, {
+  await safeFetch(`/users/update`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),

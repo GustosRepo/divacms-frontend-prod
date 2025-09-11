@@ -8,8 +8,11 @@ import Link from "next/link";
 type Order = {
   id: string;
   status: string;           // e.g. "Pending", "Shipped"
-  total_amount: number;     // dollars (from your table)
-  tracking_code: string;    // e.g. "Processing" or carrier code
+  // support both snake_case and camelCase from backend
+  total_amount?: number;    // dollars (from your table)
+  totalAmount?: number;     // normalized by some controllers
+  tracking_code?: string;   // e.g. "Processing" or carrier code
+  trackingCode?: string;    // normalized by some controllers
 };
 
 export default function OrderHistoryPage() {
@@ -31,10 +34,15 @@ export default function OrderHistoryPage() {
         const data = await safeFetch(`/orders/my-orders`);
         setOrders(Array.isArray(data) ? data : []);
       } catch (err) {
-        // Handle 404 "No orders found" as empty array instead of error
         const errorMessage = err instanceof Error ? err.message : String(err);
+        // Treat 404 as empty list
         if (errorMessage.includes("No orders found") || errorMessage.includes("404")) {
           setOrders([]);
+        } else if (errorMessage.includes("401") || errorMessage.toLowerCase().includes("unauthorized")) {
+          // Auth expired — redirect to login
+          setError("");
+          router.push("/login");
+          return;
         } else {
           setError("Failed to load orders.");
         }
@@ -49,7 +57,7 @@ export default function OrderHistoryPage() {
       await safeFetch(`/orders/${orderId}/cancel`, { method: "PUT" });
       
       setOrders((prev) =>
-        prev.map((o) => (o.id === orderId ? { ...o, status: "Cancelled" } : o))
+        prev.map((o) => (o.id === orderId ? { ...o, status: "Canceled" } : o))
       );
     } catch {
       setError("Could not cancel order.");
@@ -87,8 +95,8 @@ export default function OrderHistoryPage() {
                   Status: {order.status?.toUpperCase() || "PENDING"}
                 </p>
 
-                <p><strong>TOTAL:</strong> {fmtMoney(order.total_amount)}</p>
-                <p><strong>TRACKING:</strong> {order.tracking_code || "N/A"}</p>
+                <p><strong>TOTAL:</strong> {fmtMoney(order.total_amount ?? order.totalAmount)}</p>
+                <p><strong>TRACKING:</strong> {order.tracking_code ?? order.trackingCode ?? "N/A"}</p>
 
                 <Link
                   href={

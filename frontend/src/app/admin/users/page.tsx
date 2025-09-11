@@ -39,7 +39,7 @@ export default function AdminUsersPage() {
   if (!user) return;
   
     try {
-      const data = await safeFetch(`/admin/users/${userId}`, { 
+  await safeFetch(`/admin/users/${userId}`, { 
         method: "PUT", 
         headers: { "Content-Type": "application/json" }, 
         body: JSON.stringify({ role: newRole }) 

@@ -296,24 +296,14 @@ export default function CheckoutForm(props: CheckoutFormProps) {
       console.log("💰 Total (discounted):", totalDisplayed);
       console.log("📦 shippingInfo:", shippingInfo);
 
-      const response = await safeFetch(`/create-checkout-session`, {
+      const response = await safeFetch(`/checkout/create-checkout-session`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(requestBody),
       });
 
-      if (!response.ok) {
-        let msg = "Failed to create Stripe session.";
-        try {
-          const err = await response.json();
-          console.error("❌ Server Response:", err);
-          msg = err?.message || msg;
-        } catch {}
-        throw new Error(msg);
-      }
-
-      const { url } = await response.json();
-      console.log("✅ Stripe Checkout URL:", url);
+      console.log("✅ Checkout Response:", response);
+      const { url } = response;
       if (!url) throw new Error("Stripe session URL missing from response.");
       window.location.href = url;
     } catch (error) {
