@@ -41,10 +41,10 @@ export default function Footer() {
             <h4 className="font-shuneva text-sm lg:text-md font-bold mb-2 lg:mb-4 text-white">Connect</h4>
             <div className="grid grid-cols-2 lg:grid-cols-1 gap-1 lg:space-y-2 text-xs lg:text-sm">
               <Link href="https://instagram.com/thedivafactory" className="block hover:text-pink-400 transition-colors">📸 Instagram</Link>
-              <Link href="https://instagram.com/divafactory.nails" className="block hover:text-pink-400 transition-colors">📌 Pinterest</Link>
-              <Link href="https://tiktok.com/@thedivafactory" className="block hover:text-pink-400 transition-colors">🎵 TikTok</Link>
+              <Link href="https://instagram.com/divafactory.nails" className="block hover:text-pink-400 transition-colors">📸 Instagram nails</Link>
+              {/* <Link href="https://tiktok.com/@thedivafactory" className="block hover:text-pink-400 transition-colors">🎵 TikTok</Link> */}
               <Link href="https://facebook.com/thedivafactory" className="block hover:text-pink-400 transition-colors">💬 Facebook</Link>
-              <Link href="mailto:admin@thedivafactory.com" className="block hover:text-pink-400 transition-colors col-span-2 lg:col-span-1">📧 Email Us</Link>
+              <Link href="/contact" className="block hover:text-pink-400 transition-colors col-span-2 lg:col-span-1">📧 Email Us</Link>
             </div>
           </div>
         </div>

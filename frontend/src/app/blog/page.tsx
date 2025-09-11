@@ -1,8 +1,8 @@
 "use client";
 import { useState, useEffect } from "react";
 import { useAuth } from "@/context/AuthContext";
-import Link from "next/link";
 import { safeFetch } from "@/utils/api";
+import Link from "next/link";
 
 interface BlogPost {
   id: string; // UUID in your schema
@@ -37,14 +37,8 @@ export default function BlogPage() {
 
   const fetchPosts = async () => {
     try {
-  const response = await safeFetch(`/api/blog`);
-      if (response.ok) {
-        const data = await response.json();
-        setPosts(data);
-      } else {
-        console.error('Failed to fetch blog posts');
-        setPosts([]);
-      }
+      const data = await safeFetch('/api/blog');
+      setPosts(data);
     } catch (error) {
       console.error('Error fetching blog posts:', error);
       setPosts([]);
@@ -54,24 +48,17 @@ export default function BlogPage() {
   };
 
   const handleAddPost = async () => {
-  if (!formData.title || !formData.content || !user) return;
+    if (!formData.title || !formData.content || !user) return;
     
     try {
-      const response = await safeFetch(`/api/blog`, {
+      const newPost = await safeFetch('/api/blog', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData)
+        body: JSON.stringify(formData),
       });
 
-      if (response.ok) {
-        const newPost = await response.json();
-        setPosts([newPost, ...posts]);
-        setFormData({ title: "", content: "" });
-      } else {
-        const error = await response.json();
-        console.error('Failed to create post:', error);
-        alert('Failed to create post. Please try again.');
-      }
+      setPosts([newPost, ...posts]);
+      setFormData({ title: "", content: "" });
     } catch (error) {
       console.error('Error creating post:', error);
       alert('Error creating post. Please try again.');
@@ -87,27 +74,20 @@ export default function BlogPage() {
   };
 
   const handleUpdatePost = async () => {
-  if (!editingPost || !formData.title || !formData.content || !user) return;
+    if (!editingPost || !formData.title || !formData.content || !user) return;
     
     try {
-      const response = await safeFetch(`/api/blog/${editingPost.id}`, {
+      const updatedPost = await safeFetch(`/api/blog/${editingPost.id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData)
+        body: JSON.stringify(formData),
       });
 
-      if (response.ok) {
-        const updatedPost = await response.json();
-        setPosts(posts.map(post => 
-          post.id === editingPost.id ? updatedPost : post
-        ));
-        setEditingPost(null);
-        setFormData({ title: "", content: "" });
-      } else {
-        const error = await response.json();
-        console.error('Failed to update post:', error);
-        alert('Failed to update post. Please try again.');
-      }
+      setPosts(posts.map(post => 
+        post.id === editingPost.id ? updatedPost : post
+      ));
+      setEditingPost(null);
+      setFormData({ title: "", content: "" });
     } catch (error) {
       console.error('Error updating post:', error);
       alert('Error updating post. Please try again.');
@@ -120,18 +100,11 @@ export default function BlogPage() {
     if (!confirm('Are you sure you want to delete this post?')) return;
 
     try {
-      const response = await fetch(`/api/proxy/api/blog/${postId}`, {
+      await safeFetch(`/api/blog/${postId}`, {
         method: 'DELETE',
-        credentials: 'include',
       });
 
-      if (response.ok) {
-        setPosts(posts.filter((post) => post.id !== postId));
-      } else {
-        const error = await response.json();
-        console.error('Failed to delete post:', error);
-        alert('Failed to delete post. Please try again.');
-      }
+      setPosts(posts.filter((post) => post.id !== postId));
     } catch (error) {
       console.error('Error deleting post:', error);
       alert('Error deleting post. Please try again.');

@@ -23,12 +23,8 @@ export default function AdminUsersPage() {
 
     const fetchUsers = async () => {
       try {
-  const res = await safeFetch(`/admin/users`);
-
-        if (!res.ok) throw new Error("Failed to fetch users");
-
-        const data = await res.json();
-        setUsers(data.users);
+        const data = await safeFetch(`/admin/users`);
+        setUsers(data.users || data || []);
       } catch (error) {
         console.error("Error fetching users:", error);
       } finally {
@@ -43,15 +39,12 @@ export default function AdminUsersPage() {
   if (!user) return;
   
     try {
-  const res = await safeFetch(`/admin/users/${userId}`, { method: "PUT", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ role: newRole }) });
-  
-      const responseData = await res.json(); // ✅ Read response
-  
-      if (!res.ok) {
-        console.error("❌ Server Error:", responseData);
-        throw new Error(responseData.message || "Failed to update user role");
-      }
-  
+  await safeFetch(`/admin/users/${userId}`, { 
+        method: "PUT", 
+        headers: { "Content-Type": "application/json" }, 
+        body: JSON.stringify({ role: newRole }) 
+      });
+
       // ✅ Update UI state
       setUsers((prevUsers) =>
         prevUsers.map((u) =>
@@ -75,9 +68,10 @@ export default function AdminUsersPage() {
     if (!confirm("Are you sure you want to delete this user?")) return;
 
     try {
-  const res = await safeFetch(`/admin/users/${userId}`, { method: "DELETE", headers: { 'Content-Type': 'application/json' } });
-
-      if (!res.ok) throw new Error("Failed to delete user");
+      await safeFetch(`/admin/users/${userId}`, { 
+        method: "DELETE", 
+        headers: { 'Content-Type': 'application/json' } 
+      });
 
       setUsers((prevUsers) => prevUsers.filter((u) => u.id !== userId));
       setMessage("User deleted successfully");
@@ -85,6 +79,52 @@ export default function AdminUsersPage() {
       console.error("Error deleting user:", error);
     }
   };
+
+const handleResetPassword = async (userId: string, userEmail: string) => {
+  if (!user) return;
+
+  const newPassword = prompt(`Enter new password for ${userEmail}:`);
+  if (!newPassword) return;
+
+  if (newPassword.length < 8) {
+    alert("Password must be at least 8 characters long");
+    return;
+  }
+
+  if (!confirm(`Are you sure you want to reset password for ${userEmail}?`)) return;
+
+  try {
+    // Use relative path; safeFetch handles proxying in dev
+await safeFetch(`/admin/users/${userId}/reset-password`, {
+  method: "PATCH",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify({ newPassword }), // must match controller's expected key
+});
+
+    setMessage(`Password reset successfully for ${userEmail}`);
+    
+  } catch (error) {
+    console.error("Error resetting password:", error);
+    
+    // Try PUT as fallback
+    if (error instanceof Error && error.message.includes('404')) {
+      try {
+        await safeFetch(`/admin/users/${userId}/reset-password`, {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ newPassword })
+        });
+        setMessage(`Password reset successfully for ${userEmail} (PUT method)`);
+        return;
+      } catch (putError) {
+        console.error('PUT also failed:', putError);
+        alert(`Failed to reset password: ${putError instanceof Error ? putError.message : 'Unknown error'}`);
+      }
+    } else {
+      alert(`Failed to reset password: ${error instanceof Error ? error.message : 'Unknown error'}`);
+    }
+  }
+};
 
   return (
     <div className="container mx-auto px-6 py-10 text-white">
@@ -117,27 +157,36 @@ export default function AdminUsersPage() {
                 <td className="py-2 px-4">{u.email}</td>
                 <td className="py-2 px-4">{u.role}</td>
                 <td className="py-2 px-4">
-                  {u.role !== "admin" ? (
+                  <div className="flex flex-wrap gap-2 justify-center">
+                    {u.role !== "admin" ? (
+                      <button
+                        onClick={() => handlePromote(u.id, "admin")}
+                        className="bg-green-500 text-white px-3 py-1 rounded-md text-sm"
+                      >
+                        Make Admin
+                      </button>
+                    ) : (
+                      <button
+                        onClick={() => handlePromote(u.id, "customer")}
+                        className="bg-yellow-500 text-black px-3 py-1 rounded-md text-sm"
+                      >
+                        Demote to User
+                      </button>
+                    )}
                     <button
-                      onClick={() => handlePromote(u.id, "admin")}
-                      className="bg-green-500 text-white px-3 py-1 rounded-md"
+                      onClick={() => handleResetPassword(u.id, u.email)}
+                      className="bg-blue-500 text-white px-3 py-1 rounded-md text-sm"
+                      title="Reset Password"
                     >
-                      Make Admin
+                      Reset Password
                     </button>
-                  ) : (
                     <button
-                      onClick={() => handlePromote(u.id, "customer")}
-                      className="bg-yellow-500 text-black px-3 py-1 rounded-md"
+                      onClick={() => handleDelete(u.id)}
+                      className="bg-red-500 text-white px-3 py-1 rounded-md text-sm"
                     >
-                      Demote to User
+                      Delete
                     </button>
-                  )}
-                  <button
-                    onClick={() => handleDelete(u.id)}
-                    className="bg-red-500 text-white px-3 py-1 rounded-md ml-2"
-                  >
-                    Delete
-                  </button>
+                  </div>
                 </td>
               </tr>
             ))}

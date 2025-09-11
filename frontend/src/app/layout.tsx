@@ -19,6 +19,8 @@ const shuneva = localFont({
 });
 
 export const metadata: Metadata = {
+  // Explicit base for building absolute social/open graph URLs
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'),
   title: "Diva Factory | Luxury Press-On Nails, Toys & Boutique - Y2K Aesthetic",
   description: "Premium press-on nails, collectible toys & kawaii boutique finds. Express your Y2K aesthetic with our curated luxury collection. Free shipping on orders $50+",
   keywords: 'press-on nails, Y2K nails, kawaii accessories, luxury nail art, custom press-ons, nail trends 2025, cute nail designs, aesthetic nails, Las Vegas nails, Nevada nail salon, artificial nails, nail extensions, trendy nails, fashionable nails, Instagram nails',

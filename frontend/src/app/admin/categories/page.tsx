@@ -23,7 +23,7 @@ export default function AdminCategoriesPage() {
   const load = async () => {
     setLoading(true);
     try {
-  const res = await safeFetch(`/categories`);
+  const res = await safeFetch(`/admin/categories`);
       if (!res.ok) throw new Error('Failed to load categories');
       const data = await res.json();
       setCategories(data);
@@ -44,7 +44,7 @@ export default function AdminCategoriesPage() {
     try {
       const payload = { name: form.name, slug: form.slug, brandSegment: form.brandSegment, description: form.description };
       const method = form.id ? 'PUT' : 'POST';
-    const url = form.id ? `/categories/${form.id}` : `/categories`;
+    const url = form.id ? `/admin/categories/${form.id}` : `/admin/categories`;
   const res = await safeFetch(url, { method, headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
       if (!res.ok) throw new Error('Save failed');
       await load();
@@ -60,7 +60,7 @@ export default function AdminCategoriesPage() {
     if (!confirm('Delete category?')) return;
     if (!user) { alert('Auth required'); return; }
     try {
-  const res = await safeFetch(`/categories/${id}`, { method: 'DELETE' });
+  const res = await safeFetch(`/admin/categories/${id}`, { method: 'DELETE' });
       if (!res.ok) throw new Error('Delete failed');
       await load();
   } catch (err) { const e = err as Error | undefined; alert(e?.message ?? String(err)); }

@@ -53,14 +53,8 @@ export default function MyOrders() {
     const controller = new AbortController();
     const load = async () => {
       try {
-  const response = await safeFetch(`/orders/my-orders`, { method: "GET", signal: controller.signal });
+        const data = await safeFetch(`/orders/my-orders`, { method: "GET", signal: controller.signal });
 
-        if (response.status === 204 || response.status === 404) {
-          setOrders([]);
-          return;
-        }
-        if (!response.ok) throw new Error(`Failed to fetch orders (status ${response.status}).`);
-        const data = await response.json();
         const extractedRaw = Array.isArray(data) ? data : (Array.isArray(data?.orders) ? data.orders : []);
         // helpers to coerce values safely
         const getString = (obj: Record<string, unknown>, keys: string[]) => {
@@ -113,7 +107,19 @@ export default function MyOrders() {
         const e = errUnknown as unknown;
         // ignore aborts
         if (typeof (e as { name?: unknown })?.name === 'string' && (e as { name?: string }).name === 'AbortError') return;
-        setError(errUnknown instanceof Error ? errUnknown.message : String(errUnknown ?? 'An error'));
+        
+        // Handle 404 "No orders found" as empty array instead of error
+        const errorMessage = errUnknown instanceof Error ? errUnknown.message : String(errUnknown ?? 'An error');
+        console.log('Order fetch error:', errorMessage); // Use console.log instead of console.error for debugging
+        
+        if (errorMessage.includes("No orders found") || errorMessage.includes("404") || errorMessage.includes("API error 404")) {
+          console.log('No orders found - setting empty array');
+          setOrders([]);
+          setError(null); // Clear any previous errors
+        } else {
+          console.error('Actual error occurred:', errorMessage);
+          setError(errorMessage);
+        }
       } finally {
         setLoading(false);
       }
@@ -126,8 +132,7 @@ export default function MyOrders() {
     if (!user) return;
     if (!window.confirm("Are you sure you want to cancel this order?")) return;
     try {
-  const res = await safeFetch(`/orders/${orderId}/cancel`, { method: "PUT" });
-      if (!res.ok) throw new Error("Failed to cancel order");
+      await safeFetch(`/orders/${orderId}/cancel`, { method: "PUT" });
       setOrders(prev => prev.map(o => (o.id === orderId ? { ...o, status: "Canceled" } : o)));
     } catch (e) {
       console.error("Error canceling order", e);
@@ -136,9 +141,10 @@ export default function MyOrders() {
   };
 
   useEffect(() => {
+    if (!user) return;
     const abort = fetchOrders();
     return () => { if (typeof abort === 'function') abort(); };
-  }, [fetchOrders, refreshIndex]);
+  }, [fetchOrders, refreshIndex, user]);
 
   if (!user) {
     return <p className="text-center">Please log in to view your orders.</p>;
@@ -155,6 +161,13 @@ export default function MyOrders() {
   }
 
   const showEmpty = orders.length === 0 && !error;
+
+  console.log('MyOrders render state:', { 
+    ordersLength: orders.length, 
+    error, 
+    showEmpty, 
+    loading 
+  });
 
   // ---------- Grouping Logic (client-side) ----------
   let grouped: { key: string; items: Order[] }[] | null = null;

@@ -30,7 +30,7 @@ export default function EditProduct() {
     }
     const fetchProduct = async () => {
       try {
-        const data = await safeFetch(`/products/${id}`);
+        const data = await safeFetch(`/admin/products/${id}`);
         setProductData({
           title: data.title,
           description: data.description || "",
@@ -54,7 +54,7 @@ export default function EditProduct() {
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const data = await safeFetch('/categories');
+        const data = await safeFetch('/admin/categories');
         setCategories(data);
       } catch (error) {
         console.error("Error fetching categories:", error);
@@ -112,7 +112,7 @@ export default function EditProduct() {
     if (productData.image) formData.append("image", productData.image);
     formData.append("bestSeller", String(productData.bestSeller));
     try {
-      await safeFetch(`/products/${id}`, {
+      await safeFetch(`/admin/products/${id}`, {
         method: "PUT",
         body: formData,
       });
@@ -149,7 +149,7 @@ export default function EditProduct() {
           {availableCategorySlugs.map(slug => <option key={slug} value={slug}>{slug}</option>)}
         </select>
         <label className="block text-white mt-4">Image:</label>
-        <input type="file" onChange={handleFileChange} className="w-full p-2 text-black rounded-md mt-2" />
+        <input type="file" accept="image/*" onChange={handleFileChange} className="w-full p-2 text-black rounded-md mt-2" />
         <label className="text-white mt-4 flex items-center">
           <input type="checkbox" checked={productData.bestSeller} onChange={handleCheckboxChange} className="mr-2" />
           Mark as Best Seller

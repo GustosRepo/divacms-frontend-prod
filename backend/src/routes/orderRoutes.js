@@ -8,7 +8,8 @@ import {
   trackOrder,
   cancelOrder,
   getOrderById,
-  deleteOrder, // ✅ Import delete function
+  deleteOrder,
+  getMyOrders, // ✅ Import delete function
 } from "../controllers/orderController.js";
 import authMiddleware from "../middleware/authMiddleware.js";
 import isAdminMiddleware from "../middleware/isAdminMiddleware.js";
@@ -27,6 +28,7 @@ router.get("/admin/search", authMiddleware, isAdminMiddleware, searchOrdersByEma
 
 // ✅ User Routes
 router.get("/my-orders", authMiddleware, getUserOrders); // User's Orders
+router.get("/my-orders", authMiddleware, getMyOrders); // Get order for user
 router.post("/", authMiddleware, createOrder); // Create new order
 router.put("/admin/orders/:orderId", authMiddleware, isAdminMiddleware, updateOrderStatus);
 router.put("/:orderId/cancel", authMiddleware, cancelOrder); // Cancel order

@@ -77,8 +77,16 @@ export default function Shop() {
     if (activeBrand) params.set('brand_segment', activeBrand);
     if (activeCategory) params.set('category_slug', activeCategory);
     safeFetch(`/products${params.toString() ? `?${params.toString()}` : ''}`)
-      .then(async (res) => { if (!res.ok) throw new Error(`HTTP error ${res.status}`); return res.json(); })
-      .then(data => { if (cancelled) return; if (data && Array.isArray(data.products)) setProducts(data.products); else throw new Error("Invalid response shape"); })
+      .then(data => { 
+        if (cancelled) return; 
+        if (data && Array.isArray(data.products)) {
+          setProducts(data.products);
+        } else if (Array.isArray(data)) {
+          setProducts(data);
+        } else {
+          throw new Error("Invalid response shape");
+        }
+      })
       .catch(err => { if (!cancelled) setError(err.message); })
       .finally(() => { if (!cancelled) setLoading(false); });
     return () => { cancelled = true; };
@@ -88,10 +96,13 @@ export default function Shop() {
     if (!activeBrand) { setBrandCategories([]); return; }
     let cancelled = false;
     safeFetch(`/categories?brand_segment=${activeBrand}`)
-      .then(r=>r.json())
-      .then(data=>{ if(!cancelled && Array.isArray(data)) setBrandCategories(data); })
-      .catch(()=>{});
-    return ()=>{ cancelled=true; };
+      .then(data => { 
+        if (!cancelled && Array.isArray(data)) {
+          setBrandCategories(data);
+        }
+      })
+      .catch(() => {});
+    return () => { cancelled = true; };
   }, [activeBrand]);
 
   const brandMeta = useMemo(() => brandConfigs.find(b => b.slug === activeBrand), [activeBrand]);

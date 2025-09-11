@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 
-const BACKEND_URL = process.env.BACKEND_URL || process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000";
+const BACKEND_URL = process.env.BACKEND_URL || process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001";
 
 function getCookieToken(cookieHeader: string | null) {
   if (!cookieHeader) return null;
@@ -14,6 +14,11 @@ async function forward(request: Request, params: { path?: string[] }) {
     const urlObj = new URL(request.url);
     const search = urlObj.search || '';
     const target = BACKEND_URL.replace(/\/+$|\s+/g, '') + path + search;
+
+    // Debug logging for reset-password requests
+    if (path.includes('reset-password')) {
+      console.log(`[PROXY DEBUG] Method: ${request.method}, Path: ${path}, Target: ${target}`);
+    }
 
     const headers = new Headers();
     for (const [k, v] of request.headers) {
@@ -32,6 +37,11 @@ async function forward(request: Request, params: { path?: string[] }) {
     }
 
     const res = await fetch(target, { method: request.method, headers, body, redirect: 'manual' });
+
+    // Debug logging for reset-password requests
+    if (path.includes('reset-password')) {
+      console.log(`[PROXY DEBUG] Response status: ${res.status}, Response headers:`, Object.fromEntries(res.headers.entries()));
+    }
 
     const responseHeaders: Record<string, string> = {};
     res.headers.forEach((value, key) => {

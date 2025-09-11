@@ -15,18 +15,17 @@ export default function AccountSettings() {
   });
 
   const [message, setMessage] = useState("");
+  const [pwd, setPwd] = useState({ current: "", next: "", confirm: "" });
+  const [pwdMessage, setPwdMessage] = useState("");
+  const [pwdLoading, setPwdLoading] = useState(false);
 
   useEffect(() => {
     if (!user) return;
   
     const fetchProfile = async () => {
       try {
-  const res = await safeFetch(`/users/${user.id}`);
-  
-        if (!res.ok) throw new Error("Failed to fetch profile.");
-  
-        const data = await res.json();
-  
+        const data = await safeFetch(`/users/${user.id}`);
+
         setFormData({
           id: data.id || "", 
           name: data.name || "",
@@ -37,7 +36,23 @@ export default function AccountSettings() {
         });
       } catch (err) {
         console.error("❌ Error fetching profile:", err);
-        setMessage("Error fetching profile. Please try again.");
+        
+        // Handle "User not found" gracefully
+        const errorMessage = err instanceof Error ? err.message : String(err);
+        if (errorMessage.includes("User not found") || errorMessage.includes("404")) {
+          // Set form with default values using current user data
+          setFormData({
+            id: user.id || "",
+            name: user.name || "",
+            address: "",
+            city: "",
+            zip: "",
+            country: "",
+          });
+          setMessage("Profile data not found. Please update your information.");
+        } else {
+          setMessage("Error fetching profile. Please try again.");
+        }
       }
     };
   
@@ -53,22 +68,57 @@ export default function AccountSettings() {
     }
   
     console.log("📤 Sending profile update:", formData); // ✅ Log request data
-  
+
     try {
-      const res = await safeFetch(`/users/update`, {
+  await safeFetch(`/users/update`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),
       });
-  
-      if (!res.ok) throw new Error(`Failed to update profile: ${res.statusText}`);
-  
-  await res.json();
-  updateUser(formData); // Update user in context
+
+      updateUser(formData); // Update user in context
       setMessage("Profile updated successfully!");
     } catch (error) {
       console.error("❌ Fetch error:", error);
       setMessage(`Error: ${error instanceof Error ? error.message : "An unknown error occurred"}`);
+    }
+  };
+
+  const handlePasswordSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setPwdMessage("");
+
+    if (!pwd.current || !pwd.next || !pwd.confirm) {
+      setPwdMessage("Please fill in all fields.");
+      return;
+    }
+    if (pwd.next.length < 8) {
+      setPwdMessage("New password must be at least 8 characters.");
+      return;
+    }
+    if (pwd.next !== pwd.confirm) {
+      setPwdMessage("New passwords do not match.");
+      return;
+    }
+    if (pwd.current === pwd.next) {
+      setPwdMessage("New password must be different from current.");
+      return;
+    }
+
+    try {
+      setPwdLoading(true);
+      await safeFetch(`/users/change-password`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ currentPassword: pwd.current, newPassword: pwd.next }),
+      });
+      setPwd({ current: "", next: "", confirm: "" });
+      setPwdMessage("Password updated successfully.");
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : String(err);
+      setPwdMessage(msg || "Failed to update password.");
+    } finally {
+      setPwdLoading(false);
     }
   };
 
@@ -91,6 +141,52 @@ export default function AccountSettings() {
           Update Profile
         </button>
       </form>
+
+      <div className="mt-8 border-t border-white/20 pt-6">
+        <h3 className="text-lg font-semibold text-pink-400">Change Password</h3>
+        {pwdMessage && (
+          <p className={`mt-2 text-center ${pwdMessage.includes("successfully") ? "text-green-500" : "text-red-400"}`}>
+            {pwdMessage}
+          </p>
+        )}
+        <form onSubmit={handlePasswordSubmit} className="mt-4 space-y-4">
+          <input
+            type="password"
+            name="currentPassword"
+            value={pwd.current}
+            onChange={(e) => setPwd({ ...pwd, current: e.target.value })}
+            placeholder="Current password"
+            className="p-2 text-black rounded-lg w-full"
+            autoComplete="current-password"
+          />
+          <input
+            type="password"
+            name="newPassword"
+            value={pwd.next}
+            onChange={(e) => setPwd({ ...pwd, next: e.target.value })}
+            placeholder="New password"
+            className="p-2 text-black rounded-lg w-full"
+            autoComplete="new-password"
+          />
+          <input
+            type="password"
+            name="confirmNewPassword"
+            value={pwd.confirm}
+            onChange={(e) => setPwd({ ...pwd, confirm: e.target.value })}
+            placeholder="Confirm new password"
+            className="p-2 text-black rounded-lg w-full"
+            autoComplete="new-password"
+          />
+
+          <button
+            type="submit"
+            disabled={pwdLoading}
+            className="mt-2 bg-pink-500 hover:bg-pink-700 disabled:opacity-60 text-white px-6 py-2 rounded-md w-full"
+          >
+            {pwdLoading ? "Updating..." : "Update Password"}
+          </button>
+        </form>
+      </div>
 
       <button onClick={logout} className="mt-4 bg-red-500 text-white px-4 py-2 rounded-md">
         Log Out

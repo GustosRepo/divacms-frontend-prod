@@ -71,13 +71,7 @@ export default function TrackOrderPage() {
       {/* Header */}
       <header className="text-center mb-10">
         <h1 className="font-shuneva text-4xl md:text-6xl font-bold bg-gradient-to-r from-pink-400 via-purple-400 to-blue-400 bg-clip-text text-transparent mb-3">
-          Track Your Order{' '}
-          <span
-            className="emoji inline-block align-[-0.1em]"
-            aria-hidden="true"
-          >
-            🚚
-          </span>
+          Track Your Order
         </h1>
         <p className="max-w-2xl mx-auto">
           Enter your Order ID and the email you used at checkout to see the latest status and tracking updates.

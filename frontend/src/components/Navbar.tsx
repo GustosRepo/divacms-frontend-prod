@@ -49,7 +49,7 @@ export default function Navbar() {
         </Link>
       </motion.div>
       {/* Desktop Menu */}
-      <div className="hidden md:flex items-center gap-6 text-sm font-medium font-shuneva">
+      <div className="hidden md:flex items-center gap-4 text-sm font-medium font-shuneva">
         <Link href="/" className="hover:text-pink-500">Home</Link>
         <Link href="/shop" className="hover:text-pink-500">Shop</Link>
         <Link href="/toys" className="hover:text-pink-500">Toys</Link>
@@ -59,126 +59,144 @@ export default function Navbar() {
         <Link href="/blog" className="hover:text-pink-500">Blog</Link>
         <Link href="/contact" className="hover:text-pink-500">Contact</Link>
         <Link href="/las-vegas" className="hover:text-pink-500">Las Vegas</Link>
-        <Link href="/cart" className="relative">🛒{cartItemCount > 0 && (
+        
+        {/* Cart and Track - can be hidden on smaller screens */}
+        <div className="hidden lg:flex items-center gap-4">
+          <Link href="/cart" className="relative">🛒{cartItemCount > 0 && (
+            <span className="absolute -top-2 -right-2 bg-pink-500 text-white text-[10px] px-1 py-[2px] rounded-full">
+              {cartItemCount}
+            </span>
+          )}</Link>
+          <Link href="/track-order">
+            <button className="font-shuneva bg-pink-500 hover:bg-pink-600 text-white px-3 py-1.5 rounded-md shadow-sm">Track</button>
+          </Link>
+        </div>
+
+        {/* Theme controls - can be hidden on smaller screens */}
+        <div className="hidden xl:flex items-center gap-2">
+          <button
+            onClick={toggleDark}
+            className="w-9 h-9 rounded-full bg-gradient-to-br from-pink-400 to-fuchsia-500 text-white flex items-center justify-center text-xs shadow hover:shadow-md transition"
+            title="Toggle dark mode"
+          >
+            {dark ? '☀️' : '🌙'}
+          </button>
+          <button onClick={resetToSystemPref} className="text-xs bg-white/60 dark:bg-white/10 px-2 py-1 rounded-md">Reset</button>
+        </div>
+      </div>
+
+      {/* ALWAYS VISIBLE USER SECTION */}
+      <div className="flex items-center gap-2 shrink-0 ml-auto">
+        {/* Cart - always visible on mobile/tablet */}
+        <Link href="/cart" className="relative lg:hidden">🛒{cartItemCount > 0 && (
           <span className="absolute -top-2 -right-2 bg-pink-500 text-white text-[10px] px-1 py-[2px] rounded-full">
             {cartItemCount}
           </span>
         )}</Link>
-        <Link href="/track-order">
-          <button className="font-shuneva bg-pink-500 hover:bg-pink-600 text-white px-3 py-1.5 rounded-md shadow-sm">Track</button>
-        </Link>
-        {/* Brand Theme Selector */}
-        {/*
-        <select
-          value={brand ?? ''}
-          onChange={(e) => setBrand(e.target.value ? (e.target.value as 'nails' | 'toys' | 'boutique') : null)}
-          className="bg-white/60 dark:bg-white/10 border border-white/40 dark:border-white/10 rounded-md px-2 py-1 text-xs outline-none focus:ring-2 focus:ring-pink-400/50"
-          title="Set preferred brand theme"
-        >
-          {brandOptions.map(o => <option key={o.key ?? 'all'} value={o.key ?? ''}>{o.label}</option>)}
-        </select>
-        */}
-  {/* Dark Mode */}
+        
+        {/* Theme toggle - always visible */}
         <button
           onClick={toggleDark}
-          className="w-9 h-9 rounded-full bg-gradient-to-br from-pink-400 to-fuchsia-500 text-white flex items-center justify-center text-xs shadow hover:shadow-md transition"
+          className="xl:hidden w-8 h-8 rounded-full bg-gradient-to-br from-pink-400 to-fuchsia-500 text-white flex items-center justify-center text-xs shadow hover:shadow-md transition"
           title="Toggle dark mode"
         >
           {dark ? '☀️' : '🌙'}
         </button>
-  <button onClick={resetToSystemPref} className="ml-2 text-xs bg-white/60 dark:bg-white/10 px-2 py-1 rounded-md">Reset</button>
-        {/* Reduced Motion */}
-        {/* 
-        <button
-          onClick={() => setReducedMotion(!reducedMotion)}
-          className={`w-9 h-9 rounded-full flex items-center justify-center text-xs shadow transition ${reducedMotion ? 'bg-emerald-500 text-white' : 'bg-white/60 dark:bg-white/10 text-gray-700 dark:text-gray-200 border border-white/40 dark:border-white/10'}`}
-          title="Toggle reduced motion"
-        >
-          {reducedMotion ? 'RM' : 'AN'}
-        </button>
-        */}
-        {/* User Authentication */}
+
+        {/* User Authentication - ALWAYS VISIBLE AND PROMINENT */}
         {user ? (
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-1 shrink-0">
             <Link
               href={user?.isAdmin ? "/admin" : "/dashboard"}
-              className="font-shuneva text-xs bg-pink-500 px-3 py-1.5 rounded-md text-white"
+              className="font-shuneva text-xs bg-pink-500 hover:bg-pink-600 px-2 py-1.5 rounded-md text-white whitespace-nowrap transition-colors font-medium"
+              title="Go to Profile"
             >
               Profile
             </Link>
             <button
               onClick={logout}
-              className="font-shuneva text-red-500 text-xs hover:underline"
+              className="font-shuneva text-white text-xs bg-red-500 hover:bg-red-600 px-2 py-1.5 rounded-md border border-red-400 whitespace-nowrap transition-colors font-medium"
+              title="Logout"
             >
               Logout
             </button>
           </div>
+          
         ) : (
-          <Link href="/login" className="font-shuneva text-pink-500 hover:text-pink-400">
+          <Link 
+            href="/login" 
+            className="font-shuneva bg-pink-500 hover:bg-pink-600 text-white px-3 py-1.5 rounded-md shrink-0 text-xs font-medium transition-colors"
+          >
             Login
           </Link>
         )}
       </div>
       {/* Mobile Menu */}
       {menuOpen && (
-        <div className="absolute top-full left-0 w-full backdrop-blur-md bg-white/80 dark:bg-[#141720]/80 flex flex-col items-center py-4 md:hidden text-sm font-medium font-shuneva border-b border-white/30 dark:border-white/10">
+        <div className="absolute top-full left-0 w-full backdrop-blur-md bg-white/90 dark:bg-[#141720]/95 flex flex-col items-center py-4 md:hidden text-sm font-medium font-shuneva border-b border-white/30 dark:border-white/10 shadow-lg">
+          
+          {/* USER ACTIONS FIRST - MOST IMPORTANT */}
+          {user ? (
+            <div className="flex flex-col items-center w-full gap-3 mb-4 pb-4 border-b border-pink-200 dark:border-pink-800">
+              <div className="text-xs text-gray-600 dark:text-gray-400 text-center">
+                Welcome, {user.email?.split('@')[0]}!
+              </div>
+              <div className="flex gap-3 w-full px-4">
+                <Link
+                  href={user?.isAdmin ? "/admin" : "/dashboard"}
+                  className="font-shuneva text-sm bg-pink-500 hover:bg-pink-600 px-4 py-2 rounded-md text-center text-white font-medium flex-1 transition-colors"
+                  onClick={() => setMenuOpen(false)}
+                >
+                  Profile
+                </Link>
+                <button
+                  onClick={() => { logout(); setMenuOpen(false); }}
+                  className="font-shuneva text-sm bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-md font-medium flex-1 transition-colors"
+                >
+                  Logout
+                </button>
+              </div>
+            </div>
+          ) : (
+            <div className="w-full px-4 mb-4 pb-4 border-b border-pink-200 dark:border-pink-800">
+              <Link
+                href="/login"
+                className="font-shuneva text-sm bg-pink-500 hover:bg-pink-600 text-white px-4 py-2 rounded-md w-full text-center font-medium block transition-colors"
+                onClick={() => setMenuOpen(false)}
+              >
+                Login / Sign Up
+              </Link>
+            </div>
+          )}
+
+          {/* Navigation Links */}
           {[['/', 'Home'], ['/shop', 'Shop'], ['/toys', 'Toys'], ['/nails', 'Nails'], ['/boutique', 'Boutique'], ['/about', 'About'], ['/blog', 'Blog'], ['/contact', 'Contact'], ['/las-vegas', 'Las Vegas']].map(([href, label]) => (
             <Link key={href} href={href} className="py-2 w-full text-center hover:text-pink-500" onClick={() => setMenuOpen(false)}>
               {label}
             </Link>
           ))}
+          
+          {/* Cart and Track Order */}
+          <div className="flex gap-3 mt-3 w-full px-4">
+            <Link href="/cart" className="py-2 flex-1 text-center relative bg-white/20 dark:bg-white/10 rounded-md" onClick={() => setMenuOpen(false)}>
+              🛒 Cart
+              {cartItemCount > 0 && (
+                <span className="absolute -top-1 -right-1 bg-pink-500 text-white text-[10px] px-1 py-[2px] rounded-full">
+                  {cartItemCount}
+                </span>
+              )}
+            </Link>
+            <Link href="/track-order" className="py-2 flex-1 text-center bg-pink-500 text-white rounded-md" onClick={() => setMenuOpen(false)}>
+              Track Order
+            </Link>
+          </div>
+
+          {/* Theme Controls */}
           <div className="flex gap-3 mt-3">
             <button onClick={toggleDark} className="font-shuneva px-3 py-1 rounded-md bg-pink-500 text-white text-xs">{dark ? 'Light' : 'Dark'}</button>
             <button onClick={resetToSystemPref} className="font-shuneva px-3 py-1 rounded-md bg-white/60 dark:bg-white/10 text-xs border border-white/30 dark:border-white/10">Reset</button>
             <button onClick={() => setReducedMotion(!reducedMotion)} className="font-shuneva px-3 py-1 rounded-md bg-white/60 dark:bg-white/10 text-xs border border-white/30 dark:border-white/10">{reducedMotion ? 'Motion' : 'Reduce'}</button>
           </div>
-            {/* 
-            <div className="mt-3">
-            <select
-              value={brand ?? ''}
-              onChange={(e) => setBrand(e.target.value ? (e.target.value as 'nails'|'toys'|'boutique') : null)}
-              className="bg-white/70 dark:bg-white/10 border border-white/40 dark:border-white/10 rounded-md px-2 py-1 text-xs"
-            >
-              {brandOptions.map(o => <option key={o.key ?? 'all'} value={o.key ?? ''}>{o.label}</option>)}
-            </select>
-            </div>
-            */}
-          <Link href="/cart" className="py-2 w-full text-center relative" onClick={() => setMenuOpen(false)}>
-            🛒
-            {cartItemCount > 0 && (
-              <span className="absolute -top-2 -right-2 bg-pink-500 text-white text-[10px] px-1 py-[2px] rounded-full">
-                {cartItemCount}
-              </span>
-            )}
-          </Link>
-          <Link href="/track-order" className="py-2 w-full text-center" onClick={() => setMenuOpen(false)}>
-            <button className="font-shuneva bg-pink-500 hover:bg-pink-600 text-white px-4 py-2 rounded-md w-full">Track Order</button>
-          </Link>
-          {user ? (
-            <div className="flex flex-col items-center w-full">
-              <Link
-                href={user?.isAdmin ? "/admin" : "/dashboard"}
-                className="font-shuneva text-xs bg-pink-500 px-3 py-1.5 rounded-md w-full text-center text-white"
-                onClick={() => setMenuOpen(false)}
-              >
-                Profile
-              </Link>
-              <button
-                onClick={() => { logout(); setMenuOpen(false); }}
-                className="font-shuneva text-red-500 text-xs hover:underline w-full py-2"
-              >
-                Logout
-              </button>
-            </div>
-          ) : (
-            <Link
-              href="/login"
-              className="font-shuneva text-xs bg-pink-500 px-3 py-1.5 rounded-md w-full text-center text-white"
-              onClick={() => setMenuOpen(false)}
-            >
-              Login
-            </Link>
-          )}
         </div>
       )}
     </nav>

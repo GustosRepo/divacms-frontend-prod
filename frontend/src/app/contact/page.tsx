@@ -61,13 +61,7 @@ export default function ContactPage() {
 
         <header className="text-center mb-16">
           <h1 className="font-shuneva text-4xl md:text-6xl font-bold bg-gradient-to-r from-pink-400 via-purple-400 to-blue-400 bg-clip-text text-transparent mb-6">
-            Get In Touch!{" "}
-            <span
-              className="emoji inline-block align-[-0.1em]"
-              aria-hidden="true"
-            >
-              💌
-            </span>
+            Get In Touch!
           </h1>
           <p className="text-xl leading-relaxed max-w-3xl mx-auto">
             We&apos;d love to hear from you! Whether you need help with your order, want to schedule a pickup,
@@ -164,7 +158,7 @@ export default function ContactPage() {
                 <ul className="space-y-1 ml-4 list-disc">
                   <ul className="space-y-1 ml-4 list-disc">
                     <li>Monday - Friday: 9 AM - 5 PM</li>
-                    <li>Saturday: 10 AM - 4 PM</li>
+                    <li>Saturday: 10 AM - 5 PM</li>
                     <li>Sunday: By appointment only</li>
                   </ul>
                 </ul>
@@ -202,11 +196,12 @@ export default function ContactPage() {
             Follow us for nail inspo, tutorials, and behind-the-scenes content! Tag us in your nail pics for a chance to be featured.
           </p>
           <div className="flex justify-center space-x-6 mb-8">
-            <a href="#" className="text-pink-400 hover:text-pink-300 text-2xl">📸 Instagram</a>
-            <a href="#" className="text-purple-400 hover:text-purple-300 text-2xl">🎵 TikTok</a>
-            <a href="#" className="text-blue-400 hover:text-blue-300 text-2xl">💬 Twitter</a>
+            <a href="https://www.instagram.com/thedivafactory/" className="text-pink-400 hover:text-pink-300 text-2xl">📸 Instagram</a>
+            <a href="https://www.tiktok.com/@divafactory" className="text-purple-400 hover:text-purple-300 text-2xl">🎵 TikTok</a>
+            <a href="https://twitter.com/divafactory" className="text-blue-400 hover:text-blue-300 text-2xl">💬 Twitter</a>
           </div>
-          <div className="bg-white/10 rounded-lg p-6 max-w-md mx-auto">
+            {/* 
+            <div className="bg-white/10 rounded-lg p-6 max-w-md mx-auto">
             <h3 className="text-lg font-bold text-heading mb-3">Leave a Review!</h3>
             <p className="mb-4 text-sm">
               Love your nails? We&apos;d love to hear about it! Reviews help other nail lovers discover us.
@@ -214,7 +209,8 @@ export default function ContactPage() {
             <button className="bg-gradient-to-r from-pink-500 to-purple-500 text-white font-bold py-2 px-6 rounded-full hover:shadow-lg transition-all">
               Write Review
             </button>
-          </div>
+            </div>
+            */}
         </section>
 
         {/* Business Hours */}

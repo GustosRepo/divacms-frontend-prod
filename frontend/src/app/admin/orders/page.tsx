@@ -36,23 +36,14 @@ export default function ManageOrders() {
 
     const fetchOrders = async () => {
       try {
-        const url = new URL(`/orders/admin/orders`, window.location.origin);
-        if (filterStatus) url.searchParams.set("status", filterStatus);
-          const res = await safeFetch(url.pathname + url.search);
-
-        if (!res.ok) {
-          let errMsg = `Failed to fetch orders. Status: ${res.status}`;
-          try {
-            const errJson = await res.json();
-            errMsg += ` | ${errJson.message || JSON.stringify(errJson)}`;
-          } catch {}
-          throw new Error(errMsg);
-        }
-        const data = await res.json();
-    setOrders(data.orders || []);
+        const url = new URL('/admin/orders', window.location.origin);
+        if (filterStatus) url.searchParams.set('status', filterStatus);
+        const data = await safeFetch(url.pathname + url.search);
+        const next = Array.isArray(data) ? data : (data?.orders ?? []);
+        setOrders(next);
       } catch (err) {
         setError(err instanceof Error ? err.message : String(err));
-        console.error("Error fetching orders:", err);
+        console.error('Error fetching orders:', err);
       } finally {
         setLoading(false);
       }
@@ -85,22 +76,12 @@ export default function ManageOrders() {
 
     try {
       const isCancel = newStatus === "Canceled";
-      const endpoint = isCancel ? `/orders/${orderId}/cancel` : `/orders/admin/orders/${orderId}`;
-
-      const res = await fetch(`/api/proxy${endpoint}`, {
+      const endpoint = isCancel ? `/admin/orders/${orderId}/cancel` : `/admin/orders/${orderId}`;
+      await safeFetch(endpoint, {
         method: isCancel ? "PATCH" : "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        credentials: 'include',
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ status: newStatus, trackingCode }),
       });
-
-      if (!res.ok) {
-        let msg = `Failed to update order status (${res.status}).`;
-        try { const j = await res.json(); msg = j?.message || msg; } catch {}
-        throw new Error(msg);
-      }
 
       setOrders((prevOrders) =>
         prevOrders.map((order) =>
@@ -125,8 +106,7 @@ export default function ManageOrders() {
   // 🔹 Admin action: Mark Paid (for local pickup)
   async function handleMarkPaid(orderId: string) {
     try {
-  const res = await safeFetch(`/orders/${orderId}/mark-paid`, { method: "PATCH" });
-      if (!res.ok) throw new Error("Failed to mark as paid");
+      await safeFetch(`/admin/orders/${orderId}/mark-paid`, { method: "PATCH" });
       setOrders(prev => prev.map(o => (
         o.id === orderId
           ? { ...o, shipping_info: { ...(o.shipping_info || {}), payment_status: "paid" } }
@@ -143,8 +123,7 @@ export default function ManageOrders() {
   // 🔹 Admin action: Mark Picked Up
   async function handleMarkPickedUp(orderId: string) {
     try {
-  const res = await safeFetch(`/orders/${orderId}/mark-picked-up`, { method: "PATCH" });
-      if (!res.ok) throw new Error("Failed to mark picked up");
+      await safeFetch(`/admin/orders/${orderId}/mark-picked-up`, { method: "PATCH" });
       setOrders(prev => prev.map(o => (
         o.id === orderId ? { ...o, status: "picked_up" } : o
       )));
@@ -160,8 +139,7 @@ export default function ManageOrders() {
   async function handleCancel(orderId: string) {
     if (!confirm("Cancel this order? This will restock items.")) return;
     try {
-  const res = await safeFetch(`/orders/${orderId}/cancel`, { method: "PATCH" });
-      if (!res.ok) throw new Error("Failed to cancel order");
+      await safeFetch(`/admin/orders/${orderId}/cancel`, { method: "PATCH" });
       setOrders(prev => prev.map(o => (
         o.id === orderId ? { ...o, status: "canceled" } : o
       )));
@@ -178,9 +156,7 @@ export default function ManageOrders() {
     if (!confirm("Are you sure you want to delete this order?")) return;
 
     try {
-    const res = await safeFetch(`/orders/admin/orders/${orderId}`, { method: "DELETE" });
-
-      if (!res.ok) throw new Error("Failed to delete order.");
+      await safeFetch(`/admin/orders/${orderId}`, { method: "DELETE" });
 
       // ✅ Remove order from state
       setOrders((prevOrders) =>
