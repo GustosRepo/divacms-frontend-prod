@@ -23,19 +23,58 @@ export default function ProductList({ embedded = false, limit = 3 }: ProductList
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    safeFetch(`/products`).then(async (res) => {
-      if (!res.ok) throw new Error(`HTTP error! Status: ${res.status}`);
-      return res.json();
-    })
-      .then((data) => {
-        if (Array.isArray(data.products)) {
-          setProducts(data.products.slice(0, limit));
-        } else {
-          setError("Invalid response from server");
+    const controller = new AbortController();
+    setLoading(true);
+    setError(null);
+
+    (async () => {
+      try {
+        // Helper to normalize various API response shapes
+
+        type ProductApiResponse = Product[] | { products?: Product[]; data?: Product[]; items?: Product[] };
+        const extractList = (data: ProductApiResponse): Product[] => {
+          if (Array.isArray(data)) return data;
+          if (Array.isArray(data?.products)) return data.products;
+          if (Array.isArray(data?.data)) return data.data;
+          if (Array.isArray(data?.items)) return data.items;
+          return [];
+        };
+
+        // First attempt: paginated endpoint
+
+        let data: ProductApiResponse;
+        try {
+          // safeFetch returns parsed JSON and throws on non-2xx
+          data = await safeFetch(`/products?page=1&limit=${encodeURIComponent(String(limit))}`, {
+            signal: controller.signal,
+          });
+        } catch (e) {
+          if (e && typeof e === 'object' && 'name' in e && (e as { name?: string }).name === 'AbortError') throw e;
+          // Fallback attempt: non-paginated endpoint
+          try {
+            data = await safeFetch(`/products`, { signal: controller.signal });
+          } catch (e2) {
+            if (e2 && typeof e2 === 'object' && 'name' in e2 && (e2 as { name?: string }).name === 'AbortError') throw e2;
+            console.warn('ProductList: both paginated and fallback fetches failed', e, e2);
+            throw e2;
+          }
         }
-      })
-      .catch((error) => setError(error.message))
-      .finally(() => setLoading(false));
+
+        const list: Product[] = extractList(data);
+        if (!Array.isArray(list)) {
+          setError("Invalid response from server");
+          return;
+        }
+        setProducts(list.slice(0, limit));
+      } catch (err) {
+        if (err && typeof err === 'object' && 'name' in err && (err as { name?: string }).name === 'AbortError') return; // ignore aborts
+        setError('Products are temporarily unavailable. Please try again.');
+      } finally {
+        setLoading(false);
+      }
+    })();
+
+    return () => controller.abort();
   }, [limit]);
 
   const grid = (
@@ -70,7 +109,7 @@ export default function ProductList({ embedded = false, limit = 3 }: ProductList
   return (
     <section className="mt-16 text-center px-4">
       <h2 className="font-display text-3xl font-semibold tracking-tight text-gradient-hotpink drop-shadow-sm">
-        Featured Nails
+        Featured Products
       </h2>
       <p className="font-display text-sm mt-2 max-w-xl mx-auto text-on-pastel-soft dark:text-on-pastel-soft">
         Explore our trending designs – hand‑picked for you!

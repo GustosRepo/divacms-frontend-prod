@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import { useParams } from "next/navigation";
 import Image from "next/image";
 import { useCart } from "../../../context/CartContext"; // Import Cart Context
+import { safeFetch } from "../../../utils/api";
 
 type Product = {
   id: string;
@@ -10,6 +11,7 @@ type Product = {
   description: string;
   price: number;
   image: string;
+  quantity?: number; // available stock
   brandSegment?: string;
   brand_segment?: string;
   categorySlug?: string;
@@ -31,15 +33,21 @@ export default function ProductPage() {
 
     (async () => {
       try {
-        const data = await (await fetch(`/api/proxy/products/${id}`, { credentials: 'include' })).json();
+        const data = await safeFetch(`/products/${id}`);
         setProduct(data);
+        const stock = typeof data?.quantity === 'number' ? data.quantity : undefined;
+        if (typeof stock === 'number' && stock > 0) {
+          setQuantity(Math.min(quantity, stock));
+        } else if (stock === 0) {
+          setQuantity(0);
+        }
       } catch (err) {
         setError(err instanceof Error ? err.message : String(err));
       } finally {
         setLoading(false);
       }
     })();
-  }, [id]);
+  }, [id, quantity]);
 
   if (loading) return <p className="text-center mt-6">Loading product...</p>;
   if (error) return <p className="text-red-500 text-center mt-6">Error: {error}</p>;
@@ -96,6 +104,10 @@ export default function ProductPage() {
               ${product.price.toFixed(2)}
             </p>
 
+            <p className="font-shuneva mt-1 text-sm text-pink-200">
+              Stock: {typeof product.quantity === 'number' ? product.quantity : 'N/A'}
+            </p>
+
             {/* Quantity Selector */}
             <div className="flex flex-col sm:flex-row items-center mt-6 space-y-2 sm:space-y-0 sm:space-x-3">
               <label className="font-shuneva text-lg text-white">Quantity:</label>
@@ -103,11 +115,12 @@ export default function ProductPage() {
           className="px-3 py-2 text-black rounded-lg bg-white shadow-md font-shuneva"
           value={quantity}
           onChange={(e) => setQuantity(Number(e.target.value))}
+          disabled={typeof product.quantity === 'number' && product.quantity <= 0}
           aria-label="Select quantity"
               >
-          {[...Array(10).keys()].map((num) => (
-            <option key={num + 1} value={num + 1}>
-              {num + 1}
+          {Array.from({ length: Math.max(0, Math.min(10, Math.max(1, Number(product.quantity ?? 10)))) }, (_, i) => i + 1).map((num) => (
+            <option key={num} value={num}>
+              {num}
             </option>
           ))}
               </select>
@@ -116,10 +129,11 @@ export default function ProductPage() {
             {/* Add to Cart Button */}
             <button
               className="font-shuneva mt-6 bg-pink-500 hover:bg-pink-700 text-white px-6 py-3 rounded-lg text-lg shadow-md transition transform hover:scale-105 w-full sm:w-auto drop-shadow-lg"
-              onClick={() => addToCart({ ...product, quantity })}
+              onClick={() => addToCart({ ...product, quantity: Math.max(1, quantity), stock: typeof product.quantity === 'number' ? product.quantity : undefined })}
               aria-label={`Add ${product.title} to cart`}
+              disabled={typeof product.quantity === 'number' && product.quantity <= 0}
             >
-              Add to Cart
+              {typeof product.quantity === 'number' && product.quantity <= 0 ? 'Out of Stock' : 'Add to Cart'}
             </button>
           </div>
         </div>

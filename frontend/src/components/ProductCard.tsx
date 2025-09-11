@@ -9,15 +9,23 @@ interface Product {
 }
 
 export default function ProductCard({ product }: { product: Product }) {
+  const resolveImageSrc = (img?: string): string => {
+    const base = process.env.NEXT_PUBLIC_API_URL || "";
+    // Absolute URL provided by storage/CDN
+    if (img && /^https?:\/\//i.test(img)) return img;
+    // Use provided relative path if present, otherwise fallback to placeholder
+    if (img && img.trim()) {
+      const path = img.startsWith("/") ? img : `/uploads/${img}`;
+      return `${base}${path}`;
+    }
+    return `${base}/uploads/placeholder.jpg`;
+  };
+
   return (
-    <div className="bg-white rounded-lg p-4 shadow-lg w-full max-w-xs sm:max-w-sm md:max-w-[250px] lg:max-w-[220px] mx-auto">
+  <div className="bg-white rounded-lg p-4 shadow-lg w-full max-w-xs sm:max-w-sm md:max-w-[250px] lg:max-w-[220px] mx-auto">
       <div className="w-full aspect-square overflow-hidden flex items-center justify-center bg-gray-100">
         <Image
-          src={
-            product.image && product.image.startsWith("http")
-              ? product.image
-              : `${process.env.NEXT_PUBLIC_API_URL}/uploads/placeholder.jpg`
-          }
+          src={resolveImageSrc(product.image)}
           alt={product.title}
           width={220}
           height={220}

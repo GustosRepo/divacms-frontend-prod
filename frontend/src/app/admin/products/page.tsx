@@ -68,6 +68,15 @@ export default function ManageProducts() {
       await safeFetch(`/admin/products/${id}`, { method: "DELETE" });
       setProducts((prev) => prev.filter((p) => p.id !== id));
     } catch (err) {
+      const msg = err instanceof Error ? err.message : String(err);
+      // Heuristic: backend might return 409 if product is referenced by orders
+      if (msg.includes("409") || /constraint|foreign key|reference/i.test(msg)) {
+        alert("Cannot delete this product because it is referenced by one or more orders.");
+      } else if (msg.includes("403")) {
+        alert("You must be an admin to delete products.");
+      } else {
+        alert("Failed to delete product. Please try again.");
+      }
       console.error("Error deleting product:", err);
     }
   }

@@ -79,12 +79,27 @@ export default function MyOrders() {
 
         const extracted: Order[] = (extractedRaw as unknown[]).map((it) => {
           const item = (it || {}) as Record<string, unknown>;
+          
+          // Parse shipping_info JSON if it exists (for pickup orders)
+          let shippingInfo: import("@/types/checkout").ShippingInfo | null = null;
+          try {
+            const shippingInfoRaw = item.shipping_info;
+            if (typeof shippingInfoRaw === 'string') {
+              shippingInfo = JSON.parse(shippingInfoRaw);
+            } else if (typeof shippingInfoRaw === 'object' && shippingInfoRaw !== null) {
+              shippingInfo = shippingInfoRaw as import("@/types/checkout").ShippingInfo;
+            }
+          } catch (e) {
+            console.warn('Failed to parse shipping_info:', e);
+          }
+          
           return {
             id: getString(item, ['id', 'order_id']),
             status: getString(item, ['status']) || 'Unknown',
             totalAmount: getNumber(item, ['total_amount', 'total']),
-            subtotal: getNumber(item, ['subtotal']),
-            taxAmount: getNumber(item, ['tax_amount']),
+            // Check shipping_info JSON first, then fall back to columns
+            subtotal: typeof shippingInfo?.subtotal === "number" ? shippingInfo.subtotal : getNumber(item, ['subtotal']),
+            taxAmount: typeof shippingInfo?.taxes === "number" ? shippingInfo.taxes : getNumber(item, ['tax_amount']),
             shippingFee: getNumber(item, ['shipping_fee']),
             discountAmount: getNumber(item, ['discount_amount']),
             trackingCode: getString(item, ['tracking_code']),
