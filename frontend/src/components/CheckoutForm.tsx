@@ -416,8 +416,9 @@ export default function CheckoutForm(props: CheckoutFormProps) {
         type="text"
         name="state"
         value={formData.shippingInfo.state}
-        onChange={(e) => setFormData({ ...formData, shippingInfo: { ...formData.shippingInfo, state: e.target.value } })}
-        placeholder="State / Province"
+        maxLength={2}
+        onChange={(e) => setFormData({ ...formData, shippingInfo: { ...formData.shippingInfo, state: e.target.value.toUpperCase() } })}
+        placeholder="State (2-letter code)"
         className={`p-2 text-black rounded-lg w-full mt-2 ${isLocalPickup ? "opacity-50 cursor-not-allowed" : ""}`}
         disabled={isLocalPickup}
       />

@@ -28,6 +28,8 @@ export default function AboutSection({ embedded = true }: AboutSectionProps) {
                 width={600}
                 height={380}
                 className="w-full h-auto object-cover"
+                sizes="(max-width: 768px) 100vw, 600px"
+                style={{ height: "auto" }}
               />
             </div>
           </div>

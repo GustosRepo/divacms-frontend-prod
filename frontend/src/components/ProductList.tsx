@@ -23,19 +23,35 @@ export default function ProductList({ embedded = false, limit = 3 }: ProductList
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    safeFetch(`/products`).then(async (res) => {
-      if (!res.ok) throw new Error(`HTTP error! Status: ${res.status}`);
-      return res.json();
-    })
-      .then((data) => {
-        if (Array.isArray(data.products)) {
-          setProducts(data.products.slice(0, limit));
-        } else {
+    const controller = new AbortController();
+    setLoading(true);
+    setError(null);
+
+    (async () => {
+      try {
+        // safeFetch returns parsed JSON and throws on non-2xx
+        const data = await safeFetch(`/products?page=1&limit=${encodeURIComponent(String(limit))}` , { signal: controller.signal });
+
+        const list: Product[] = Array.isArray(data)
+          ? data
+          : Array.isArray(data?.products)
+          ? data.products
+          : [];
+
+        if (!Array.isArray(list)) {
           setError("Invalid response from server");
+          return;
         }
-      })
-      .catch((error) => setError(error.message))
-      .finally(() => setLoading(false));
+        setProducts(list.slice(0, limit));
+      } catch (err: unknown) {
+        if ((err as any)?.name === 'AbortError') return; // ignore aborts
+        setError((err as Error)?.message || 'Failed to load products');
+      } finally {
+        setLoading(false);
+      }
+    })();
+
+    return () => controller.abort();
   }, [limit]);
 
   const grid = (
@@ -70,7 +86,7 @@ export default function ProductList({ embedded = false, limit = 3 }: ProductList
   return (
     <section className="mt-16 text-center px-4">
       <h2 className="font-display text-3xl font-semibold tracking-tight text-gradient-hotpink drop-shadow-sm">
-        Featured Nails
+        Featured Products
       </h2>
       <p className="font-display text-sm mt-2 max-w-xl mx-auto text-on-pastel-soft dark:text-on-pastel-soft">
         Explore our trending designs – hand‑picked for you!

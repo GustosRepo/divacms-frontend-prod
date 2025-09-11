@@ -69,9 +69,17 @@ export default function ManageOrders() {
       return;
     }
 
-    // ✅ If "Shipped", prompt for a tracking number
+    // ✅ If "Shipped", auto-use existing tracking from the order; only prompt if missing
     if (newStatus === "Shipped") {
-      trackingCode = prompt("Enter Tracking Number:") || "";
+      const s = (order?.shipping_info || {}) as any;
+      const existing = (order as any)?.trackingCode
+        || (order as any)?.tracking_code
+        || s?.tracking_code
+        || s?.tracking_number
+        || (order as any)?.tracking
+        || (order as any)?.trackingNumber
+        || "";
+      trackingCode = existing || prompt("Enter Tracking Number:") || "";
     }
 
     try {
@@ -334,6 +342,34 @@ export default function ManageOrders() {
                 </td>
                 <td className="p-2 lg:p-3">
                   <div className="flex flex-col lg:flex-row lg:flex-wrap items-start lg:items-center gap-1 lg:gap-2">
+                    {(() => {
+                      const trackingUrl = (order as any)?.tracking_url || (order as any)?.trackingUrl;
+                      const labelUrl = (order as any)?.label_url || (order as any)?.labelUrl;
+                      return (
+                        <>
+                          {trackingUrl && (
+                            <a
+                              href={trackingUrl}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="bg-white/10 hover:bg-white/20 px-2 py-1 rounded text-xs lg:text-sm w-full lg:w-auto"
+                            >
+                              Track
+                            </a>
+                          )}
+                          {labelUrl && (
+                            <a
+                              href={labelUrl}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="bg-white/10 hover:bg-white/20 px-2 py-1 rounded text-xs lg:text-sm w-full lg:w-auto"
+                            >
+                              Label PDF
+                            </a>
+                          )}
+                        </>
+                      );
+                    })()}
                     {/* View payment proof if uploaded */}
                     {(() => {
                       const proofUrl = (order.shipping_info as ShippingInfo | null)?.payment_proof_url as string | undefined;
