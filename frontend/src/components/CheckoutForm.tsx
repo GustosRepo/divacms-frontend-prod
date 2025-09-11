@@ -300,7 +300,7 @@ export default function CheckoutForm(props: CheckoutFormProps) {
       console.log("💰 Total (discounted):", totalDisplayed);
       console.log("📦 shippingInfo:", shippingInfo);
 
-      const response = await safeFetch(`/checkout/create-checkout-session`, {
+      const response = await safeFetch(`/create-checkout-session`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(requestBody),

@@ -23,17 +23,16 @@ export default function AdminDashboard() {
   useEffect(() => {
     const fetchStats = async () => {
       try {
-        const res = await safeFetch(`/admin/dashboard-stats`);
-
-        if (!res.ok) throw new Error("Failed to fetch stats");
-
-        const data = await res.json();
+        // Assume safeFetch returns parsed JSON or throws on error
+        const data = await safeFetch(`/admin/dashboard-stats`, { method: 'GET' });
         console.log("📊 Admin Stats:", data);
         setStats(data);
       } catch (error) {
         console.error("❌ Error fetching admin stats:", error);
       }
     };
+
+    if (!user || !user.isAdmin) return;
 
     fetchStats();
   }, [user]);

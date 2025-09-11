@@ -21,12 +21,8 @@ export default function AccountSettings() {
   
     const fetchProfile = async () => {
       try {
-  const res = await safeFetch(`/users/${user.id}`);
-  
-        if (!res.ok) throw new Error("Failed to fetch profile.");
-  
-        const data = await res.json();
-  
+        const data = await safeFetch(`/users/${user.id}`);
+
         setFormData({
           id: data.id || "", 
           name: data.name || "",
@@ -37,7 +33,23 @@ export default function AccountSettings() {
         });
       } catch (err) {
         console.error("❌ Error fetching profile:", err);
-        setMessage("Error fetching profile. Please try again.");
+        
+        // Handle "User not found" gracefully
+        const errorMessage = err instanceof Error ? err.message : String(err);
+        if (errorMessage.includes("User not found") || errorMessage.includes("404")) {
+          // Set form with default values using current user data
+          setFormData({
+            id: user.id || "",
+            name: user.name || "",
+            address: "",
+            city: "",
+            zip: "",
+            country: "",
+          });
+          setMessage("Profile data not found. Please update your information.");
+        } else {
+          setMessage("Error fetching profile. Please try again.");
+        }
       }
     };
   
@@ -53,18 +65,15 @@ export default function AccountSettings() {
     }
   
     console.log("📤 Sending profile update:", formData); // ✅ Log request data
-  
+
     try {
-      const res = await safeFetch(`/users/update`, {
+      const data = await safeFetch(`/users/update`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),
       });
-  
-      if (!res.ok) throw new Error(`Failed to update profile: ${res.statusText}`);
-  
-  await res.json();
-  updateUser(formData); // Update user in context
+
+      updateUser(formData); // Update user in context
       setMessage("Profile updated successfully!");
     } catch (error) {
       console.error("❌ Fetch error:", error);

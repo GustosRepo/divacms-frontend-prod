@@ -79,7 +79,7 @@ export default function CheckoutPage() {
   const handleOrderSubmit = async (data: CheckoutFormData, pointsUsed: number) => {
 
     try {
-      const res = await safeFetch(`/checkout/create-checkout-session`, {
+      const res = await safeFetch(`/create-checkout-session`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ items: cartItems, pointsUsed, shippingInfo: data, metadata: { userId: user.id, email: user.email } }),

@@ -43,7 +43,7 @@ export default function AddProduct() {
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const data = await safeFetch('/api/proxy/categories');
+        const data = await safeFetch('/admin/categories');
         setCategories(data);
       } catch (error) {
         console.error("Error fetching categories:", error);

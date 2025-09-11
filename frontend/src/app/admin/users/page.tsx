@@ -23,12 +23,8 @@ export default function AdminUsersPage() {
 
     const fetchUsers = async () => {
       try {
-  const res = await safeFetch(`/admin/users`);
-
-        if (!res.ok) throw new Error("Failed to fetch users");
-
-        const data = await res.json();
-        setUsers(data.users);
+        const data = await safeFetch(`/admin/users`);
+        setUsers(data.users || data || []);
       } catch (error) {
         console.error("Error fetching users:", error);
       } finally {
@@ -43,15 +39,12 @@ export default function AdminUsersPage() {
   if (!user) return;
   
     try {
-  const res = await safeFetch(`/admin/users/${userId}`, { method: "PUT", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ role: newRole }) });
-  
-      const responseData = await res.json(); // ✅ Read response
-  
-      if (!res.ok) {
-        console.error("❌ Server Error:", responseData);
-        throw new Error(responseData.message || "Failed to update user role");
-      }
-  
+      const data = await safeFetch(`/admin/users/${userId}`, { 
+        method: "PUT", 
+        headers: { "Content-Type": "application/json" }, 
+        body: JSON.stringify({ role: newRole }) 
+      });
+
       // ✅ Update UI state
       setUsers((prevUsers) =>
         prevUsers.map((u) =>
@@ -75,9 +68,10 @@ export default function AdminUsersPage() {
     if (!confirm("Are you sure you want to delete this user?")) return;
 
     try {
-  const res = await safeFetch(`/admin/users/${userId}`, { method: "DELETE", headers: { 'Content-Type': 'application/json' } });
-
-      if (!res.ok) throw new Error("Failed to delete user");
+      await safeFetch(`/admin/users/${userId}`, { 
+        method: "DELETE", 
+        headers: { 'Content-Type': 'application/json' } 
+      });
 
       setUsers((prevUsers) => prevUsers.filter((u) => u.id !== userId));
       setMessage("User deleted successfully");

@@ -1,8 +1,8 @@
 "use client";
 import { useState, useEffect, useCallback } from "react";
 import { useParams, useRouter } from "next/navigation";
-import { safeFetch } from "@/utils/api";
 import { useAuth } from "@/context/AuthContext";
+import { safeFetch } from "@/utils/api";
 import Link from "next/link";
 
 interface BlogPost {
@@ -43,19 +43,12 @@ export default function BlogPostPage() {
 
   const fetchPost = useCallback(async () => {
     try {
-  const response = await safeFetch(`/api/blog/${postId}`);
-      if (response.ok) {
-        const data = await response.json();
-        setPost(data);
-        setFormData({
-          title: data.title,
-          content: data.content
-        });
-      } else {
-        console.error('Failed to fetch blog post');
-        // Redirect to blog list if post not found
-        router.push('/blog');
-      }
+      const data = await safeFetch(`/api/blog/${postId}`);
+      setPost(data);
+      setFormData({
+        title: data.title,
+        content: data.content
+      });
     } catch (error) {
       console.error('Error fetching blog post:', error);
       router.push('/blog');
@@ -65,23 +58,17 @@ export default function BlogPostPage() {
   }, [postId, router]);
 
   const handleUpdatePost = async () => {
-  if (!formData.title || !formData.content || !user) return;
+    if (!formData.title || !formData.content || !user) return;
     
     try {
-      const response = await safeFetch(`/api/blog/${postId}`, {
+      const updatedPost = await safeFetch(`/api/blog/${postId}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData)
+        body: JSON.stringify(formData),
       });
-      if (response.ok) {
-        const updatedPost = await response.json();
-        setPost(updatedPost);
-        setIsEditing(false);
-      } else {
-        const error = await response.json();
-        console.error('Failed to update post:', error);
-        alert('Failed to update post. Please try again.');
-      }
+
+      setPost(updatedPost);
+      setIsEditing(false);
     } catch (error) {
       console.error('Error updating post:', error);
       alert('Error updating post. Please try again.');
@@ -92,20 +79,13 @@ export default function BlogPostPage() {
   }, [postId, fetchPost]);
 
   const handleDeletePost = async () => {
-  if (!user) return;
+    if (!user) return;
     
     if (!confirm('Are you sure you want to delete this post? This action cannot be undone.')) return;
     
     try {
-  const response = await safeFetch(`/api/blog/${postId}`, { method: 'DELETE' });
-
-      if (response.ok) {
-        router.push('/blog');
-      } else {
-        const error = await response.json();
-        console.error('Failed to delete post:', error);
-        alert('Failed to delete post. Please try again.');
-      }
+      await safeFetch(`/api/blog/${postId}`, { method: 'DELETE' });
+      router.push('/blog');
     } catch (error) {
       console.error('Error deleting post:', error);
       alert('Error deleting post. Please try again.');
