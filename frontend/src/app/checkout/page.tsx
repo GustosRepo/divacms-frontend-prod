@@ -23,11 +23,7 @@ export default function CheckoutPage() {
 
     const fetchUserData = async () => {
       try {
-  const response = await safeFetch(`/users/${user.id}`);
-
-        if (!response.ok) throw new Error("Failed to fetch user profile.");
-
-        const data = await response.json();
+        const data = await safeFetch(`/users/${user.id}`);
         setShippingInfo({ ...data, pointsUsed: 0 });
       } catch (err) {
         console.error("❌ Error fetching user profile:", err);

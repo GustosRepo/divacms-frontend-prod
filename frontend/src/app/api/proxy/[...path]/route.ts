@@ -15,6 +15,11 @@ async function forward(request: Request, params: { path?: string[] }) {
     const search = urlObj.search || '';
     const target = BACKEND_URL.replace(/\/+$|\s+/g, '') + path + search;
 
+    // Debug logging for reset-password requests
+    if (path.includes('reset-password')) {
+      console.log(`[PROXY DEBUG] Method: ${request.method}, Path: ${path}, Target: ${target}`);
+    }
+
     const headers = new Headers();
     for (const [k, v] of request.headers) {
       if (k.toLowerCase() === 'host') continue;
@@ -32,6 +37,11 @@ async function forward(request: Request, params: { path?: string[] }) {
     }
 
     const res = await fetch(target, { method: request.method, headers, body, redirect: 'manual' });
+
+    // Debug logging for reset-password requests
+    if (path.includes('reset-password')) {
+      console.log(`[PROXY DEBUG] Response status: ${res.status}, Response headers:`, Object.fromEntries(res.headers.entries()));
+    }
 
     const responseHeaders: Record<string, string> = {};
     res.headers.forEach((value, key) => {

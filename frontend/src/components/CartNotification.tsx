@@ -9,7 +9,7 @@ export default function CartNotification() {
   if (!cartNotification) return null;
 
   return (
-    <div className="fixed bottom-24 right-24 bg-black/80 text-white px-6 py-4 rounded-lg shadow-lg animate-fade-in flex flex-col items-center justify-center space-y-2">
+    <div className="fixed bottom-24 right-24 bg-black/80 text-white px-6 py-4 rounded-lg shadow-lg animate-fade-in flex flex-col items-center justify-center space-y-2 z-[9999]">
       <p className="text-sm">🛒 Item added to cart!</p>
       
       {/* Go to Cart Button */}

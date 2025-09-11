@@ -122,10 +122,10 @@ export default function BestSellers({ embedded = false, limit = 1 }: BestSellers
     <section className="mt-16 pb-2 text-center px-4">
       <div className="relative rounded-3xl dark:bg-white/10 backdrop-blur-xl border border-white/80 dark:border-white/10 shadow-[0_8px_24px_-8px_rgba(0,0,0,0.18)] dark:shadow-[0_4px_20px_-4px_rgba(0,0,0,0.5)] p-6 sm:p-10 max-w-2xl mx-auto overflow-hidden transition-colors">
         <h2 className="font-shuneva text-3xl font-extrabold tracking-wide bg-clip-text text-transparent bg-gradient-to-r from-pink-600 via-fuchsia-600 to-violet-600 drop-shadow-sm">
-          Best‑Selling Nails
+          Best Selling Items
         </h2>
         <p className="font-shuneva dark:text-pink-200 text-sm mt-2 max-w-xl mx-auto bg-gradient-to-r from-pink-600 via-fuchsia-600 to-violet-600 drop-shadow-sm">
-          Our most loved style – grab it before it sells out!
+          Our most loved style  grab it before it sells out!
         </p>
         <div className="mt-8">{content}</div>
       </div>

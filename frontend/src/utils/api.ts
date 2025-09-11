@@ -54,8 +54,21 @@ export const login = async (email: string, password: string) => {
     credentials: "include",
     body: JSON.stringify({ email, password }),
   });
-  const data = await res.json();
-  if (!res.ok) throw new Error(data?.error || "Login failed");
+  
+  // Check if response is valid JSON
+  const contentType = res.headers.get("content-type");
+  if (!contentType?.includes("application/json")) {
+    const text = await res.text();
+    console.error("Non-JSON login response:", text);
+    throw new Error("Server error - invalid response format");
+  }
+  
+  const data = await res.json().catch((error) => {
+    console.error("Failed to parse login response as JSON:", error);
+    throw new Error("Server error - invalid JSON response");
+  });
+  
+  if (!res.ok) throw new Error(data?.error || `Login failed (${res.status})`);
   return data;
 };
 

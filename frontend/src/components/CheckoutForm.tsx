@@ -110,19 +110,15 @@ export default function CheckoutForm(props: CheckoutFormProps) {
       setShippingLoading(true);
       try {
         const shippingForRate = { ...s, country: isoCountry };
-        const resp = await safeFetch(`/checkout/shippo-rate`, {
+        const json = await safeFetch(`/checkout/shippo-rate`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ shippingInfo: shippingForRate, items }),
         });
-        if (!resp.ok) {
-          setShippingFee(5);
-          return;
-        }
-        const json = await resp.json();
         const fee = Number(json?.shipping_fee ?? (json?.shipping_fee_cents ? json.shipping_fee_cents / 100 : 5));
         setShippingFee(Number.isFinite(fee) ? fee : 5);
-      } catch {
+      } catch (error) {
+        console.error("Shipping rate fetch error:", error);
         setShippingFee(5);
       } finally {
         setShippingLoading(false);
