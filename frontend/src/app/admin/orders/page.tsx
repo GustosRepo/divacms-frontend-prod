@@ -71,13 +71,12 @@ export default function ManageOrders() {
 
     // ✅ If "Shipped", auto-use existing tracking from the order; only prompt if missing
     if (newStatus === "Shipped") {
-      const s = (order?.shipping_info || {}) as any;
-      const existing = (order as any)?.trackingCode
-        || (order as any)?.tracking_code
-        || s?.tracking_code
-        || s?.tracking_number
-        || (order as any)?.tracking
-        || (order as any)?.trackingNumber
+      const s: ShippingInfo = order?.shipping_info || {};
+      const existing = order?.trackingCode
+        || (s as { tracking_code?: string })?.tracking_code
+        || (s as { tracking_number?: string })?.tracking_number
+        || (order as { tracking?: string })?.tracking
+        || (order as { trackingNumber?: string })?.trackingNumber
         || "";
       trackingCode = existing || prompt("Enter Tracking Number:") || "";
     }
@@ -343,8 +342,8 @@ export default function ManageOrders() {
                 <td className="p-2 lg:p-3">
                   <div className="flex flex-col lg:flex-row lg:flex-wrap items-start lg:items-center gap-1 lg:gap-2">
                     {(() => {
-                      const trackingUrl = (order as any)?.tracking_url || (order as any)?.trackingUrl;
-                      const labelUrl = (order as any)?.label_url || (order as any)?.labelUrl;
+                      const trackingUrl = (order as { tracking_url?: string, trackingUrl?: string })?.tracking_url || (order as { tracking_url?: string, trackingUrl?: string })?.trackingUrl;
+                      const labelUrl = (order as { label_url?: string, labelUrl?: string })?.label_url || (order as { label_url?: string, labelUrl?: string })?.labelUrl;
                       return (
                         <>
                           {trackingUrl && (

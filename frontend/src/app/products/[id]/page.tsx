@@ -47,7 +47,7 @@ export default function ProductPage() {
         setLoading(false);
       }
     })();
-  }, [id]);
+  }, [id, quantity]);
 
   if (loading) return <p className="text-center mt-6">Loading product...</p>;
   if (error) return <p className="text-red-500 text-center mt-6">Error: {error}</p>;

@@ -36,13 +36,13 @@ export default function ProductPage() {
         } else if (stock === 0) {
           setQuantity(0);
         }
-      } catch (e: any) {
-        setError(e?.message || 'Failed to load product');
+      } catch (e) {
+        setError(e instanceof Error ? e.message : 'Failed to load product');
       } finally {
         setLoading(false);
       }
     })();
-  }, [id]);
+  }, [id, quantity]);
 
   if (loading) return <p className="text-center mt-6">Loading product...</p>;
   if (error) return <p className="text-red-500 text-center mt-6">Error: {error}</p>;

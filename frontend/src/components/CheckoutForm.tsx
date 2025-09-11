@@ -1,6 +1,6 @@
 "use client";
 import { useState, useEffect, useRef, useMemo } from "react";
-import Image from "next/image";
+// import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { CheckoutFormData } from "@/types/checkout";
 import { loadStripe } from "@stripe/stripe-js";
@@ -357,6 +357,7 @@ export default function CheckoutForm(props: CheckoutFormProps) {
                 onClick={() => setQrModal({ src: '/venmo.jpg', alt: 'Venmo QR' })}
                 aria-label="Expand Venmo QR"
               >
+                {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img src="/venmo.jpg" alt="Venmo QR" className="h-28 w-auto max-w-full object-contain rounded bg-white transition-transform hover:scale-105 active:scale-110 cursor-zoom-in" />
               </button>
             </div>
@@ -368,6 +369,7 @@ export default function CheckoutForm(props: CheckoutFormProps) {
                 onClick={() => setQrModal({ src: '/zelle.jpg', alt: 'Zelle QR' })}
                 aria-label="Expand Zelle QR"
               >
+                {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img src="/zelle.jpg" alt="Zelle QR" className="h-28 w-auto max-w-full object-contain rounded bg-white transition-transform hover:scale-105 active:scale-110 cursor-zoom-in" />
               </button>
             </div>
@@ -379,6 +381,7 @@ export default function CheckoutForm(props: CheckoutFormProps) {
                 onClick={() => setQrModal({ src: '/cashapp.jpg', alt: 'Cash App QR' })}
                 aria-label="Expand Cash App QR"
               >
+                {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img src="/cashapp.jpg" alt="Cash App QR" className="h-28 w-auto max-w-full object-contain rounded bg-white transition-transform hover:scale-105 active:scale-110 cursor-zoom-in" />
               </button>
             </div>
@@ -405,6 +408,7 @@ export default function CheckoutForm(props: CheckoutFormProps) {
             >
               ×
             </button>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src={qrModal.src}
               alt={qrModal.alt}

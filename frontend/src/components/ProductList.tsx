@@ -30,28 +30,31 @@ export default function ProductList({ embedded = false, limit = 3 }: ProductList
     (async () => {
       try {
         // Helper to normalize various API response shapes
-        const extractList = (data: any): Product[] => {
-          if (Array.isArray(data)) return data as Product[];
-          if (Array.isArray(data?.products)) return data.products as Product[];
-          if (Array.isArray(data?.data)) return data.data as Product[];
-          if (Array.isArray(data?.items)) return data.items as Product[];
+
+        type ProductApiResponse = Product[] | { products?: Product[]; data?: Product[]; items?: Product[] };
+        const extractList = (data: ProductApiResponse): Product[] => {
+          if (Array.isArray(data)) return data;
+          if (Array.isArray(data?.products)) return data.products;
+          if (Array.isArray(data?.data)) return data.data;
+          if (Array.isArray(data?.items)) return data.items;
           return [];
         };
 
         // First attempt: paginated endpoint
-        let data: any;
+
+        let data: ProductApiResponse;
         try {
           // safeFetch returns parsed JSON and throws on non-2xx
           data = await safeFetch(`/products?page=1&limit=${encodeURIComponent(String(limit))}`, {
             signal: controller.signal,
           });
         } catch (e) {
-          if ((e as any)?.name === 'AbortError') throw e; // propagate aborts
+          if (e && typeof e === 'object' && 'name' in e && (e as { name?: string }).name === 'AbortError') throw e;
           // Fallback attempt: non-paginated endpoint
           try {
             data = await safeFetch(`/products`, { signal: controller.signal });
           } catch (e2) {
-            if ((e2 as any)?.name === 'AbortError') throw e2;
+            if (e2 && typeof e2 === 'object' && 'name' in e2 && (e2 as { name?: string }).name === 'AbortError') throw e2;
             console.warn('ProductList: both paginated and fallback fetches failed', e, e2);
             throw e2;
           }
@@ -63,8 +66,8 @@ export default function ProductList({ embedded = false, limit = 3 }: ProductList
           return;
         }
         setProducts(list.slice(0, limit));
-      } catch (err: unknown) {
-        if ((err as any)?.name === 'AbortError') return; // ignore aborts
+      } catch (err) {
+        if (err && typeof err === 'object' && 'name' in err && (err as { name?: string }).name === 'AbortError') return; // ignore aborts
         setError('Products are temporarily unavailable. Please try again.');
       } finally {
         setLoading(false);
