@@ -1,5 +1,10 @@
+// Type guard for error objects with a message
 "use client";
-import { useState } from "react";
+function isErrorWithMessage(e: unknown): e is { message: string } {
+  return typeof e === 'object' && e !== null && 'message' in e && typeof (e as { message?: unknown }).message === 'string';
+}
+import React, { useState, useEffect } from "react";
+import { safeFetch } from "@/utils/api";
 import { useAuth } from "@/context/AuthContext";
 import Link from "next/link";
 // import Image from "next/image";
@@ -19,12 +24,33 @@ interface PopupFormData {
 
 export default function LasVegasPage() {
   const { user } = useAuth();
-  const [popupEvents, setPopupEvents] = useState<PopupEvent[]>([
-    { id: '1', title: 'Las Vegas Market', description: 'First Sunday monthly', emoji: '🎰' },
-    { id: '2', title: 'Vegas Strip Events', description: 'Seasonal shows', emoji: '🎭' },
-    { id: '3', title: 'Vegas Beauty Expo', description: 'Coming this fall', emoji: '✨' },
-    { id: '4', title: 'Casino Resort Partnerships', description: 'Monthly', emoji: '💎' }
-  ]);
+  const [popupEvents, setPopupEvents] = useState<PopupEvent[]>([]);
+  const [loadingEvents, setLoadingEvents] = useState(true);
+  const [eventError, setEventError] = useState<string | null>(null);
+  // Fetch popup events from backend on mount
+  useEffect(() => {
+    const fetchEvents = async () => {
+      setLoadingEvents(true);
+      setEventError(null);
+      try {
+        const json = await safeFetch("/popup-events");
+        if (json.success && Array.isArray(json.data)) {
+          setPopupEvents(json.data);
+        } else {
+          setEventError(json.message || "Failed to load events");
+        }
+      } catch (e: unknown) {
+        if (isErrorWithMessage(e)) {
+          setEventError(e.message);
+        } else {
+          setEventError("Failed to load events");
+        }
+      } finally {
+        setLoadingEvents(false);
+      }
+    };
+    fetchEvents();
+  }, []);
   const [isAdminMode, setIsAdminMode] = useState(false);
   const [editingEvent, setEditingEvent] = useState<PopupEvent | null>(null);
   const [formData, setFormData] = useState<PopupFormData>({
@@ -38,25 +64,40 @@ export default function LasVegasPage() {
 
   const handleSubmitEvent = async (e: React.FormEvent) => {
     e.preventDefault();
-    
-    if (editingEvent) {
-      // Update existing event
-      setPopupEvents(popupEvents.map(event => 
-        event.id === editingEvent.id 
-          ? { ...event, ...formData }
-          : event
-      ));
-      setEditingEvent(null);
-    } else {
-      // Add new event
-      const newEvent: PopupEvent = {
-        id: Date.now().toString(),
-        ...formData
-      };
-      setPopupEvents([...popupEvents, newEvent]);
+    try {
+      if (editingEvent) {
+        // Update existing event (PUT)
+        const json = await safeFetch(`/popup-events/${editingEvent.id}`, {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(formData),
+        });
+        if (json.success && json.data) {
+          setPopupEvents(popupEvents.map(ev => ev.id === editingEvent.id ? json.data : ev));
+          setEditingEvent(null);
+        } else {
+          alert(json.message || "Failed to update event");
+        }
+      } else {
+        // Create new event (POST)
+        const json = await safeFetch("/popup-events", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(formData),
+        });
+        if (json.success && json.data) {
+          setPopupEvents([json.data, ...popupEvents]);
+        } else {
+          alert(json.message || "Failed to create event");
+        }
+      }
+    } catch (e: unknown) {
+      if (isErrorWithMessage(e)) {
+        alert(e.message);
+      } else {
+        alert("Network error. Please try again.");
+      }
     }
-    
-    // Reset form
     setFormData({ title: "", description: "", emoji: "" });
   };
 
@@ -69,9 +110,21 @@ export default function LasVegasPage() {
     });
   };
 
-  const handleDeleteEvent = (eventId: string) => {
-    if (confirm('Are you sure you want to delete this pop-up event?')) {
-      setPopupEvents(popupEvents.filter(event => event.id !== eventId));
+  const handleDeleteEvent = async (eventId: string) => {
+    if (!confirm('Are you sure you want to delete this pop-up event?')) return;
+    try {
+      const json = await safeFetch(`/popup-events/${eventId}`, { method: "DELETE" });
+      if (json.success) {
+        setPopupEvents(popupEvents.filter(ev => ev.id !== eventId));
+      } else {
+        alert(json.message || "Failed to delete event");
+      }
+    } catch (e: unknown) {
+      if (isErrorWithMessage(e)) {
+        alert(e.message);
+      } else {
+        alert("Network error. Please try again.");
+      }
     }
   };
   const jsonLd = {
@@ -283,33 +336,39 @@ export default function LasVegasPage() {
           <div className="grid md:grid-cols-2 gap-8">
             <div className="bg-gradient-to-br from-pink-900/30 to-purple-900/30 rounded-lg p-6">
               <h3 className="text-xl font-bold text-pink-300 mb-4">Upcoming Pop-ups</h3>
-              <ul className=" space-y-3">
-                {popupEvents.map((event) => (
-                  <li key={event.id} className="flex items-center justify-between group">
-                    <span>
-                      {event.emoji} <strong>{event.title}</strong> - {event.description}
-                    </span>
-                    {isAdmin && isAdminMode && (
-                      <div className="flex gap-2 transition-opacity">
-                        <button
-                          onClick={() => handleEditEvent(event)}
-                          className="text-blue-400 hover:text-blue-300 text-sm bg-blue-900/30 hover:bg-blue-900/50 px-2 py-1 rounded transition-all"
-                          title="Edit event"
-                        >
-                          ✏️
-                        </button>
-                        <button
-                          onClick={() => handleDeleteEvent(event.id)}
-                          className="text-red-400 hover:text-red-300 text-sm bg-red-900/30 hover:bg-red-900/50 px-2 py-1 rounded transition-all"
-                          title="Delete event"
-                        >
-                          🗑️
-                        </button>
-                      </div>
-                    )}
-                  </li>
-                ))}
-              </ul>
+              {loadingEvents ? (
+                <div className="text-center py-6 text-gray-400">Loading events...</div>
+              ) : eventError ? (
+                <div className="text-center py-6 text-red-400">{eventError}</div>
+              ) : (
+                <ul className=" space-y-3">
+                  {popupEvents.map((event) => (
+                    <li key={event.id} className="flex items-center justify-between group">
+                      <span>
+                        {event.emoji} <strong>{event.title}</strong> - {event.description}
+                      </span>
+                      {isAdmin && isAdminMode && (
+                        <div className="flex gap-2 transition-opacity">
+                          <button
+                            onClick={() => handleEditEvent(event)}
+                            className="text-blue-400 hover:text-blue-300 text-sm bg-blue-900/30 hover:bg-blue-900/50 px-2 py-1 rounded transition-all"
+                            title="Edit event"
+                          >
+                            ✏️
+                          </button>
+                          <button
+                            onClick={() => handleDeleteEvent(event.id)}
+                            className="text-red-400 hover:text-red-300 text-sm bg-red-900/30 hover:bg-red-900/50 px-2 py-1 rounded transition-all"
+                            title="Delete event"
+                          >
+                            🗑️
+                          </button>
+                        </div>
+                      )}
+                    </li>
+                  ))}
+                </ul>
+              )}
             </div>
             <div className="bg-gradient-to-br from-purple-900/30 to-blue-900/30 rounded-lg p-6">
               <h3 className="text-xl font-bold text-purple-300 mb-4">Collectible Meetups</h3>
@@ -344,7 +403,7 @@ export default function LasVegasPage() {
                       type="text"
                       id="emoji"
                       value={formData.emoji}
-                      onChange={(e) => setFormData({...formData, emoji: e.target.value})}
+                      onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFormData({ ...formData, emoji: e.target.value })}
                       className="w-full p-3 border border-gray-600 rounded-lg bg-gray-800 text-white focus:ring-2 focus:ring-pink-500 focus:border-transparent"
                       placeholder="🎰"
                       maxLength={2}
@@ -360,7 +419,7 @@ export default function LasVegasPage() {
                       type="text"
                       id="title"
                       value={formData.title}
-                      onChange={(e) => setFormData({...formData, title: e.target.value})}
+                      onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFormData({ ...formData, title: e.target.value })}
                       className="w-full p-3 border border-gray-600 rounded-lg bg-gray-800 text-white focus:ring-2 focus:ring-pink-500 focus:border-transparent"
                       placeholder="Las Vegas Market"
                       required
@@ -375,7 +434,7 @@ export default function LasVegasPage() {
                       type="text"
                       id="description"
                       value={formData.description}
-                      onChange={(e) => setFormData({...formData, description: e.target.value})}
+                      onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFormData({ ...formData, description: e.target.value })}
                       className="w-full p-3 border border-gray-600 rounded-lg bg-gray-800 text-white focus:ring-2 focus:ring-pink-500 focus:border-transparent"
                       placeholder="First Sunday monthly"
                       required

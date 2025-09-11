@@ -42,10 +42,16 @@ export default function LoginPage() {
           </button>
         </form>
 
-        {/* ✅ Add Sign Up Link */}
-        <div className="text-center mt-4">
+        {/* ✅ Add Forgot Password and Sign Up Links */}
+        <div className="text-center mt-4 space-y-2">
+          <div>
+            <span className="text-gray-300">Forgot password?</span>{' '}
+            <Link href="/contact" className="text-pink-400 underline">
+              Email us to reset your password
+            </Link>
+          </div>
           <p>
-            Don&apos;t have an account?{" "}
+            Don&apos;t have an account?{' '}
             <Link href="/register" className="text-pink-400 underline">
               Sign up
             </Link>
