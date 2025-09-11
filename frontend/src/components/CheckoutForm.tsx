@@ -159,46 +159,54 @@ export default function CheckoutForm(props: CheckoutFormProps) {
         if (proofFile.size > maxBytes) { setFileError("File too large. Max 10MB."); setLoading(false); return; }
         setFileError(null);
         // Build minimal payload the backend expects
+        console.log("🔍 User object for pickup:", user);
+        let userEmail = (user as { email?: string } | null | undefined)?.email;
+        
+        // If email is missing from user object, try to get it from the backend
+        if (!userEmail && user?.id) {
+          try {
+            const userDetails = await safeFetch(`/users/${user.id}`);
+            userEmail = userDetails?.email;
+            console.log("📧 Fetched user email:", userEmail);
+          } catch (e) {
+            console.error("Failed to fetch user email:", e);
+          }
+        }
+        
+        if (!userEmail) {
+          throw new Error("User email is required for pickup orders. Please make sure you're logged in.");
+        }
+        
         const payload = {
           items: cartItems.map((it) => ({ id: it.id, quantity: it.quantity })),
           customer: {
             user_id: (user as { id?: string } | null | undefined)?.id || undefined,
             name: s.name,
             phone: s.phone,
-            email: (user as { email?: string } | null | undefined)?.email || "",
+            email: userEmail,
           },
+          subtotal: Number(subtotal.toFixed(2)),
           taxes: Number((totalAfterDiscount * TAX_RATE).toFixed(2)),
           tax_rate: TAX_RATE,
           notes: undefined as unknown as string | undefined,
         };
         try {
-          const resp = await safeFetch(`/orders/pickup`, {
+          const json = await safeFetch(`/orders/pickup`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(payload),
           });
-          if (!resp.ok) {
-            let msg = "Failed to create pickup order.";
-            try { const e = await resp.json(); msg = e?.message || msg; } catch {}
-            throw new Error(msg);
-          }
-          const json = await resp.json();
           const serverOrderId: string = json?.order_id || `pickup_${Date.now()}`;
           const expIso: string | undefined = json?.reservation_expires_at;
           const expiresAt = expIso ? Date.parse(expIso) : (Date.now() + 48 * 60 * 60 * 1000);
           // Upload payment proof
           const fd = new FormData();
           fd.append('file', proofFile);
-          const up = await safeFetch(`/orders/${serverOrderId}/payment-proof`, {
+          await safeFetch(`/orders/${serverOrderId}/payment-proof`, {
             method: 'POST',
             // when sending FormData, do NOT set Content-Type (browser sets multipart/form-data)
             body: fd,
           });
-          if (!up.ok) {
-            let m = 'Failed to upload payment proof';
-            try { const j = await up.json(); m = j?.message || m; } catch {}
-            throw new Error(m);
-          }
           try {
             localStorage.setItem("latestPickupOrder", JSON.stringify({ orderId: serverOrderId, expiresAt }));
             localStorage.removeItem("cart");
@@ -314,8 +322,11 @@ export default function CheckoutForm(props: CheckoutFormProps) {
     }
   };
 
+  // Modal state for QR preview
+  const [qrModal, setQrModal] = useState<null | { src: string; alt: string }>(null);
+
   return (
-  <form onSubmit={handleSubmit} className="p-6 bg-black/30 rounded-lg">
+  <form onSubmit={handleSubmit} className="p-6 bg-black/30 rounded-lg relative">
       <div className="flex items-center mt-2 mb-2">
         <input
           type="checkbox"
@@ -333,28 +344,78 @@ export default function CheckoutForm(props: CheckoutFormProps) {
           <p className="mt-1">We’ll reserve your items after payment confirmation.</p>
           <p className="mt-2">Pay via Venmo, Zelle, or Cash App, then upload your payment confirmation below:</p>
           <ul className="mt-2 list-disc list-inside space-y-1 text-white/90">
-            <li>Venmo: <span className="font-mono">@your-venmo</span></li>
+            <li>Venmo: <span className="font-mono">@DivaFactory</span></li>
             <li>Zelle: <span className="font-mono">admin@thedivafactory.com</span></li>
-            <li>Cash App: <span className="font-mono">$yourcashapp</span></li>
+            <li>Cash App: <span className="font-mono">$DivaFactoryStore</span></li>
           </ul>
-          <div className="mt-3 grid grid-cols-3 gap-3 text-center text-xs">
-            <div className="bg-white/10 rounded p-2">
+          <div className="mt-3 grid grid-cols-1 sm:grid-cols-3 gap-3 text-center text-xs">
+            <div className="bg-white/10 rounded p-2 flex flex-col items-center">
               <div className="mb-1">Venmo QR</div>
-              <div className="mx-auto max-h-20">
-                <Image src="/qr/venmo.png" alt="Venmo QR" width={80} height={80} priority={false} />
-              </div>
+              <button
+                type="button"
+                className="mx-auto max-h-32 w-full flex items-center justify-center focus:outline-none"
+                onClick={() => setQrModal({ src: '/venmo.jpg', alt: 'Venmo QR' })}
+                aria-label="Expand Venmo QR"
+              >
+                <img src="/venmo.jpg" alt="Venmo QR" className="h-28 w-auto max-w-full object-contain rounded bg-white transition-transform hover:scale-105 active:scale-110 cursor-zoom-in" />
+              </button>
             </div>
-            <div className="bg-white/10 rounded p-2">
+            <div className="bg-white/10 rounded p-2 flex flex-col items-center">
               <div className="mb-1">Zelle QR</div>
-              <div className="mx-auto max-h-20">
-                <Image src="/qr/zelle.png" alt="Zelle QR" width={80} height={80} priority={false} />
-              </div>
+              <button
+                type="button"
+                className="mx-auto max-h-32 w-full flex items-center justify-center focus:outline-none"
+                onClick={() => setQrModal({ src: '/zelle.jpg', alt: 'Zelle QR' })}
+                aria-label="Expand Zelle QR"
+              >
+                <img src="/zelle.jpg" alt="Zelle QR" className="h-28 w-auto max-w-full object-contain rounded bg-white transition-transform hover:scale-105 active:scale-110 cursor-zoom-in" />
+              </button>
             </div>
-            <div className="bg-white/10 rounded p-2">
+            <div className="bg-white/10 rounded p-2 flex flex-col items-center">
               <div className="mb-1">Cash App QR</div>
-              <div className="mx-auto max-h-20">
-                <Image src="/qr/cashapp.png" alt="Cash App QR" width={80} height={80} priority={false} />
-              </div>
+              <button
+                type="button"
+                className="mx-auto max-h-32 w-full flex items-center justify-center focus:outline-none"
+                onClick={() => setQrModal({ src: '/cashapp.jpg', alt: 'Cash App QR' })}
+                aria-label="Expand Cash App QR"
+              >
+                <img src="/cashapp.jpg" alt="Cash App QR" className="h-28 w-auto max-w-full object-contain rounded bg-white transition-transform hover:scale-105 active:scale-110 cursor-zoom-in" />
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+      {/* QR Modal for expanded view */}
+      {qrModal && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm"
+          onClick={() => setQrModal(null)}
+          aria-modal="true"
+          role="dialog"
+        >
+          <div
+            className="relative max-w-full max-h-full flex flex-col items-center justify-center"
+            onClick={e => e.stopPropagation()}
+          >
+            <button
+              className="absolute top-2 right-2 text-white text-2xl font-bold bg-black/60 rounded-full w-9 h-9 flex items-center justify-center hover:bg-black/80 focus:outline-none"
+              onClick={() => setQrModal(null)}
+              aria-label="Close QR preview"
+              type="button"
+            >
+              ×
+            </button>
+            <img
+              src={qrModal.src}
+              alt={qrModal.alt}
+              className="w-[90vw] max-w-xs sm:max-w-md md:max-w-lg lg:max-w-xl h-auto object-contain rounded-lg border-4 border-white shadow-xl bg-white"
+              style={{ maxHeight: '80vh' }}
+            />
+            <div className="mt-3 text-white text-center text-base font-semibold select-all">
+              {qrModal.alt}
+            </div>
+            <div className="mt-1 text-white/80 text-xs select-all">
+              Tap and hold to save or screenshot this QR code.
             </div>
           </div>
         </div>

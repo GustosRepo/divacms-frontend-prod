@@ -53,14 +53,14 @@ export default function CartPage() {
                     {/* Quantity Selector */}
                     <div className="flex items-center mt-2 space-x-2">
                       <label className="text-sm">Qty:</label>
-                      <select
+                        <select
                         className="px-2 py-1 text-black rounded-lg bg-white shadow-md"
                         value={product.quantity}
-                        onChange={(e) => updateQuantity(product.id, Number(e.target.value))}
+                         onChange={(e) => updateQuantity(product.id, Number(e.target.value))}
                       >
-                        {[...Array(10).keys()].map((num) => (
-                          <option key={num + 1} value={num + 1}>
-                            {num + 1}
+                        {Array.from({ length: Math.max(1, Math.min(10, Number(product.stock ?? 10))) }, (_, i) => i + 1).map((q) => (
+                          <option key={q} value={q}>
+                            {q}
                           </option>
                         ))}
                       </select>

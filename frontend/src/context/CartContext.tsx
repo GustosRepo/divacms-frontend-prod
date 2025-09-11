@@ -9,6 +9,8 @@ export type CartItem = {
   quantity: number;
   image: string;
   // 👇 new (all optional to avoid breaking existing code)
+  // Available stock for this item at time of add; used to clamp quantities client-side
+  stock?: number;
   weightOz?: number;
   lengthIn?: number;
   widthIn?: number;
@@ -48,11 +50,19 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
     setCart((prev) => {
       const existingItem = prev.find((p) => p.id === item.id);
       if (existingItem) {
-        return prev.map((p) =>
-          p.id === item.id ? { ...p, quantity: p.quantity + item.quantity } : p
-        );
+        return prev.map((p) => {
+          if (p.id !== item.id) return p;
+          const max = (p.stock ?? item.stock);
+          if (typeof max === 'number' && Number.isFinite(max)) {
+            const nextQty = Math.min(p.quantity + item.quantity, max);
+            return { ...p, quantity: nextQty, stock: max };
+          }
+          return { ...p, quantity: p.quantity + item.quantity, stock: p.stock ?? item.stock };
+        });
       }
-      return [...prev, item];
+      const max = item.stock ?? Infinity;
+      const initialQty = Math.min(item.quantity, max);
+      return [...prev, { ...item, quantity: initialQty }];
     });
   
     console.log("✅ Product added to cart:", item);
@@ -73,9 +83,12 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
 
   const updateQuantity = (productId: string, newQuantity: number) => {
     setCart((currentCart) =>
-      currentCart.map((item) =>
-        item.id === productId ? { ...item, quantity: newQuantity } : item
-      )
+      currentCart.map((item) => {
+        if (item.id !== productId) return item;
+        const max = item.stock ?? Infinity;
+        const clamped = Math.max(1, Math.min(newQuantity, max));
+        return { ...item, quantity: clamped };
+      })
     );
   };
 

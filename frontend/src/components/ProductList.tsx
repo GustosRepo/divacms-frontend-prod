@@ -29,15 +29,35 @@ export default function ProductList({ embedded = false, limit = 3 }: ProductList
 
     (async () => {
       try {
-        // safeFetch returns parsed JSON and throws on non-2xx
-        const data = await safeFetch(`/products?page=1&limit=${encodeURIComponent(String(limit))}` , { signal: controller.signal });
+        // Helper to normalize various API response shapes
+        const extractList = (data: any): Product[] => {
+          if (Array.isArray(data)) return data as Product[];
+          if (Array.isArray(data?.products)) return data.products as Product[];
+          if (Array.isArray(data?.data)) return data.data as Product[];
+          if (Array.isArray(data?.items)) return data.items as Product[];
+          return [];
+        };
 
-        const list: Product[] = Array.isArray(data)
-          ? data
-          : Array.isArray(data?.products)
-          ? data.products
-          : [];
+        // First attempt: paginated endpoint
+        let data: any;
+        try {
+          // safeFetch returns parsed JSON and throws on non-2xx
+          data = await safeFetch(`/products?page=1&limit=${encodeURIComponent(String(limit))}`, {
+            signal: controller.signal,
+          });
+        } catch (e) {
+          if ((e as any)?.name === 'AbortError') throw e; // propagate aborts
+          // Fallback attempt: non-paginated endpoint
+          try {
+            data = await safeFetch(`/products`, { signal: controller.signal });
+          } catch (e2) {
+            if ((e2 as any)?.name === 'AbortError') throw e2;
+            console.warn('ProductList: both paginated and fallback fetches failed', e, e2);
+            throw e2;
+          }
+        }
 
+        const list: Product[] = extractList(data);
         if (!Array.isArray(list)) {
           setError("Invalid response from server");
           return;
@@ -45,7 +65,7 @@ export default function ProductList({ embedded = false, limit = 3 }: ProductList
         setProducts(list.slice(0, limit));
       } catch (err: unknown) {
         if ((err as any)?.name === 'AbortError') return; // ignore aborts
-        setError((err as Error)?.message || 'Failed to load products');
+        setError('Products are temporarily unavailable. Please try again.');
       } finally {
         setLoading(false);
       }
