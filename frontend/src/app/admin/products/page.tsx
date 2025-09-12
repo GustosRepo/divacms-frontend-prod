@@ -36,7 +36,8 @@ export default function ManageProducts() {
       try {
         const qs = new URLSearchParams();
         if (brandFilter) qs.append("brandSegment", brandFilter);
-        const url = `/admin/products${qs.toString() ? `?${qs.toString()}` : ""}`;
+  if (!qs.has('limit')) qs.append('limit', '1000');
+  const url = `/admin/products${qs.toString() ? `?${qs.toString()}` : ""}`;
         // safeFetch is expected to return JSON or throw on non-2xx
         const data = await safeFetch(url, { method: 'GET' });
         let list: Product[] = data.products || [];

@@ -61,6 +61,7 @@ export default function Shop() {
   const searchParams = useSearchParams();
   const activeBrand = (searchParams?.get("brand_segment") || "").toLowerCase();
   const activeCategory = (searchParams?.get("category_slug") || searchParams?.get("category") || "").toLowerCase();
+  const initialPage = Number(searchParams?.get("page")) || 1;
 
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
@@ -69,6 +70,8 @@ export default function Shop() {
   const [debouncedSearch, setDebouncedSearch] = useState("");
   const debounceRef = useRef<number | null>(null);
   const [brandCategories, setBrandCategories] = useState<{ id:string; name:string; slug?:string; brand_segment?:string }[]>([]);
+  const [page, setPage] = useState(initialPage);
+  const [totalPages, setTotalPages] = useState(1);
 
   useEffect(() => {
     let cancelled = false;
@@ -76,13 +79,17 @@ export default function Shop() {
     const params = new URLSearchParams();
     if (activeBrand) params.set('brand_segment', activeBrand);
     if (activeCategory) params.set('category_slug', activeCategory);
+  params.set('limit', '20');
+    params.set('page', String(page));
     safeFetch(`/products${params.toString() ? `?${params.toString()}` : ''}`)
       .then(data => { 
         if (cancelled) return; 
         if (data && Array.isArray(data.products)) {
           setProducts(data.products);
+          setTotalPages(data.totalPages || 1);
         } else if (Array.isArray(data)) {
           setProducts(data);
+          setTotalPages(1);
         } else {
           throw new Error("Invalid response shape");
         }
@@ -90,7 +97,7 @@ export default function Shop() {
       .catch(err => { if (!cancelled) setError(err.message); })
       .finally(() => { if (!cancelled) setLoading(false); });
     return () => { cancelled = true; };
-  }, [activeBrand, activeCategory]);
+  }, [activeBrand, activeCategory, page]);
 
   useEffect(() => {
     if (!activeBrand) { setBrandCategories([]); return; }
@@ -250,6 +257,35 @@ export default function Shop() {
               )
             ))}
           </div>
+          {/* Pagination Controls */}
+          {totalPages > 1 && (
+            <div className="flex justify-center items-center gap-2 mt-8">
+              <button
+                className="px-3 py-1 rounded bg-gray-200 text-gray-700 font-semibold disabled:opacity-50"
+                onClick={() => setPage((p) => Math.max(1, p - 1))}
+                disabled={page === 1}
+              >
+                Prev
+              </button>
+              {Array.from({ length: totalPages }, (_, i) => i + 1).map((pg) => (
+                <button
+                  key={pg}
+                  className={`px-3 py-1 rounded font-semibold ${pg === page ? 'bg-pink-500 text-white' : 'bg-gray-100 text-gray-700'}`}
+                  onClick={() => setPage(pg)}
+                  disabled={pg === page}
+                >
+                  {pg}
+                </button>
+              ))}
+              <button
+                className="px-3 py-1 rounded bg-gray-200 text-gray-700 font-semibold disabled:opacity-50"
+                onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
+                disabled={page === totalPages}
+              >
+                Next
+              </button>
+            </div>
+          )}
         </section>
       )}
       </div>
