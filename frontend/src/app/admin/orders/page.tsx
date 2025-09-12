@@ -18,6 +18,7 @@ export default function ManageOrders() {
   const [error, setError] = useState<string | null>(null);
   const [filterStatus, setFilterStatus] = useState<string>("");
   const [proofModalUrl, setProofModalUrl] = useState<string | null>(null);
+  const [imgError, setImgError] = useState(false);
 
   // Close modal on Escape
 
@@ -26,6 +27,10 @@ export default function ManageOrders() {
     const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') setProofModalUrl(null); };
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
+  }, [proofModalUrl]);
+
+  useEffect(() => {
+    setImgError(false);
   }, [proofModalUrl]);
 
   useEffect(() => {
@@ -417,8 +422,11 @@ export default function ManageOrders() {
       {/* Proof modal */}
       {proofModalUrl && (
         <div className="fixed inset-0 z-50 flex items-center justify-center">
-          <div className="absolute inset-0 bg-black/70" onClick={() => setProofModalUrl(null)} />
-          <div className="relative max-w-3xl w-full mx-4">
+          <div
+            className="absolute inset-0 bg-black/70"
+            onClick={() => setProofModalUrl(null)}
+          />
+          <div className="relative max-w-4xl w-full mx-4">
             <button
               onClick={() => setProofModalUrl(null)}
               className="absolute right-2 top-2 z-10 bg-white/10 hover:bg-white/20 text-white rounded-full p-2"
@@ -427,9 +435,40 @@ export default function ManageOrders() {
               ✖
             </button>
             <div className="bg-gray-900 rounded-lg p-4">
-              <div className="w-full h-auto rounded overflow-hidden">
-                <Image src={proofModalUrl || ''} alt="Payment proof" width={1200} height={800} style={{ width: '100%', height: 'auto' }} />
-              </div>
+              {(() => {
+                const isPdf = /\.pdf($|\?)/i.test(proofModalUrl);
+                if (isPdf) {
+                  return (
+                    <div className="w-full h-[75vh]">
+                      <iframe
+                        src={proofModalUrl}
+                        className="w-full h-full rounded"
+                        title="Payment proof PDF"
+                      />
+                    </div>
+                  );
+                }
+                return (
+                  <div className="w-full h-auto rounded overflow-hidden">
+                    {imgError ? (
+                      <img
+                        src={proofModalUrl}
+                        alt="Payment proof"
+                        style={{ width: '100%', height: 'auto' }}
+                      />
+                    ) : (
+                      <Image
+                        src={proofModalUrl}
+                        alt="Payment proof"
+                        width={1200}
+                        height={800}
+                        style={{ width: '100%', height: 'auto' }}
+                        onError={() => setImgError(true)}
+                      />
+                    )}
+                  </div>
+                );
+              })()}
             </div>
           </div>
         </div>
