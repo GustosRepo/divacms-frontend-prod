@@ -29,9 +29,6 @@ const faqs = [
         <li>
           <strong>Expedited (1–2 business days)</strong> — fastest delivery. Order by 12pm PT.
         </li>
-        <li>
-          <strong>Free shipping</strong> on US orders over <strong>$200</strong> (after discounts, before tax).
-        </li>
       </ul>
     ),
   },

@@ -34,14 +34,6 @@ export default function FAQPage() {
       },
       {
         '@type': 'Question',
-        name: 'Do you offer free shipping?',
-        acceptedAnswer: {
-          '@type': 'Answer',
-          text: 'Yes! We offer free shipping on orders over $250 within the United States. We also offer local pickup in Los Angeles for free shipping regardless of order amount.'
-        }
-      },
-      {
-        '@type': 'Question',
         name: 'How do I remove press-on nails safely?',
         acceptedAnswer: {
           '@type': 'Answer',
@@ -116,10 +108,6 @@ export default function FAQPage() {
     {
       category: "Shipping & Orders",
       questions: [
-        {
-          q: "Do you offer free shipping?",
-          a: "Yes! Free shipping on orders over $200 within the United States. Las Vegas customers can choose free local pickup to skip shipping entirely!"
-        },
         {
           q: "How fast do orders ship?",
           a: "Orders placed before 2 PM PST ship same day! Standard shipping takes 3-5 business days. Express shipping arrives in 1-2 business days. Local LV pickup orders are ready within 2 hours."

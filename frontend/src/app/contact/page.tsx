@@ -149,18 +149,17 @@ export default function ContactPage() {
                 <ol className="space-y-2 ml-4 list-decimal">
                   <li>Select &quot;Local Pickup&quot; at checkout</li>
                   <li>Complete your order (no shipping fee!)</li>
-                  <li>We&apos;ll text you when ready (usually 2 hours)</li>
+                    <li>We&apos;ll coordinate a pickup time with you (orders are usually ready within 1 hour)</li>
                   <li>Pick up from our Las Vegas location</li>
                 </ol>
               </div>
               <div>
                 <h3 className="text-lg font-bold text-white mb-2">Pickup Hours:</h3>
                 <ul className="space-y-1 ml-4 list-disc">
-                  <ul className="space-y-1 ml-4 list-disc">
-                    <li>Monday - Friday: 9 AM - 5 PM</li>
-                    <li>Saturday: 10 AM - 5 PM</li>
-                    <li>Sunday: By appointment only</li>
-                  </ul>
+                  <li>Monday - Friday: 10 AM - 6 PM</li>
+                  <li>Saturday: 10 AM - 5 PM</li>
+                  <li>Sunday: 10 AM - 5 PM</li>
+                  <li>Pickup available by appointment — please contact us via email or DM to schedule</li>
                 </ul>
               </div>
             </div>
