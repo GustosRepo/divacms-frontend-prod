@@ -221,6 +221,7 @@ export default function ManageOrders() {
           <tr className="bg-blue-500">
             <th className="p-2 lg:p-3 text-xs lg:text-sm font-medium">Customer</th>
             <th className="p-2 lg:p-3 text-xs lg:text-sm font-medium min-w-[200px]">Shipping Address</th>
+            <th className="p-2 lg:p-3 text-xs lg:text-sm font-medium min-w-[180px]">Items Ordered</th>
             <th className="p-2 lg:p-3 text-xs lg:text-sm font-medium">Total</th>
             <th className="p-2 lg:p-3 text-xs lg:text-sm font-medium">Status</th>
             <th className="p-2 lg:p-3 text-xs lg:text-sm font-medium">Tracking</th>
@@ -232,7 +233,7 @@ export default function ManageOrders() {
         <tbody>
           {orders.length === 0 && (
             <tr>
-              <td colSpan={8} className="text-center p-3">
+              <td colSpan={9} className="text-center p-3">
                 No orders found
               </td>
             </tr>
@@ -247,6 +248,7 @@ export default function ManageOrders() {
                 </td>
                 <td className="p-2 lg:p-3 text-xs lg:text-sm">
                   {(() => {
+                    // ...existing code for shipping address...
                     const s = (order.shipping_info || {}) as ShippingInfo;
                     const line1 = s.address_line1 || s.address || order.address || "";
                     const line2 = s.address_line2 || "";
@@ -297,6 +299,22 @@ export default function ManageOrders() {
                     }
                     return <span className="text-gray-400">No address</span>;
                   })()}
+                </td>
+                {/* Items Ordered column */}
+                <td className="p-2 lg:p-3 text-xs lg:text-sm">
+                  {Array.isArray(order.items) && order.items.length > 0 ? (
+                    <ul className="list-disc pl-4 space-y-1">
+                      {order.items.map((item: { title?: string; name?: string; variant?: string; quantity: number }, idx: number) => (
+                        <li key={idx} className="text-xs">
+                          <span className="font-semibold">{item.title || item.name}</span>
+                          {item.variant && <span className="ml-1 text-gray-400">({item.variant})</span>}
+                          <span className="ml-2">x{item.quantity}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  ) : (
+                    <span className="text-gray-400">No items</span>
+                  )}
                 </td>
                 <td className="p-2 lg:p-3 text-xs lg:text-sm font-medium">
                   {typeof order.totalAmount === "number" ? `$${order.totalAmount.toFixed(2)}` : <span className="text-gray-400">N/A</span>}
@@ -451,10 +469,13 @@ export default function ManageOrders() {
                 return (
                   <div className="w-full h-auto rounded overflow-hidden">
                     {imgError ? (
-                      <img
+                      <Image
                         src={proofModalUrl}
                         alt="Payment proof"
+                        width={1200}
+                        height={800}
                         style={{ width: '100%', height: 'auto' }}
+                        unoptimized
                       />
                     ) : (
                       <Image
