@@ -93,4 +93,7 @@ export interface AdminOrder {
   zip?: string | null;
   shipping_info?: ShippingInfo | null;
   phone?: string | null;
+  items?: CartItem[] | null;
+  pointsUsed?: number;
+  createdAt?: string;
 }
