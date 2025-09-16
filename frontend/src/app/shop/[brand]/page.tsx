@@ -11,5 +11,5 @@ export default function BrandShopRoute(props: unknown) {
     // fallback to hub if invalid brand
     redirect('/shop');
   }
-  redirect(`/shop?brand_segment=${brand}`);
+redirect(`/shop?brand_segment=${brand}&page=1`);
 }

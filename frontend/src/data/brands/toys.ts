@@ -25,7 +25,7 @@ export const toysConfig: BrandConfig = {
     glow1: 'bg-teal-300/40',
     glow2: 'bg-indigo-300/30'
   },
-  ctaHref: '/shop?brand_segment=toys'
+  ctaHref: '/shop?brand_segment=toys&page=1'
 };
 
 export default toysConfig;

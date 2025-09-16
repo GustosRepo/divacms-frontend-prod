@@ -10,33 +10,39 @@ function proxyUrlFor(path: string) {
 
 async function safeFetch(path: string, init: RequestInit = {}) {
   const url = proxyUrlFor(path);
-  const mergedInit: RequestInit = { credentials: "include", ...init };
-  const res = await fetch(url, mergedInit);
+  const opts: RequestInit = {
+    credentials: "include",
+    headers: { "Content-Type": "application/json", ...(init.headers || {}) },
+    ...init,
+  };
+
+  const res = await fetch(url, opts);
 
   const ct = res.headers.get("content-type") || "";
+  const isJSON = ct.includes("application/json");
+
   if (!res.ok) {
-    const text = await res.text();
-    
-    // Don't log certain expected 404s that are handled gracefully by components
-    const is404 = res.status === 404;
-    const isExpected404 = is404 && (
-      text.includes("No orders found") || 
-      text.includes("User not found") ||
-      path.includes("/orders/my-orders") ||
-      path.includes("/users/")
-    );
-    
-    if (!isExpected404) {
-      console.error("API error", res.status, text);
+    let bodyText = "";
+    try {
+      bodyText = isJSON ? JSON.stringify(await res.json()) : await res.text();
+    } catch {
+      // ignore parse errors
     }
-    
-    throw new Error(`API ${res.status}: ${url}`);
+    console.error("API error", res.status, bodyText || res.statusText);
+    const err = new Error(`API ${res.status}: ${url}${bodyText ? " — " + bodyText : ""}`);
+    // @ts-expect-error attach extra info
+    err.status = res.status;
+  // @ts-expect-error: attach extra info to error object
+    err.body = bodyText;
+    throw err;
   }
-  if (!ct.includes("application/json")) {
+
+  if (!isJSON) {
     const text = await res.text();
     console.error("Non-JSON response:", text);
     throw new Error(`Expected JSON at ${url} but got ${ct}`);
   }
+
   return res.json();
 }
 
