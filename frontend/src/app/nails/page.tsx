@@ -25,7 +25,7 @@ const nailsConfig: BrandConfig = {
     glow1: 'bg-pink-300/40',
     glow2: 'bg-purple-300/30'
   },
-  ctaHref: '/shop?brand_segment=nails'
+  ctaHref: '/shop?brand_segment=nails&page=1'
 };
 
 export default function NailsLanding() { return <BrandLanding config={nailsConfig}/>; }

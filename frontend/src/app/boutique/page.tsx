@@ -25,7 +25,7 @@ const boutiqueConfig: BrandConfig = {
     glow1: 'bg-amber-300/40',
     glow2: 'bg-rose-300/30'
   },
-  ctaHref: '/shop?brand_segment=accessories'
+  ctaHref: '/shop?brand_segment=accessories&page=1'
 };
 
 export default function BoutiqueLanding() { return <BrandLanding config={boutiqueConfig}/>; }
