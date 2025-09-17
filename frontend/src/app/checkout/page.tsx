@@ -73,7 +73,6 @@ export default function CheckoutPage() {
   const userPoints = shippingInfo?.points || 0;
 
   const handleOrderSubmit = async (data: CheckoutFormData, pointsUsed: number) => {
-
     try {
       const res = await safeFetch(`/create-checkout-session`, {
         method: "POST",
@@ -82,6 +81,36 @@ export default function CheckoutPage() {
       });
 
       if (!res.ok) {
+        if (res.status === 409) {
+          // Another customer likely bought the last unit at the same time.
+          let msg = "One or more items are no longer in stock at the requested quantity.";
+          let conflictedId: string | undefined;
+          let available: number | undefined;
+          try {
+            const body = await res.json();
+            msg = body?.message || msg;
+            conflictedId = body?.product_id || body?.productId || body?.id;
+            if (typeof body?.available === 'number') available = body.available;
+          } catch {}
+
+          if (conflictedId) {
+            setCartItems((prev) => {
+              const next = prev
+                .map((line) => {
+                  if (line.id !== conflictedId) return line;
+                  const newQty = typeof available === 'number' ? Math.max(0, Math.min(line.quantity, available)) : 0;
+                  if (newQty <= 0) return null; // remove item if none available
+                  return { ...line, quantity: newQty };
+                })
+                .filter(Boolean) as CartItem[];
+              try { localStorage.setItem('cart', JSON.stringify(next)); } catch {}
+              return next;
+            });
+          }
+
+          toast.error(msg);
+          return;
+        }
         const errorData = await res.json();
         throw new Error(errorData.message || "Unknown server error");
       }

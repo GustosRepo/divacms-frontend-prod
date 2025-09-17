@@ -10,10 +10,22 @@ function proxyUrlFor(path: string) {
 
 async function safeFetch(path: string, init: RequestInit = {}) {
   const url = proxyUrlFor(path);
+
+  // Detect multipart uploads and set headers safely
+  const isForm = typeof FormData !== 'undefined' && init.body instanceof FormData;
+  const hdrs = new Headers(init.headers || {});
+  if (isForm) {
+    // Let the browser set the multipart boundary automatically
+    hdrs.delete('Content-Type');
+  } else {
+    // Default to JSON for non-FormData requests if not already provided
+    if (!hdrs.has('Content-Type')) hdrs.set('Content-Type', 'application/json');
+  }
+
   const opts: RequestInit = {
-    credentials: "include",
-    headers: { "Content-Type": "application/json", ...(init.headers || {}) },
+    credentials: 'include',
     ...init,
+    headers: hdrs,
   };
 
   const res = await fetch(url, opts);

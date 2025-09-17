@@ -153,7 +153,7 @@ export default function CheckoutForm(props: CheckoutFormProps) {
           return;
         }
         // extra guard on size/type
-        const maxBytes = 10 * 1024 * 1024; // 10MB
+        const maxBytes = 20 * 1024 * 1024; // 20MB
         const okType = proofFile.type.startsWith("image/") || proofFile.type === "application/pdf";
         if (!okType) { setFileError("Invalid file type. Upload an image or PDF."); setLoading(false); return; }
         if (proofFile.size > maxBytes) { setFileError("File too large. Max 10MB."); setLoading(false); return; }
