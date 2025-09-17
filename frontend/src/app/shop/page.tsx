@@ -67,7 +67,8 @@ export default function Shop() {
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [search, setSearch] = useState("");
+  const initialSearch = (searchParams?.get("q") || "");
+  const [search, setSearch] = useState(initialSearch);
   const [debouncedSearch, setDebouncedSearch] = useState("");
   const debounceRef = useRef<number | null>(null);
   const [brandCategories, setBrandCategories] = useState<{ id:string; name:string; slug?:string; brand_segment?:string }[]>([]);
@@ -114,6 +115,7 @@ export default function Shop() {
     if (activeCategory) params.set('category_slug', activeCategory);
     params.set('limit', '20');
     params.set('page', String(page));
+    if (debouncedSearch) params.set('q', debouncedSearch); // ← add this
 
     safeFetch(`/products${params.toString() ? `?${params.toString()}` : ''}`, { signal: controller.signal })
       .then(data => {
@@ -179,7 +181,7 @@ export default function Shop() {
       cancelled = true;
       controller.abort();
     };
-  }, [activeBrand, activeCategory, page]);
+  }, [activeBrand, activeCategory, page, debouncedSearch]);
   // Sync page state with URL query string
   useEffect(() => {
     const params = new URLSearchParams(Array.from(searchParams.entries()));
@@ -189,9 +191,16 @@ export default function Shop() {
     else params.delete('brand_segment');
     if (activeCategory) params.set('category_slug', activeCategory);
     else params.delete('category_slug');
+    if (debouncedSearch) params.set('q', debouncedSearch);
+    else params.delete('q');
     router.replace(`?${params.toString()}`);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [page, activeBrand, activeCategory]);
+  }, [page, activeBrand, activeCategory, debouncedSearch]);
+
+  // Reset pagination to page 1 whenever the debounced search changes
+  useEffect(() => {
+    setPage(1);
+  }, [debouncedSearch]);
 
 
   useEffect(() => {
@@ -218,7 +227,11 @@ export default function Shop() {
   const visibleProducts = normalizedProducts.filter(p => {
     if (activeBrand && p._brand !== activeBrand) return false;
     if (activeCategory && p._categorySlug !== activeCategory) return false;
-    return p.title.toLowerCase().includes(debouncedSearch.toLowerCase());
+    const q = debouncedSearch.toLowerCase();
+    if (!q) return true;
+    const titleMatch = p.title?.toLowerCase().includes(q);
+    const descMatch = (p.description || "").toLowerCase().includes(q);
+    return titleMatch || descMatch;
   });
   const trendingProducts = useMemo<ExtendedProduct[]>(() => {
     if (activeBrand) return [] as ExtendedProduct[];
