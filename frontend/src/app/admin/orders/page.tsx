@@ -43,6 +43,7 @@ export default function ManageOrders() {
       try {
         const url = new URL('/admin/orders', window.location.origin);
         if (filterStatus) url.searchParams.set('status', filterStatus);
+        url.searchParams.set('limit', '1000'); // Show up to 1000 orders in one page
         const data = await safeFetch(url.pathname + url.search);
         const next = Array.isArray(data) ? data : (data?.orders ?? []);
         setOrders(next);
