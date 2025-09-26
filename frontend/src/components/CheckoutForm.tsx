@@ -345,7 +345,7 @@ export default function CheckoutForm(props: CheckoutFormProps) {
           <p className="mt-2">Pay via Venmo, Zelle, or Cash App, then upload your payment confirmation below:</p>
           <ul className="mt-2 list-disc list-inside space-y-1 text-white/90">
             <li>Venmo: <span className="font-mono">@DivaFactory</span></li>
-            <li>Zelle: <span className="font-mono">admin@thedivafactory.com</span></li>
+            <li>Zelle: <span className="font-mono">Use Qr Code</span></li>
             <li>Cash App: <span className="font-mono">$DivaFactoryStore</span></li>
           </ul>
           <div className="mt-3 grid grid-cols-1 sm:grid-cols-3 gap-3 text-center text-xs">
