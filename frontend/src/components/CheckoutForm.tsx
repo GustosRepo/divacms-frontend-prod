@@ -77,13 +77,26 @@ export default function CheckoutForm(props: CheckoutFormProps) {
     const shippingKey = useMemo(() => JSON.stringify(formData.shippingInfo || {}), [formData.shippingInfo]);
 
   const [selectedPoints /*, setSelectedPoints*/] = useState<number>(formData.pointsUsed || 0);
-  const [discount /*, setDiscount*/] = useState<number>(0);
+  // Auto 10% promo until Nov 1, 2025 (UTC). You can override via NEXT_PUBLIC_PROMO_10_END_ISO / NEXT_PUBLIC_PROMO_10_RATE
+  const PROMO_END_ISO = process.env.NEXT_PUBLIC_PROMO_10_END_ISO || "2025-11-01T00:00:00Z";
+  const PROMO_RATE = Number(process.env.NEXT_PUBLIC_PROMO_10_RATE || "10"); // percent
+  // Avoid using Date.now() during SSR to prevent hydration mismatches
+  const [nowTs, setNowTs] = useState<number | null>(null);
+  useEffect(() => { setNowTs(Date.now()); }, []);
+  const promoActive = useMemo(() => {
+    const end = Date.parse(PROMO_END_ISO);
+    return nowTs != null && Number.isFinite(end) ? nowTs < end : false;
+  }, [nowTs, PROMO_END_ISO]);
+  const discount = promoActive ? PROMO_RATE : 0;
   const [loading, setLoading] = useState(false);
   const [proofFile, setProofFile] = useState<File | null>(null);
   const [fileError, setFileError] = useState<string | null>(null);
-  // Compute subtotal and discount locally
+  // Track which cart item ids are toys (fetched from backend)
+  const [toyIds, setToyIds] = useState<Set<string>>(new Set());
+  // Compute subtotal and toys-only discount locally (for display only)
   const subtotal = cartItems.reduce((sum, it) => sum + Number(it.price || 0) * Number(it.quantity || 1), 0);
-  const discountAmount = (subtotal * discount) / 100;
+  const toysSubtotal = cartItems.reduce((sum, it) => sum + (toyIds.has(it.id) ? (Number(it.price || 0) * Number(it.quantity || 1)) : 0), 0);
+  const discountAmount = promoActive ? (toysSubtotal * discount) / 100 : 0;
   const totalAfterDiscount = Math.max(0, subtotal - discountAmount);
   // Local pickup sales tax (8.375%)
   const TAX_RATE = 0.08375;
@@ -92,6 +105,32 @@ export default function CheckoutForm(props: CheckoutFormProps) {
   const [shippingFee, setShippingFee] = useState<number | null>(null);
   const [shippingLoading, setShippingLoading] = useState(false);
   const rateDebounceRef = useRef<number | null>(null);
+
+  // Fetch product brand segments for items in cart to identify TOYS
+  useEffect(() => {
+    let alive = true;
+    const itemsArr: { id: string }[] = cartKey ? JSON.parse(cartKey) : [];
+    const ids = Array.from(new Set(itemsArr.map(it => it.id))).filter(Boolean);
+    if (!ids.length) { setToyIds(new Set()); return; }
+    (async () => {
+      try {
+        const results = await Promise.allSettled(ids.map(id => safeFetch(`/products/${id}`)));
+        const toys = new Set<string>();
+        results.forEach((r, idx) => {
+          if (r.status === 'fulfilled') {
+            const p = r.value as { brand_segment?: string; brandSegment?: string };
+            const brand = String(p?.brand_segment ?? p?.brandSegment ?? '').toLowerCase();
+            if (brand === 'toys') toys.add(ids[idx]);
+          }
+        });
+        if (alive) setToyIds(toys);
+      } catch (e) {
+        console.warn('Failed to fetch product segments for cart items:', e);
+        if (alive) setToyIds(new Set());
+      }
+    })();
+    return () => { alive = false; };
+  }, [cartKey]);
 
   // Fetch live shipping rate when shippingInfo or cartItems change (debounced)
   useEffect(() => {
@@ -514,8 +553,11 @@ export default function CheckoutForm(props: CheckoutFormProps) {
       </select> */}
 
       <div className="text-white mt-4 text-lg space-y-1">
+        {promoActive && (
+          <div className="text-sm text-green-300">Limited-time promo: {PROMO_RATE}% off toys until Nov 1</div>
+        )}
         <div><strong>Subtotal:</strong> ${subtotal.toFixed(2)}</div>
-        <div><strong>Discount:</strong> -${discountAmount.toFixed(2)}</div>
+        <div><strong>Discount (toys only):</strong> -${discountAmount.toFixed(2)}</div>
         {isLocalPickup && (
           <div><strong>Tax (8.375%):</strong> ${taxDisplayed.toFixed(2)}</div>
         )}
